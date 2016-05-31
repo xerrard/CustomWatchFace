@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CustomWatchFace.iml" filepath="$PROJECT_DIR$/CustomWatchFace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/customwatchface/customwatchface.iml" filepath="$PROJECT_DIR$/customwatchface/customwatchface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/customwatchwear/customwatchwear.iml" filepath="$PROJECT_DIR$/customwatchwear/customwatchwear.iml" />
+    </modules>
+  </component>
+</project>
