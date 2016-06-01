@@ -22,8 +22,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,17 +39,9 @@ import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.android.wearable.MessageApi;
 import com.igeak.android.wearable.MessageEvent;
 import com.igeak.android.wearable.Wearable;
-import com.igeak.customwatchface.watchfaceview.BackGround;
-import com.igeak.customwatchface.watchfaceview.BaseElement;
-import com.igeak.customwatchface.watchfaceview.DialScale;
-import com.igeak.customwatchface.watchfaceview.Hour;
-import com.igeak.customwatchface.watchfaceview.Minute;
-import com.igeak.customwatchface.watchfaceview.Second;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +49,7 @@ import java.util.concurrent.TimeUnit;
  * Analog watch face with a ticking second hand. In ambient mode, the second hand isn't shown. On
  * devices with low-bit ambient mode, the hands are drawn without anti-aliasing in ambient mode.
  */
-public class MyWatchFace extends CanvasWatchFaceService {
+public class MyWatchFacebenfen extends CanvasWatchFaceService {
     /**
      * Update rate in milliseconds for interactive mode. We update once a second to advance the
      * second hand.
@@ -75,15 +67,15 @@ public class MyWatchFace extends CanvasWatchFaceService {
     }
 
     private static class EngineHandler extends Handler {
-        private final WeakReference<MyWatchFace.Engine> mWeakReference;
+        private final WeakReference<MyWatchFacebenfen.Engine> mWeakReference;
 
-        public EngineHandler(MyWatchFace.Engine reference) {
+        public EngineHandler(MyWatchFacebenfen.Engine reference) {
             mWeakReference = new WeakReference<>(reference);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            MyWatchFace.Engine engine = mWeakReference.get();
+            MyWatchFacebenfen.Engine engine = mWeakReference.get();
             if (engine != null) {
                 switch (msg.what) {
                     case MSG_UPDATE_TIME:
@@ -128,13 +120,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         WatchFacePresent present;
 
-        private Map<Type, BaseElement> mElements = new HashMap<Type, BaseElement>();
-
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
 
-            setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFace.this)
+            setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFacebenfen.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT) //以单行高度显示通知卡片
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
                     //卡片的背景只会简单的显示且只用于终止通知
@@ -142,14 +132,14 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     .setAcceptsTapEvents(true)
                     .build());
 
-            mGoogleApiclent = new GeakApiClient.Builder(MyWatchFace.this)
+            mGoogleApiclent = new GeakApiClient.Builder(MyWatchFacebenfen.this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(Wearable.API)
                     .build();
             mGoogleApiclent.connect();
 
-            Resources resources = MyWatchFace.this.getResources();
+            Resources resources = MyWatchFacebenfen.this.getResources();
 
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(resources.getColor(R.color.background));
@@ -163,7 +153,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTime = new Time();
 
             present = new WatchFacePresent(getApplicationContext(),this);
-            present.loadWatchimg();
+
 
         }
 
@@ -211,7 +201,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
          */
         @Override
         public void onTapCommand(int tapType, int x, int y, long eventTime) {
-            Resources resources = MyWatchFace.this.getResources();
+            Resources resources = MyWatchFacebenfen.this.getResources();
             switch (tapType) {
                 case TAP_TYPE_TOUCH:
                     // The user has started touching the screen.
@@ -229,42 +219,46 @@ public class MyWatchFace extends CanvasWatchFaceService {
             invalidate();
         }
 
-
-
-        public void setElements(WatchFace watchface) {
-            mElements.clear();
-            mElements.put(Type.BACKGROUND, new BackGround(watchface
-                    .getBackground()));
-            mElements.put(Type.DIALSCALE, new DialScale(watchface
-                    .getDialScale()));
-            mElements.put(Type.HOUR, new Hour(watchface.getHour()));
-            mElements.put(Type.MINUTE, new Minute(watchface.getMinute()));
-            mElements.put(Type.SECOND, new Second(watchface.getSecond()));
-        }
-
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             mTime.setToNow();
 
-
-            drawElement(canvas, mElements.get(Type.BACKGROUND),bounds);
-            drawElement(canvas, mElements.get(Type.DIALSCALE),bounds);
-            drawElement(canvas, mElements.get(Type.HOUR),bounds);
-            drawElement(canvas, mElements.get(Type.MINUTE),bounds);
-            drawElement(canvas, mElements.get(Type.SECOND),bounds);
-        }
-
-        private void drawElement(Canvas canvas, BaseElement element,Rect bounds) {
-            if (element == null || canvas == null) {
-                return;
+            // Draw the background.
+            if (isInAmbientMode()) {
+                canvas.drawColor(Color.BLACK);
+            } else {
+                canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), mBackgroundPaint);
             }
-            PaintFlagsDrawFilter paintFlter = new PaintFlagsDrawFilter(0,
-                    Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG); //设置抗锯齿
-            canvas.setDrawFilter(paintFlter);
-            element.layout(bounds.width(), bounds.height());
-            element.onDraw(canvas);
-        }
 
+            // Find the center. Ignore the window insets so that, on round watches with a
+            // "chin", the watch face is centered on the entire screen, not just the usable
+            // portion.
+            float centerX = bounds.width() / 2f;
+            float centerY = bounds.height() / 2f;
+
+            float secRot = mTime.second / 30f * (float) Math.PI;
+            int minutes = mTime.minute;
+            float minRot = minutes / 30f * (float) Math.PI;
+            float hrRot = ((mTime.hour + (minutes / 60f)) / 6f) * (float) Math.PI;
+
+            float secLength = centerX - 20;
+            float minLength = centerX - 40;
+            float hrLength = centerX - 80;
+
+            if (!mAmbient) {
+                float secX = (float) Math.sin(secRot) * secLength;
+                float secY = (float) -Math.cos(secRot) * secLength;
+                canvas.drawLine(centerX, centerY, centerX + secX, centerY + secY, mHandPaint);
+            }
+
+            float minX = (float) Math.sin(minRot) * minLength;
+            float minY = (float) -Math.cos(minRot) * minLength;
+            canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mHandPaint);
+
+            float hrX = (float) Math.sin(hrRot) * hrLength;
+            float hrY = (float) -Math.cos(hrRot) * hrLength;
+            canvas.drawLine(centerX, centerY, centerX + hrX, centerY + hrY, mHandPaint);
+        }
 
         @Override
         public void onVisibilityChanged(boolean visible) {
@@ -292,7 +286,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             }
             mRegisteredTimeZoneReceiver = true;
             IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
-            MyWatchFace.this.registerReceiver(mTimeZoneReceiver, filter);
+            MyWatchFacebenfen.this.registerReceiver(mTimeZoneReceiver, filter);
         }
 
         private void unregisterReceiver() {
@@ -300,7 +294,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 return;
             }
             mRegisteredTimeZoneReceiver = false;
-            MyWatchFace.this.unregisterReceiver(mTimeZoneReceiver);
+            MyWatchFacebenfen.this.unregisterReceiver(mTimeZoneReceiver);
         }
 
         /**
@@ -368,12 +362,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void updateWatchFaceView(WatchFace watchFace) {
-            setElements(watchFace);
             updateTimer();
         }
-    }
-
-    public enum Type {
-        HOUR, MINUTE, SECOND, BACKGROUND, DIALSCALE, DATE, WEEK, NULL
     }
 }
