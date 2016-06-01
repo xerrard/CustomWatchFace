@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.animation.Transformation;
 
@@ -71,18 +72,18 @@ public abstract class BaseElement {
     }
 
 
-    public void layout(float view_width, float view_height) {
+    public void layout(float view_width, float view_height, Time mTime) {
 
 //起始坐标为中心点
         start_x = view_width / 2;
         start_y = view_height / 2;
 
         if (mType == MyWatchFace.Type.HOUR) {
-            mRotate = 320.0f;
+            mRotate = 360.0f * mTime.hour/24.0f;
         } else if (mType == MyWatchFace.Type.MINUTE) {
-            mRotate = 40.0f;
+            mRotate = 360.0f * mTime.minute/60.0f;
         } else if (mType == MyWatchFace.Type.SECOND) {
-            mRotate = 180.0f;
+            mRotate = 360.0f * mTime.second/60.0f;
         } else {
             mRotate = 0.0f;
         }

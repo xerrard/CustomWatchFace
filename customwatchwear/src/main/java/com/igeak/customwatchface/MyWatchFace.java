@@ -261,7 +261,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             PaintFlagsDrawFilter paintFlter = new PaintFlagsDrawFilter(0,
                     Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG); //设置抗锯齿
             canvas.setDrawFilter(paintFlter);
-            element.layout(bounds.width(), bounds.height());
+            element.layout(bounds.width(), bounds.height(),mTime);
             element.onDraw(canvas);
         }
 
