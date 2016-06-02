@@ -16,6 +16,7 @@
 
 package com.igeak.customwatchface;
 
+import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -162,7 +164,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
             mTime = new Time();
 
-            present = new WatchFacePresent(getApplicationContext(),this);
+            present = new WatchFacePresent(getApplicationContext(), this);
             present.loadWatchimg();
 
         }
@@ -230,7 +232,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
         }
 
 
-
         public void setElements(WatchFace watchface) {
             mElements.clear();
             mElements.put(Type.BACKGROUND, new BackGround(watchface
@@ -245,23 +246,30 @@ public class MyWatchFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             mTime.setToNow();
-
-
-            drawElement(canvas, mElements.get(Type.BACKGROUND),bounds);
-            drawElement(canvas, mElements.get(Type.DIALSCALE),bounds);
-            drawElement(canvas, mElements.get(Type.HOUR),bounds);
-            drawElement(canvas, mElements.get(Type.MINUTE),bounds);
-            drawElement(canvas, mElements.get(Type.SECOND),bounds);
+//            try {
+//                Drawable drawable = mElements.get(Type.BACKGROUND).mDrawable;
+//                if (drawable != null) {
+//                    WallpaperManager.getInstance(getBaseContext()).setBitmap(PicUtil.drawable2Bitmap
+//                            (drawable));
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+            drawElement(canvas, mElements.get(Type.BACKGROUND), bounds);
+            drawElement(canvas, mElements.get(Type.DIALSCALE), bounds);
+            drawElement(canvas, mElements.get(Type.HOUR), bounds);
+            drawElement(canvas, mElements.get(Type.MINUTE), bounds);
+            drawElement(canvas, mElements.get(Type.SECOND), bounds);
         }
 
-        private void drawElement(Canvas canvas, BaseElement element,Rect bounds) {
+        private void drawElement(Canvas canvas, BaseElement element, Rect bounds) {
             if (element == null || canvas == null) {
                 return;
             }
             PaintFlagsDrawFilter paintFlter = new PaintFlagsDrawFilter(0,
                     Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG); //设置抗锯齿
             canvas.setDrawFilter(paintFlter);
-            element.layout(bounds.width(), bounds.height(),mTime);
+            element.layout(bounds.width(), bounds.height(), mTime);
             element.onDraw(canvas);
         }
 

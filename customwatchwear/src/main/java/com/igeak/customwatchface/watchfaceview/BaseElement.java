@@ -47,6 +47,8 @@ public abstract class BaseElement {
 
     private String pngName = "";
 
+    float view_width;
+    float view_height;
 
     public BaseElement(Drawable drawable) {
         isEnable = true;
@@ -73,17 +75,19 @@ public abstract class BaseElement {
 
 
     public void layout(float view_width, float view_height, Time mTime) {
-
+        Log.d(Const.TAG, " view_width = " + view_width + " view_height = " + view_height);
 //起始坐标为中心点
+        this.view_height = view_height;
+        this.view_width = view_width;
         start_x = view_width / 2;
         start_y = view_height / 2;
 
         if (mType == MyWatchFace.Type.HOUR) {
-            mRotate = 360.0f * mTime.hour/24.0f;
+            mRotate = 360.0f * mTime.hour / 24.0f;
         } else if (mType == MyWatchFace.Type.MINUTE) {
-            mRotate = 360.0f * mTime.minute/60.0f;
+            mRotate = 360.0f * mTime.minute / 60.0f;
         } else if (mType == MyWatchFace.Type.SECOND) {
-            mRotate = 360.0f * mTime.second/60.0f;
+            mRotate = 360.0f * mTime.second / 60.0f;
         } else {
             mRotate = 0.0f;
         }
@@ -113,9 +117,13 @@ public abstract class BaseElement {
         if (drawable != null) {
 
             //BitmapDrawable
-            mDrawable.getBitmap().getDensity();
+            int density = mDrawable.getBitmap().getDensity();
+
             int w = drawable.getIntrinsicWidth();
             int h = drawable.getIntrinsicHeight();
+
+            int width = (int) (density / 160.0f * w);
+            int height = (int) (density / 160.0f * h);
             Log.d(Const.TAG, " w = " + w + " h = " + h);
             Log.d(Const.TAG, " mDrawable.getBitmap().getDensity(); = " + mDrawable.getBitmap()
                     .getDensity());
@@ -123,8 +131,18 @@ public abstract class BaseElement {
                     .getBitmap().getHeight());
             Log.d(Const.TAG, " mDrawable.getBitmap().getScaledWidth() = " + mDrawable.getBitmap()
                     .getScaledWidth(canvas));
-            drawable.setBounds((int) (x - (w / 2)), (int) (y - (h / 2)), (int) (x + (w / 2)),
-                    (int) (y + (h / 2)));
+
+
+            if (mType.equals(MyWatchFace.Type.BACKGROUND)||mType.equals(MyWatchFace.Type.DIALSCALE)) {
+                drawable.setBounds((int) (x - (view_width / 2)), (int) (y - (view_height / 2)),
+                        (int) (x +
+                                (view_width / 2)),
+                        (int) (y + (view_height / 2)));
+            } else {
+                drawable.setBounds((int) (x - (width / 2)), (int) (y - (height / 2)), (int) (x +
+                                (width / 2)),
+                        (int) (y + (height / 2)));
+            }
             drawable.draw(canvas);
         }
 

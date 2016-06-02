@@ -171,7 +171,9 @@ public class WatchFaceEditPresent {
                 stream = context.getContentResolver().openInputStream(uri);
                 Drawable drawable = Drawable.createFromStream(stream, null);
                 //Bitmap bitmap = PicUtil.InputStream2Bitmap(stream); Crop获得的是drawable，获得不到Bitmap
-                watchfaceview.updatebackground(drawable);
+                Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
+                //watchfaceview.updatebackground(drawable);
+                changeBackImg(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -182,11 +184,6 @@ public class WatchFaceEditPresent {
     }
 
     public void savewatch() throws Exception {
-//        watchface.setBackground(modifyMaps.get(WatchPreviewView.Type.BACKGROUND));
-//        watchface.setDialScale(modifyMaps.get(WatchPreviewView.Type.DIALSCALE));
-//        watchface.setHour(modifyMaps.get(WatchPreviewView.Type.HOUR));
-//        watchface.setMinute(modifyMaps.get(WatchPreviewView.Type.MINUTE));
-//        watchface.setSecond(modifyMaps.get(WatchPreviewView.Type.SECOND));
         for (WatchPreviewView.Type type : modifyMaps.keySet()) {
             PicUtil.saveBitmapToFile(
                     modifyMaps.get(type),
