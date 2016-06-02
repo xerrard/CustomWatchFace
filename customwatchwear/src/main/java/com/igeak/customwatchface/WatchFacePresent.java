@@ -52,6 +52,17 @@ public class WatchFacePresent {
         loadWatchimg();
     }
 
+    public void initwatch() {
+        try {
+            if(!FileOperation.getCustomWatchfacesFolder().exists()){
+                FileOperation.assert2Folder(context);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public interface IWatchFaceDetailView {
         void updateWatchFaceView(WatchFace watchFace);

@@ -165,9 +165,13 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTime = new Time();
 
             present = new WatchFacePresent(getApplicationContext(), this);
+
+            present.initwatch();
             present.loadWatchimg();
 
         }
+
+
 
         @Override
         public void onDestroy() {

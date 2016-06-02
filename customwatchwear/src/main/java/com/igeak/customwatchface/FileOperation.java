@@ -1,5 +1,6 @@
 package com.igeak.customwatchface;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.google.gson.Gson;
@@ -15,6 +16,22 @@ import java.io.InputStreamReader;
  * Created by xuqiang on 16-6-1.
  */
 public class FileOperation {
+
+
+    /**
+     * 将需要发送的表盘先复制到T卡
+     *
+     * @param context
+     * @throws Exception
+     */
+    public static void assert2Folder(Context context) throws Exception {
+        String assetsPath = Const.FOLDER_NAME;
+        String filePath = FileOperation.getCustomWatchfacesFolderPath();
+        FileUtil.assets2Files(context,assetsPath,filePath);
+
+    }
+
+
     /**
      * 获取 javabean
      * @return
