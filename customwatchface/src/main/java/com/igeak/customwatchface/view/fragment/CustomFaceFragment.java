@@ -1,5 +1,6 @@
 package com.igeak.customwatchface.view.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -54,9 +55,15 @@ public class CustomFaceFragment extends Fragment implements WatchFacesPresent.IW
         mRecycleViewAdapter = new RecycleViewAdapter();
 
         present = new WatchFacesPresent(this, getActivity().getApplicationContext());
-        present.getWatchfaceBeanList(facePath);
+
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        present.getWatchfaceBeanList(facePath);
     }
 
     @Override
@@ -76,6 +83,11 @@ public class CustomFaceFragment extends Fragment implements WatchFacesPresent.IW
     public void updateWatchFace(WatchPreviewView imageView, WatchFace watchFace) {
         imageView.setElements(watchFace);
         //imageView.invalidate();
+    }
+
+    @Override
+    public void onWatchCreated(WatchFaceBean watchFaceBean) {
+
     }
 
 

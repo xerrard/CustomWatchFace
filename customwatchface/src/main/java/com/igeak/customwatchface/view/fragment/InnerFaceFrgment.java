@@ -1,5 +1,6 @@
 package com.igeak.customwatchface.view.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.WatchFacesPresent;
 import com.igeak.customwatchface.R;
+import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.watchfaceview.WatchPreviewView;
 import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 
@@ -54,10 +56,17 @@ public class InnerFaceFrgment extends Fragment implements WatchFacesPresent.IWat
         mRecycleViewAdapter = new RecycleViewAdapter();
 
         present = new WatchFacesPresent(this, getActivity().getApplicationContext());
-        present.getWatchfaceBeanList(facePath);
+        //present.getWatchfaceBeanList(facePath);
 
         return rootView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        present.getWatchfaceBeanList(facePath);
+    }
+
 
     @Override
     public void updateWatchFaceBeanList(List<WatchFaceBean> watchFaceBeanList) {
@@ -74,6 +83,15 @@ public class InnerFaceFrgment extends Fragment implements WatchFacesPresent.IWat
     @Override
     public void updateWatchFace(WatchPreviewView imageView, WatchFace watchFace) {
         imageView.setElements(watchFace);
+    }
+
+    @Override
+    public void onWatchCreated(WatchFaceBean watchFaceBean) {
+        Intent intent = new Intent(getContext(), FaceEditActivity.class);
+        intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchFaceBean);
+        intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
+                (WatchFacesModel.FacePath.FACE_CUSTOM));
+        startActivity(intent);
     }
 
 
@@ -164,7 +182,7 @@ public class InnerFaceFrgment extends Fragment implements WatchFacesPresent.IWat
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.option_new) {
-
+                    present.creatNewFace(watchfaceList.get((int) getItemId()));
                     return true;
                 }
                 return false;

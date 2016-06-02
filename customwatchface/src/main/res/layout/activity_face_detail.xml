@@ -26,14 +26,14 @@
             android:src="@mipmap/ic_launcher"/>
 
         <Button
-            android:id="@+id/sendtophone"
+            android:id="@+id/sendwatch"
             android:layout_marginTop="-20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="@string/sendtophone"
-            android:onClick="sendToPhone"/>
+            android:text="@string/sendtowatch"
+            android:onClick="sendToWatch"/>
 
         <TextView
             android:layout_width="match_parent"

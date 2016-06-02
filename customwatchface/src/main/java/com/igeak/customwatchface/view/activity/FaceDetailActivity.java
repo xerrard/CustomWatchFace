@@ -51,7 +51,7 @@ public class FaceDetailActivity extends BaseActivity implements WatchFaceDetailP
         setTitle(watchfacebean.getName()); //更新title
     }
 
-    public void sendToPhone(View v) {
+    public void sendToWatch(View v) {
         present.zipFileAndSentToWatch(this, watchfacebean,facePath);
     }
 

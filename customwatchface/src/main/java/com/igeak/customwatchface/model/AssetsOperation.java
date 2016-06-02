@@ -82,4 +82,20 @@ public class AssetsOperation {
         return FileOperation.zipFolder(watchfaceName);
     }
 
+    /**
+     * 将需要发送的表盘打包
+     * assert打包的过程比较特别，需要先复制到T卡，然后打包
+     *
+     * @param context
+     * @param watchfaceName
+     * @throws Exception
+     */
+    public static void assert2Folder(Context context, final String
+            watchfaceName) throws Exception {
+        String assetsPath = Const.FOLDER_NAME + "/" + watchfaceName;
+        String filePath = FileOperation.getCustomWatchfacesFolderPath() + "/" + watchfaceName;
+        FileUtil.assets2Files(context,assetsPath,filePath);
+
+    }
+
 }

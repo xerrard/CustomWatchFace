@@ -5,12 +5,14 @@ import android.util.Log;
 
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
+import com.igeak.customwatchface.model.AssetsOperation;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.view.watchfaceview.WatchPreviewView;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -53,10 +55,53 @@ public class WatchFacesPresent {
                 });
     }
 
+
+    public void creatNewFace(final WatchFaceBean watchface) {
+        Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {
+            @Override
+            public void call(Subscriber<? super WatchFaceBean> subscriber) {
+                try {
+                    AssetsOperation.assert2Folder(context, watchface.getName());
+                    if (watchface == null) {
+                        subscriber.onError(new Exception("User = null"));
+                    } else {
+                        subscriber.onNext(watchface);
+                        subscriber.onCompleted();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchFaceBean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(WatchFaceBean watchFaceBean) {
+                        mWatchFaceView.onWatchCreated(watchFaceBean);
+                    }
+                });
+
+
+    }
+
+
     public interface IWatchFacesView {
         void updateWatchFaceBeanList(List<WatchFaceBean> watchFaceBeanList);
 
         void updateWatchFace(WatchPreviewView imageview, WatchFace watchFace);
+
+        void onWatchCreated(WatchFaceBean watchFaceBean);
     }
 
 
@@ -78,7 +123,7 @@ public class WatchFacesPresent {
                     @Override
                     public void onNext(WatchFace watchFace) {
                         mWatchFaceView.updateWatchFace(imageView, watchFace);
-                        Log.i("xerrard","ddd onNext");
+                        Log.i("xerrard", "ddd onNext");
                     }
 
                 });

@@ -18,7 +18,6 @@ public class MyApplication extends Application implements GeakApiClient.Connecti
     @Override
     public void onCreate() {
         super.onCreate();
-        CustomManager.getInstance(getApplicationContext());
         mGoogleApiclent = new GeakApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

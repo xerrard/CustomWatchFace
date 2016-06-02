@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
@@ -128,8 +129,10 @@ public class FaceEditActivity extends BaseActivity implements WatchFaceEditPrese
 
     public void savewatch(View view) throws Exception {
         present.savewatch();
-
+        Toast.makeText(this,"watchface saved",Toast.LENGTH_LONG).show();
+        finish();
     }
+
 
     class MainActivityPagerAdapter extends FragmentPagerAdapter {
         public MainActivityPagerAdapter(FragmentManager fm) {
