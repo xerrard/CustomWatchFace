@@ -31,10 +31,9 @@ import java.io.InputStream;
 public class PicUtil {
     private static final String TAG = "PicUtil";
 
-    public static BitmapDrawable readRawDrawable(Context context , int resourceId) {
+    public static BitmapDrawable readRawDrawable(Context context, int resourceId) {
         return bitmap2Drawable(decodeResource(context.getResources(), resourceId));
     }
-
 
 
     public static Drawable file2Drawable(File file) throws FileNotFoundException {
@@ -90,8 +89,7 @@ public class PicUtil {
     }
 
 
-
-    public static boolean saveBitmapToFile(Bitmap bm, File file) {
+    public static boolean saveBitmapToFile(Bitmap bm, File file) throws IOException {
         if (bm != null && file != null) {
             FileOutputStream output = null;
             Bitmap.CompressFormat format = Bitmap.CompressFormat.PNG;
@@ -102,27 +100,23 @@ public class PicUtil {
             if (file.exists()) {
                 file.delete(); //如果已经有文件，先删除
             }
-            try {
-                output = new FileOutputStream(file);
-                bm.compress(format, 100, output);
-                output.close();
-                return true;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            output = new FileOutputStream(file);
+            bm.compress(format, 100, output);
+            output.close();
+            return true;
+
         }
         return false;
     }
 
     /**
      * save bitmap to file
+     *
      * @param bm
      * @param filePath
      * @return
      */
-    public static boolean saveBitmapToFile(Bitmap bm, String filePath) {
+    public static boolean saveBitmapToFile(Bitmap bm, String filePath) throws IOException {
         if (bm != null && filePath != null) {
             FileOutputStream output = null;
             Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
@@ -136,21 +130,14 @@ public class PicUtil {
             if (f.exists()) {
                 f.delete(); //如果已经有文件，先删除
             }
-            try {
-                output = new FileOutputStream(f);
-                bm.compress(format, 100, output);
-                output.close();
-                return true;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            output = new FileOutputStream(f);
+            bm.compress(format, 100, output);
+            output.close();
+            return true;
+
         }
         return false;
     }
-
-
 
 
     /**
@@ -210,8 +197,9 @@ public class PicUtil {
 
 
     //图片合成
-    public static Bitmap addFrameToImageTwo(Bitmap bmp, Bitmap frameBitmap) //bmp原图 frameBitmap资源图片(边框)
- {
+    public static Bitmap addFrameToImageTwo(Bitmap bmp, Bitmap frameBitmap) //bmp原图
+    // frameBitmap资源图片(边框)
+    {
         //bmp原图 创建新位图
         int width = bmp.getWidth();
         int height = bmp.getHeight();
@@ -219,11 +207,11 @@ public class PicUtil {
         //对边框进行缩放
         int w = frameBitmap.getWidth();
         int h = frameBitmap.getHeight();
-        float scaleX = width*1F / w;        //缩放比 如果图片尺寸超过边框尺寸 会自动匹配
-        float scaleY = height*1F / h;
+        float scaleX = width * 1F / w;        //缩放比 如果图片尺寸超过边框尺寸 会自动匹配
+        float scaleY = height * 1F / h;
         Matrix matrix = new Matrix();
         matrix.postScale(scaleX, scaleY);   //缩放图片
-        Bitmap copyBitmap =  Bitmap.createBitmap(frameBitmap, 0, 0, w, h, matrix, true);
+        Bitmap copyBitmap = Bitmap.createBitmap(frameBitmap, 0, 0, w, h, matrix, true);
 
         int pixColor = 0;
         int layColor = 0;
@@ -249,10 +237,8 @@ public class PicUtil {
         float alphaG = 0F;
         float alphaB = 0F;
 
-        for (int i = 0; i < width; i++)
-        {
-            for (int k = 0; k < height; k++)
-            {
+        for (int i = 0; i < width; i++) {
+            for (int k = 0; k < height; k++) {
                 pixColor = bmp.getPixel(i, k);
                 layColor = copyBitmap.getPixel(i, k);
                 // 获取原图片的RGBA值
@@ -266,12 +252,9 @@ public class PicUtil {
                 layB = Color.blue(layColor);
                 layA = Color.alpha(layColor);
                 // 颜色与纯黑色相近的点
-                if (layR < 20 && layG < 20 && layB < 20)
-                {
+                if (layR < 20 && layG < 20 && layB < 20) {
                     alpha = 1F;
-                }
-                else
-                {
+                } else {
                     alpha = 0.3F;
                 }
                 alphaR = alpha;
@@ -296,8 +279,8 @@ public class PicUtil {
     }
 
 
-    public static Bitmap createBitmap(Bitmap src, Bitmap watermark ) {
-        if( src == null ) {
+    public static Bitmap createBitmap(Bitmap src, Bitmap watermark) {
+        if (src == null) {
             return null;
         }
         int w = src.getWidth();
@@ -305,19 +288,18 @@ public class PicUtil {
         int ww = watermark.getWidth();
         int wh = watermark.getHeight();
         //create the new blank bitmap
-        Bitmap newb = Bitmap.createBitmap( w, h, Bitmap.Config.ARGB_8888 );//创建一个新的和SRC长度宽度一样的位图
-        Canvas cv = new Canvas( newb );
+        Bitmap newb = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);//创建一个新的和SRC长度宽度一样的位图
+        Canvas cv = new Canvas(newb);
         //draw src into
-        cv.drawBitmap( src, 0, 0, null );//在 0，0坐标开始画入src
+        cv.drawBitmap(src, 0, 0, null);//在 0，0坐标开始画入src
         //draw watermark into
-        cv.drawBitmap( watermark, w - ww + 5, h - wh + 5, null );//在src的右下角画入水印
+        cv.drawBitmap(watermark, w - ww + 5, h - wh + 5, null);//在src的右下角画入水印
         //save all clip
-        cv.save( Canvas.ALL_SAVE_FLAG );//保存
+        cv.save(Canvas.ALL_SAVE_FLAG);//保存
         //store
         cv.restore();//存储
         return newb;
     }
-
 
 
 }

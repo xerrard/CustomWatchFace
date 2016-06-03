@@ -61,19 +61,16 @@ public class WatchFaceEditPresent {
         modifyMaps = new HashMap<>();
     }
 
-    public List<Bitmap> loadbackImg() {
+    public List<Bitmap> loadbackImg() throws IOException {
         List<Bitmap> backImgs = new ArrayList<Bitmap>();
         String[] backgrounds;
-        try {
-            backgrounds = context.getAssets().list(Const.BACK_FOLDER_NAME);
+        backgrounds = context.getAssets().list(Const.BACK_FOLDER_NAME);
 
-            for (String str : backgrounds) {
-                InputStream is = context.getAssets().open(Const.BACK_FOLDER_NAME + "/" + str);
-                backImgs.add(PicUtil.InputStream2Bitmap(is));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (String str : backgrounds) {
+            InputStream is = context.getAssets().open(Const.BACK_FOLDER_NAME + "/" + str);
+            backImgs.add(PicUtil.InputStream2Bitmap(is));
         }
+
         return backImgs;
     }
 
@@ -82,19 +79,16 @@ public class WatchFaceEditPresent {
         modifyMaps.put(WatchPreviewView.Type.BACKGROUND, bitmap);
     }
 
-    public List<Bitmap> loadScaleImg() {
+    public List<Bitmap> loadScaleImg() throws IOException {
         List<Bitmap> backImgs = new ArrayList<Bitmap>();
         String[] backgrounds;
-        try {
-            backgrounds = context.getAssets().list(Const.SCALE_FOLDER_NAME);
+        backgrounds = context.getAssets().list(Const.SCALE_FOLDER_NAME);
 
-            for (String str : backgrounds) {
-                InputStream is = context.getAssets().open(Const.SCALE_FOLDER_NAME + "/" + str);
-                backImgs.add(PicUtil.InputStream2Bitmap(is));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (String str : backgrounds) {
+            InputStream is = context.getAssets().open(Const.SCALE_FOLDER_NAME + "/" + str);
+            backImgs.add(PicUtil.InputStream2Bitmap(is));
         }
+
         return backImgs;
     }
 
@@ -103,29 +97,26 @@ public class WatchFaceEditPresent {
         modifyMaps.put(WatchPreviewView.Type.DIALSCALE, bitmap);
     }
 
-    public List<Map<PointView.Type, Bitmap>> loadPointImg() {
+    public List<Map<PointView.Type, Bitmap>> loadPointImg() throws IOException {
         List<Map<PointView.Type, Bitmap>> pointImgs = new ArrayList<>();
         String[] backgrounds;
-        try {
-            backgrounds = context.getAssets().list(Const.POINT_FOLDER_NAME);
+        backgrounds = context.getAssets().list(Const.POINT_FOLDER_NAME);
 
-            for (String str : backgrounds) {
-                Map<PointView.Type, Bitmap> map = new HashMap<>();
+        for (String str : backgrounds) {
+            Map<PointView.Type, Bitmap> map = new HashMap<>();
 
-                map.put(PointView.Type.HOUR, PicUtil.InputStream2Bitmap(context.getAssets().open
-                        (Const.POINT_FOLDER_NAME + "/" + str +
-                                "/" + Const.HOUR_NAME + Const.PNG_EXNAME)));
-                map.put(PointView.Type.MINUTE, PicUtil.InputStream2Bitmap(context.getAssets().open
-                        (Const.POINT_FOLDER_NAME + "/" + str +
-                                "/" + Const.MINUTE_NAME + Const.PNG_EXNAME)));
-                map.put(PointView.Type.SECOND, PicUtil.InputStream2Bitmap(context.getAssets().open
-                        (Const.POINT_FOLDER_NAME + "/" + str +
-                                "/" + Const.SECOND_NAME + Const.PNG_EXNAME)));
-                pointImgs.add(map);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            map.put(PointView.Type.HOUR, PicUtil.InputStream2Bitmap(context.getAssets().open
+                    (Const.POINT_FOLDER_NAME + "/" + str +
+                            "/" + Const.HOUR_NAME + Const.PNG_EXNAME)));
+            map.put(PointView.Type.MINUTE, PicUtil.InputStream2Bitmap(context.getAssets().open
+                    (Const.POINT_FOLDER_NAME + "/" + str +
+                            "/" + Const.MINUTE_NAME + Const.PNG_EXNAME)));
+            map.put(PointView.Type.SECOND, PicUtil.InputStream2Bitmap(context.getAssets().open
+                    (Const.POINT_FOLDER_NAME + "/" + str +
+                            "/" + Const.SECOND_NAME + Const.PNG_EXNAME)));
+            pointImgs.add(map);
         }
+
         return pointImgs;
     }
 
@@ -161,22 +152,19 @@ public class WatchFaceEditPresent {
                 });
     }
 
-    public void handleCrop(int resultCode, Intent result) {
+    public void handleCrop(int resultCode, Intent result) throws FileNotFoundException {
         if (resultCode == Activity.RESULT_OK) {
             //resultView.setImageURI(Crop.getOutput(result));
 
             Uri uri = Crop.getOutput(result);
             InputStream stream;
-            try {
-                stream = context.getContentResolver().openInputStream(uri);
-                Drawable drawable = Drawable.createFromStream(stream, null);
-                //Bitmap bitmap = PicUtil.InputStream2Bitmap(stream); Crop获得的是drawable，获得不到Bitmap
-                Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
-                //watchfaceview.updatebackground(drawable);
-                changeBackImg(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            stream = context.getContentResolver().openInputStream(uri);
+            Drawable drawable = Drawable.createFromStream(stream, null);
+            //Bitmap bitmap = PicUtil.InputStream2Bitmap(stream); Crop获得的是drawable，获得不到Bitmap
+            Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
+            //watchfaceview.updatebackground(drawable);
+            changeBackImg(bitmap);
+
 
         } else if (resultCode == Crop.RESULT_ERROR) {
             Toast.makeText(context, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
@@ -193,8 +181,6 @@ public class WatchFaceEditPresent {
                     )
             );
         }
-
-
 
 
     }

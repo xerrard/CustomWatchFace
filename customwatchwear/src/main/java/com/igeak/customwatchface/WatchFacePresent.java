@@ -52,15 +52,10 @@ public class WatchFacePresent {
         loadWatchimg();
     }
 
-    public void initwatch() {
-        try {
-            if(!FileOperation.getCustomWatchfacesFolder().exists()){
-                FileOperation.assert2Folder(context);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void initwatch() throws Exception {
+        if (!FileOperation.getCustomWatchfacesFolder().exists()) {
+            FileOperation.assert2Folder(context);
         }
-
     }
 
 

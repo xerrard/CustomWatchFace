@@ -166,7 +166,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
             present = new WatchFacePresent(getApplicationContext(), this);
 
-            present.initwatch();
+            try {
+                present.initwatch();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             present.loadWatchimg();
 
         }
@@ -250,15 +254,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             mTime.setToNow();
-//            try {
-//                Drawable drawable = mElements.get(Type.BACKGROUND).mDrawable;
-//                if (drawable != null) {
-//                    WallpaperManager.getInstance(getBaseContext()).setBitmap(PicUtil.drawable2Bitmap
-//                            (drawable));
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
             drawElement(canvas, mElements.get(Type.BACKGROUND), bounds);
             drawElement(canvas, mElements.get(Type.DIALSCALE), bounds);
             drawElement(canvas, mElements.get(Type.HOUR), bounds);
@@ -373,7 +368,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 try {
                     present.handleMessage(bytes);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }

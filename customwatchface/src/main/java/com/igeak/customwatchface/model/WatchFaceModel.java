@@ -72,7 +72,7 @@ public class WatchFaceModel {
                                 watchFaceBean.getSecond()));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
                 if (watchFace == null) {
                     subscriber.onError(new Exception("User = null"));

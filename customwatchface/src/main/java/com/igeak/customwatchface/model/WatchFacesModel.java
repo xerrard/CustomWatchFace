@@ -1,13 +1,9 @@
 package com.igeak.customwatchface.model;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -18,7 +14,7 @@ import rx.Subscriber;
  */
 public class WatchFacesModel {
 
-    public static enum FacePath {
+    public enum FacePath {
         FACE_INNER,
         FACE_CUSTOM
     }
@@ -59,7 +55,7 @@ public class WatchFacesModel {
                         subscriber.onCompleted();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
 
             }
@@ -114,7 +110,7 @@ public class WatchFacesModel {
                                 watchFaceBean.getSecond()));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
                 if (watchFace == null) {
                     subscriber.onError(new Exception("User = null"));

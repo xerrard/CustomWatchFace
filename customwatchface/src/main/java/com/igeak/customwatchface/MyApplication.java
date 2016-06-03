@@ -6,6 +6,11 @@ import android.os.Bundle;
 import com.igeak.android.common.ConnectionResult;
 import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.android.wearable.Wearable;
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.LogTool;
+import com.orhanobut.logger.Logger;
+
+import org.xerrard.util.CrashHandler;
 
 /**
  * Created by xuqiang on 16-5-19.
@@ -13,11 +18,17 @@ import com.igeak.android.wearable.Wearable;
 public class MyApplication extends Application implements GeakApiClient.ConnectionCallbacks,
         GeakApiClient.OnConnectionFailedListener {
 
+    private static final String YOUR_TAG = "CustomWatch";
     public GeakApiClient mGoogleApiclent;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        CrashHandler.getInstance().init(this);
+        Logger.init(YOUR_TAG);
+
+
+
         mGoogleApiclent = new GeakApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

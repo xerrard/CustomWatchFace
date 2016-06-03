@@ -85,7 +85,7 @@ public class WatchFaceDetailPresent {
                         subscriber.onCompleted();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
 
 

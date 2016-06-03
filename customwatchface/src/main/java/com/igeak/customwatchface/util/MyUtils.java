@@ -31,14 +31,12 @@ public class MyUtils {
         return null;
     }
 
-    public static void close(Closeable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void close(Closeable closeable) throws IOException {
+
+        if (closeable != null) {
+            closeable.close();
         }
+
     }
 
     public static DisplayMetrics getScreenMetrics(Context context) {

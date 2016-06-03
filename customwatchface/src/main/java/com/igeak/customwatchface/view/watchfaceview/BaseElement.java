@@ -11,6 +11,7 @@ import android.view.animation.Transformation;
 
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.PicUtil;
+import com.orhanobut.logger.Logger;
 
 
 /**

@@ -1,8 +1,6 @@
 package com.igeak.customwatchface.presenter;
 
 import android.content.Context;
-import android.util.Log;
-
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.AssetsOperation;
@@ -69,7 +67,7 @@ public class WatchFacesPresent {
                         subscriber.onCompleted();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         })
@@ -123,7 +121,6 @@ public class WatchFacesPresent {
                     @Override
                     public void onNext(WatchFace watchFace) {
                         mWatchFaceView.updateWatchFace(imageView, watchFace);
-                        Log.i("xerrard", "ddd onNext");
                     }
 
                 });

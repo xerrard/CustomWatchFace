@@ -20,20 +20,17 @@ import java.util.List;
  */
 public class JsonUtil {
 
-    public static List<JSONObject> getJsonArray(String json) {
+    public static List<JSONObject> getJsonArray(String json) throws JSONException {
 
         JSONTokener jsonParser = new JSONTokener(json);
         JSONObject object = null;
         List<JSONObject> objectList = new ArrayList<JSONObject>();
-        try {
-            object = (JSONObject) jsonParser.nextValue();
-            JSONArray jsonArray = object.getJSONArray("watchlist");
-            for(int i=0;i<jsonArray.length();i++){
-                objectList.add(jsonArray.getJSONObject(i));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        object = (JSONObject) jsonParser.nextValue();
+        JSONArray jsonArray = object.getJSONArray("watchlist");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            objectList.add(jsonArray.getJSONObject(i));
         }
+
 
         return objectList;
 
@@ -45,8 +42,6 @@ public class JsonUtil {
         object = (JSONObject) jsonParser.nextValue();
         return object;
     }
-
-
 
 
 }

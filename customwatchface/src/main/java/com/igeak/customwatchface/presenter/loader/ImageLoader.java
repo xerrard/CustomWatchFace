@@ -275,8 +275,13 @@ public class ImageLoader {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            MyUtils.close(out);
-            MyUtils.close(in);
+            try {
+                MyUtils.close(out);
+                MyUtils.close(in);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
         return false;
     }
@@ -298,7 +303,11 @@ public class ImageLoader {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            MyUtils.close(in);
+            try {
+                MyUtils.close(in);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return bitmap;
     }

@@ -61,7 +61,7 @@ public class FileOperation {
             @Override
             public boolean accept(File dir, String filename) {
                 return filename.contains(Const.ASSETS_WATCH_START_NAME)
-                        ||filename.contains(Const.WATCH_START_NAME);
+                        || filename.contains(Const.WATCH_START_NAME);
             }
         });
 
@@ -96,6 +96,7 @@ public class FileOperation {
 
     /**
      * 获取 javabean列表
+     *
      * @return
      * @throws Exception
      */
@@ -139,7 +140,7 @@ public class FileOperation {
     public static Bitmap getWatchfacesElementImg(final String faceItem, String
             faceElement) throws Exception {
 
-        return PicUtil.file2Bitmap(getWatchfacesElementFile(faceItem,faceElement));
+        return PicUtil.file2Bitmap(getWatchfacesElementFile(faceItem, faceElement));
     }
 
     /**
@@ -173,7 +174,6 @@ public class FileOperation {
     }
 
 
-
     /**
      * 将需要发送的表盘打包
      *
@@ -181,14 +181,10 @@ public class FileOperation {
      * @return
      * @throws Exception
      */
-    public static byte[] zipFolder(final String
-            watchfaceName) throws Exception {
+    public static byte[] zipFolder(final String watchfaceName) throws Exception {
         File watchFolder = getWatchFaceFile(watchfaceName);
-        try {
-            FileUtil.zipFolder(watchFolder, getZipfilePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        FileUtil.zipFolder(watchFolder, getZipfilePath());
+
 
         return FileUtil.file2Byte(getZipfilePath());
     }
@@ -208,7 +204,6 @@ public class FileOperation {
         File watchFolder = getWatchFaceFile(watchfaceName);
         FileUtil.deleteDir(watchFolder);
     }
-
 
 
 }

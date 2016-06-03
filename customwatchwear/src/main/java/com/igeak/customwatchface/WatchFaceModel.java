@@ -44,7 +44,7 @@ public class WatchFaceModel {
                         subscriber.onCompleted();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         });

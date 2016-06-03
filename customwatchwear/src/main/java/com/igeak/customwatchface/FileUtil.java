@@ -17,7 +17,7 @@ import java.util.zip.ZipInputStream;
  */
 public class FileUtil {
 
-    public static File getFileFromBytes(byte[] bytes) {
+    public static File getFileFromBytes(byte[] bytes) throws IOException {
         String filename = Const.ZIPFILE_NAME;
         String folderstring = new StringBuffer()
                 .append(getExternalStoragePath())
@@ -26,23 +26,18 @@ public class FileUtil {
                 .toString();
 
         File file = null;
-        try {
-            file = new File(folderstring);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            file = new File(folderstring, filename);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        file = new File(folderstring);
+        if (!file.exists()) {
+            file.mkdirs();
         }
+        file = new File(folderstring, filename);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(bytes);
+        fos.close();
+
         return file;
     }
 
