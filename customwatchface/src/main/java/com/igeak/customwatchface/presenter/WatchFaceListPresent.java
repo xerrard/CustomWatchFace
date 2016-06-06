@@ -6,7 +6,7 @@ import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.AssetsOperation;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
-import com.igeak.customwatchface.view.watchfaceview.WatchPreviewView;
+import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
 import java.util.List;
 
@@ -18,19 +18,21 @@ import rx.schedulers.Schedulers;
 /**
  * Created by xuqiang on 16-5-19.
  */
-public class WatchFacesPresent {
-    private IWatchFacesView mWatchFaceView;
+public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPresent{
+    private IWatchFacesContract.IWatchFacesView mWatchFaceView;
     private WatchFacesModel mWatchFacesModel;
     private Context context;
 
 
-    public WatchFacesPresent(IWatchFacesView watchFaceView, Context context) {
+    public WatchFaceListPresent(IWatchFacesContract.IWatchFacesView watchFaceView, Context context) {
         this.mWatchFaceView = watchFaceView;
         mWatchFacesModel = new WatchFacesModel(context);
         this.context = context;
 
     }
 
+
+    @Override
     public void getWatchfaceBeanList(WatchFacesModel.FacePath facePath) {
         mWatchFacesModel.getWatchfaceBeanList(facePath)
                 .subscribeOn(Schedulers.io())
@@ -53,7 +55,7 @@ public class WatchFacesPresent {
                 });
     }
 
-
+    @Override
     public void creatNewFace(final WatchFaceBean watchface) {
         Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {
             @Override
@@ -94,15 +96,8 @@ public class WatchFacesPresent {
     }
 
 
-    public interface IWatchFacesView {
-        void updateWatchFaceBeanList(List<WatchFaceBean> watchFaceBeanList);
 
-        void updateWatchFace(WatchPreviewView imageview, WatchFace watchFace);
-
-        void onWatchCreated(WatchFaceBean watchFaceBean);
-    }
-
-
+    @Override
     public void loadWatchimg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
                              final WatchFacesModel.FacePath facePath) {
         mWatchFacesModel.loadWatchimg(watchFaceBean, facePath)
@@ -125,6 +120,7 @@ public class WatchFacesPresent {
 
                 });
     }
+
 
 
 }

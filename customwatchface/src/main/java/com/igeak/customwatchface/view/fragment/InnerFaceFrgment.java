@@ -1,6 +1,5 @@
 package com.igeak.customwatchface.view.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,10 +19,12 @@ import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
-import com.igeak.customwatchface.presenter.WatchFacesPresent;
+import com.igeak.customwatchface.presenter.IPresenter;
+import com.igeak.customwatchface.presenter.IWatchFacesContract;
+import com.igeak.customwatchface.presenter.WatchFaceListPresent;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
-import com.igeak.customwatchface.view.watchfaceview.WatchPreviewView;
+import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 
 import java.util.List;
@@ -31,15 +32,16 @@ import java.util.List;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class InnerFaceFrgment extends Fragment implements WatchFacesPresent.IWatchFacesView {
+public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IWatchFacesView {
 
     private static final String TAG = "InnerFaceFrgment";
     private static final int SPAN_COUNT = 2;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter mRecycleViewAdapter = null;
 
-    WatchFacesPresent present = null;
+    WatchFaceListPresent present = null;
     WatchFacesModel.FacePath facePath = WatchFacesModel.FacePath.FACE_INNER;
+
 
     @Nullable
     @Override
@@ -55,11 +57,10 @@ public class InnerFaceFrgment extends Fragment implements WatchFacesPresent.IWat
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecycleViewAdapter = new RecycleViewAdapter();
 
-        present = new WatchFacesPresent(this, getActivity().getApplicationContext());
-        //present.getWatchfaceBeanList(facePath);
-
+        present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
         return rootView;
     }
+
 
     @Override
     public void onResume() {
@@ -93,6 +94,8 @@ public class InnerFaceFrgment extends Fragment implements WatchFacesPresent.IWat
                 (WatchFacesModel.FacePath.FACE_CUSTOM));
         startActivity(intent);
     }
+
+
 
 
     //继承自 RecyclerView.Adapter

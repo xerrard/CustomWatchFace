@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class ScaleEditFragment extends Fragment implements WatchFaceEditPresent.IScaleView{
+public class ScaleEditFragment extends Fragment implements WatchFaceEditPresent.IScaleView {
 
     private static final String TAG = "ScaleEditFragment";
     private static final int SPAN_COUNT = 2;
@@ -44,17 +44,36 @@ public class ScaleEditFragment extends Fragment implements WatchFaceEditPresent.
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         present = ((FaceEditActivity) getActivity()).present;
-        bitmaps = present.loadScaleImg();
         adapter = new RecycleViewAdapter(bitmaps);
         mRecyclerView.setAdapter(adapter);
         return rootView;
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        bitmaps = present.loadScaleImg();
+        if (!adapter.isSetAdapter()) {
+            adapter.setBitmaps(bitmaps);
+            mRecyclerView.setAdapter(adapter);
+        } else {
+            adapter.setBitmaps(bitmaps);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<Bitmap> bitmaps;
+        public boolean isSetAdapter() {
+            return bitmaps != null;
+        }
+
+        public void setBitmaps(List<Bitmap> bitmaps) {
+            this.bitmaps = bitmaps;
+        }
 
         public RecycleViewAdapter(List<Bitmap> bitmaps) {
             this.bitmaps = bitmaps;

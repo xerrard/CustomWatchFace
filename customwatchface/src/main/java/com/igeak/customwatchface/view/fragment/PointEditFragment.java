@@ -10,13 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
-import com.igeak.customwatchface.view.watchfaceview.PointView;
-import com.soundcloud.android.crop.Crop;
+import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 
 import java.util.List;
 import java.util.Map;
@@ -48,10 +46,24 @@ public class PointEditFragment extends Fragment implements WatchFaceEditPresent.
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         present = ((FaceEditActivity) getActivity()).present;
-        pointMaps = present.loadPointImg();
         adapter = new RecycleViewAdapter(pointMaps);
-        mRecyclerView.setAdapter(adapter);
+
         return rootView;
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        pointMaps = present.loadPointImg();
+        if (!adapter.isSetAdapter()) {
+            adapter.setBitmap(pointMaps);
+            mRecyclerView.setAdapter(adapter);
+        } else {
+            adapter.setBitmap(pointMaps);
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -59,6 +71,13 @@ public class PointEditFragment extends Fragment implements WatchFaceEditPresent.
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<Map<PointView.Type, Bitmap>> pointMaps;
+        public boolean isSetAdapter() {
+            return pointMaps != null;
+        }
+
+        public void setBitmap(List<Map<PointView.Type, Bitmap>> pointMaps) {
+            this.pointMaps = pointMaps;
+        }
 
         public RecycleViewAdapter(List<Map<PointView.Type, Bitmap>> pointMaps) {
             this.pointMaps = pointMaps;

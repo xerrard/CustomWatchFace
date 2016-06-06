@@ -6,11 +6,10 @@ import android.os.Bundle;
 import com.igeak.android.common.ConnectionResult;
 import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.android.wearable.Wearable;
-import com.orhanobut.logger.LogLevel;
-import com.orhanobut.logger.LogTool;
 import com.orhanobut.logger.Logger;
 
 import org.xerrard.util.CrashHandler;
+import org.xerrard.util.LogcatHelper;
 
 /**
  * Created by xuqiang on 16-5-19.
@@ -25,10 +24,8 @@ public class MyApplication extends Application implements GeakApiClient.Connecti
     public void onCreate() {
         super.onCreate();
         CrashHandler.getInstance().init(this);
+        LogcatHelper.getInstance(this).start();
         Logger.init(YOUR_TAG);
-
-
-
         mGoogleApiclent = new GeakApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.igeak.customwatchface.view;
+package com.igeak.customwatchface.view.view.slide;
 
 import android.R;
 import android.content.Context;

@@ -8,9 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
 import com.igeak.customwatchface.R;
+import com.igeak.customwatchface.presenter.IPresenter;
 import com.igeak.customwatchface.view.fragment.CustomFaceFragment;
 import com.igeak.customwatchface.view.fragment.InnerFaceFrgment;
-import com.igeak.customwatchface.view.SlidingTabLayout;
+import com.igeak.customwatchface.view.view.slide.SlidingTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MainActivity extends BaseActivity {
     SlidingTabLayout mSlidingTabLayout = null;
     List<Fragment> fragments = null;
     List<String> titlelist = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

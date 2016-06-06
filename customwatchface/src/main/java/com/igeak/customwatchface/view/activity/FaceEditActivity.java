@@ -18,13 +18,15 @@ import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.WatchFace;
+import com.igeak.customwatchface.presenter.IPresenter;
+import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
-import com.igeak.customwatchface.view.SlidingTabLayout;
+import com.igeak.customwatchface.view.view.slide.SlidingTabLayout;
 import com.igeak.customwatchface.view.fragment.BackgroudEditFragment;
 import com.igeak.customwatchface.view.fragment.PointEditFragment;
 import com.igeak.customwatchface.view.fragment.ScaleEditFragment;
-import com.igeak.customwatchface.view.watchfaceview.PointView;
-import com.igeak.customwatchface.view.watchfaceview.WatchPreviewView;
+import com.igeak.customwatchface.view.view.watchfaceview.PointView;
+import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -33,8 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FaceEditActivity extends BaseActivity implements WatchFaceEditPresent
-        .IWatchFaceEditView {
+public class FaceEditActivity extends BaseActivity implements IWatchFaceEditContract.IWatchFaceEditView {
 
     ViewPager viewPager = null;
     MainActivityPagerAdapter mMyPagerAdapter = null;
@@ -48,6 +49,9 @@ public class FaceEditActivity extends BaseActivity implements WatchFaceEditPrese
     ScaleEditFragment scaleEditFragment = new ScaleEditFragment();
     PointEditFragment pointEditFragment = new PointEditFragment();
     Button saveBtn;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +68,16 @@ public class FaceEditActivity extends BaseActivity implements WatchFaceEditPrese
                 , backgroudEditFragment
                 , scaleEditFragment
                 , pointEditFragment);
-        present.loadWatchimg(watchfacebean);
+
         saveBtn = (Button) findViewById(R.id.savewatch);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        present.loadWatchimg(watchfacebean);
     }
 
     private void initFragment() {

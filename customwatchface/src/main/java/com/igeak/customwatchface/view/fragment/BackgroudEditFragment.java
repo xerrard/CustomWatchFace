@@ -1,9 +1,7 @@
 package com.igeak.customwatchface.view.fragment;
 
 
-import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,12 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.igeak.customwatchface.R;
+import com.igeak.customwatchface.presenter.IPresenter;
+import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.soundcloud.android.crop.Crop;
@@ -28,7 +25,7 @@ import java.util.List;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class BackgroudEditFragment extends Fragment implements WatchFaceEditPresent
+public class BackgroudEditFragment extends Fragment implements IWatchFaceEditContract
         .IBackgroundView {
 
     private static final String TAG = "InnerFaceFrgment";
@@ -38,6 +35,8 @@ public class BackgroudEditFragment extends Fragment implements WatchFaceEditPres
 
     WatchFaceEditPresent present;
     List<Bitmap> bitmaps;
+
+
 
     @Nullable
     @Override
@@ -50,17 +49,35 @@ public class BackgroudEditFragment extends Fragment implements WatchFaceEditPres
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         present = ((FaceEditActivity) getActivity()).present;
-        bitmaps = present.loadbackImg();
         adapter = new RecycleViewAdapter(bitmaps);
         mRecyclerView.setAdapter(adapter);
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        bitmaps = present.loadbackImg();
+        if (!adapter.isSetAdapter()) {
+            adapter.setBitmaps(bitmaps);
+            mRecyclerView.setAdapter(adapter);
+        } else {
+            adapter.setBitmaps(bitmaps);
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<Bitmap> bitmaps;
+        public boolean isSetAdapter() {
+            return bitmaps != null;
+        }
+
+        public void setBitmaps(List<Bitmap> bitmaps) {
+            this.bitmaps = bitmaps;
+        }
 
         public RecycleViewAdapter(List<Bitmap> bitmaps) {
             this.bitmaps = bitmaps;
@@ -80,7 +97,7 @@ public class BackgroudEditFragment extends Fragment implements WatchFaceEditPres
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
             if (i > 0) {
-                viewHolder.imageView.setImageBitmap(bitmaps.get(i-1));
+                viewHolder.imageView.setImageBitmap(bitmaps.get(i - 1));
             } else {
                 viewHolder.imageView.setImageResource(R.drawable.card_background);
             }
@@ -115,7 +132,7 @@ public class BackgroudEditFragment extends Fragment implements WatchFaceEditPres
                 if (index > 0) {
                     Bitmap bitmap = bitmaps.get(index - 1);
                     present.changeBackImg(bitmap);
-                }else {
+                } else {
                     Crop.pickImage(getActivity());
                 }
             }

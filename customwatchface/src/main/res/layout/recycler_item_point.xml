@@ -5,7 +5,7 @@
               android:orientation="vertical">
 
 
-    <com.igeak.customwatchface.view.watchfaceview.PointView
+    <com.igeak.customwatchface.view.view.watchfaceview.PointView
         android:id="@+id/point"
         android:layout_width="match_parent"
         android:layout_height="150dp"

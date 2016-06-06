@@ -1,4 +1,4 @@
-package com.igeak.customwatchface.view.watchfaceview;
+package com.igeak.customwatchface.view.view.watchfaceview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,7 +11,6 @@ import android.view.animation.Transformation;
 
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.PicUtil;
-import com.orhanobut.logger.Logger;
 
 
 /**

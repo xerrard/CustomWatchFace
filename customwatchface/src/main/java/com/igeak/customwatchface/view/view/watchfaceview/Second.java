@@ -1,4 +1,4 @@
-package com.igeak.customwatchface.view.watchfaceview;
+package com.igeak.customwatchface.view.view.watchfaceview;
 
 import android.content.Context;
 import android.graphics.Bitmap;

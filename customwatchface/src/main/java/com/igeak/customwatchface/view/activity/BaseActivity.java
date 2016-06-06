@@ -14,13 +14,20 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.igeak.customwatchface.R;
+import com.igeak.customwatchface.presenter.IPresenter;
 
-public class BaseActivity extends AppCompatActivity {
+import java.util.HashSet;
+import java.util.Set;
+
+public abstract class BaseActivity extends AppCompatActivity {
 
     Toolbar toolbar = null;
     TextView toolbarTitle = null;
     LayoutInflater inflater;
     FrameLayout flContainer;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,7 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base);
         inflater = LayoutInflater.from(getApplicationContext());
         flContainer = (FrameLayout) findViewById(R.id.flContainer);
+
     }
 
     /**

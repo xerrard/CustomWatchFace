@@ -15,11 +15,12 @@ import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
+import com.igeak.customwatchface.presenter.IWatchFaceDetailContract;
 import com.igeak.customwatchface.presenter.WatchFaceDetailPresent;
 import com.igeak.customwatchface.R;
-import com.igeak.customwatchface.view.watchfaceview.WatchPreviewView;
+import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
-public class FaceDetailActivity extends BaseActivity implements WatchFaceDetailPresent
+public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetailContract
         .IWatchFaceDetailView {
 
     RecyclerView mRecyclerView = null;
@@ -30,6 +31,7 @@ public class FaceDetailActivity extends BaseActivity implements WatchFaceDetailP
     String[] data = {"12小时制", "显示天气", "显示日期", "显示星期"};
     WatchFacesModel.FacePath facePath;
     WatchPreviewView watchview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +49,18 @@ public class FaceDetailActivity extends BaseActivity implements WatchFaceDetailP
         watchview = (WatchPreviewView) findViewById(R.id.watch_view);
 
         present = new WatchFaceDetailPresent(this.getApplicationContext(), this);
-        present.loadWatchimg(watchfacebean,facePath);
+
         setTitle(watchfacebean.getName()); //更新title
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        present.loadWatchimg(watchfacebean, facePath);
+    }
+
     public void sendToWatch(View v) {
-        present.zipFileAndSentToWatch(this, watchfacebean,facePath);
+        present.zipFileAndSentToWatch(this, watchfacebean, facePath);
     }
 
     @Override

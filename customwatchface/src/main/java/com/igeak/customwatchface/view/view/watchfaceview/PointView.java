@@ -1,90 +1,70 @@
-package com.igeak.customwatchface.view.watchfaceview;
+package com.igeak.customwatchface.view.view.watchfaceview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-
-import com.igeak.customwatchface.model.WatchFace;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class WatchPreviewView extends View {
+public class PointView extends View {
 
 
     private Context context;
-    private static final String TAG = "WatchPreviewView";
-    private Map<Type, BaseElement> mElements = null;
+    private static final String TAG = "PointView";
+    public Map<Type, BaseElement> mElements = null;
     public float view_width = 0;
-
     public float view_height = 0;
 
     private PaintFlagsDrawFilter paintFlter = new PaintFlagsDrawFilter(0,
             Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG); //设置抗锯齿
 
 
-    public WatchPreviewView(Context context) {
+    public PointView(Context context) {
         this(context, null);
     }
 
-    public WatchPreviewView(Context context, AttributeSet attrs) {
+    public PointView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public WatchPreviewView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PointView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         this.context = context;
         mElements = new HashMap<Type, BaseElement>();
     }
 
-    public void setElements(WatchFace watchface) {
+    public void setPointElement(Map<Type,Bitmap> map) {
         mElements.clear();
-        mElements.put(Type.BACKGROUND, new BackGround(context, watchface
-                .getBackground()));
-        mElements.put(Type.DIALSCALE, new DialScale(context, watchface
-                .getDialScale()));
-        mElements.put(Type.HOUR, new Hour(context, watchface.getHour()));
-        mElements.put(Type.MINUTE, new Minute(context, watchface.getMinute()));
-        mElements.put(Type.SECOND, new Second(context, watchface.getSecond()));
+        mElements.put(Type.HOUR, new Hour(context, map.get(Type.HOUR)));
+        mElements.put(Type.MINUTE, new Minute(context, map.get(Type.MINUTE)));
+        mElements.put(Type.SECOND, new Second(context, map.get(Type.SECOND)));
         //requestLayout();
         invalidate();
     }
 
-
-    public Map<Type,BaseElement> getElements(){
-        return mElements;
-    }
-
-    public void setBackground(Bitmap bitmap) {
-        mElements.put(Type.BACKGROUND, new BackGround(context, bitmap));
-        //requestLayout();
+    public void setHour(Bitmap bitmap){
+        mElements.put(Type.HOUR,new DialScale(context,bitmap));
         invalidate();
     }
 
-    public void setBackground(Drawable drawable) {
-        mElements.put(Type.BACKGROUND, new BackGround(context, drawable));
-        //requestLayout();
+    public void setMinute(Bitmap bitmap){
+        mElements.put(Type.MINUTE,new DialScale(context,bitmap));
         invalidate();
     }
 
-    public void setScale(Bitmap bitmap) {
-        mElements.put(Type.DIALSCALE, new DialScale(context, bitmap));
+    public void setSecond(Bitmap bitmap){
+        mElements.put(Type.SECOND,new DialScale(context,bitmap));
         invalidate();
     }
 
-    public void setPoint(Map<PointView.Type, Bitmap> map) {
-        mElements.put(Type.HOUR, new Hour(context, map.get(PointView.Type.HOUR)));
-        mElements.put(Type.MINUTE, new Hour(context, map.get(PointView.Type.MINUTE)));
-        mElements.put(Type.SECOND, new Hour(context, map.get(PointView.Type.SECOND)));
-        invalidate();
-    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -105,11 +85,10 @@ public class WatchPreviewView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.i(TAG,"onDraw");
         super.onDraw(canvas);
         view_width = this.getWidth();
         view_height = this.getHeight();
-        drawElement(canvas, mElements.get(Type.BACKGROUND));
-        drawElement(canvas, mElements.get(Type.DIALSCALE));
         drawElement(canvas, mElements.get(Type.HOUR));
         drawElement(canvas, mElements.get(Type.MINUTE));
         drawElement(canvas, mElements.get(Type.SECOND));
@@ -126,6 +105,6 @@ public class WatchPreviewView extends View {
     }
 
     public enum Type {
-        HOUR, MINUTE, SECOND, BACKGROUND, DIALSCALE, DATE, WEEK, NULL
+        HOUR, MINUTE, SECOND
     }
 }

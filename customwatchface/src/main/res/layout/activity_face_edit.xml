@@ -18,7 +18,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical">
 
-        <com.igeak.customwatchface.view.watchfaceview.WatchPreviewView
+        <com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView
             android:id="@+id/watch_view"
             android:layout_width="match_parent"
             android:layout_height="150dp"/>
@@ -36,7 +36,7 @@
             android:onClick="savewatch"/>
 
 
-        <com.igeak.customwatchface.view.SlidingTabLayout
+        <com.igeak.customwatchface.view.view.slide.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

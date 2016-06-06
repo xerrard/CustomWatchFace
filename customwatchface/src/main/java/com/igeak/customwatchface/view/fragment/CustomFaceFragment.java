@@ -1,6 +1,5 @@
 package com.igeak.customwatchface.view.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,8 +20,10 @@ import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
-import com.igeak.customwatchface.presenter.WatchFacesPresent;
-import com.igeak.customwatchface.view.watchfaceview.WatchPreviewView;
+import com.igeak.customwatchface.presenter.IPresenter;
+import com.igeak.customwatchface.presenter.IWatchFacesContract;
+import com.igeak.customwatchface.presenter.WatchFaceListPresent;
+import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 
@@ -31,14 +32,16 @@ import java.util.List;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class CustomFaceFragment extends Fragment implements WatchFacesPresent.IWatchFacesView {
+public class CustomFaceFragment extends Fragment implements IWatchFacesContract.IWatchFacesView {
 
     private static final String TAG = "CustomFaceFragment";
     private static final int SPAN_COUNT = 2;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter mRecycleViewAdapter = null;
-    WatchFacesPresent present = null;
+    WatchFaceListPresent present = null;
     private WatchFacesModel.FacePath facePath = WatchFacesModel.FacePath.FACE_CUSTOM;
+
+
 
 
     @Nullable
@@ -53,10 +56,7 @@ public class CustomFaceFragment extends Fragment implements WatchFacesPresent.IW
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecycleViewAdapter = new RecycleViewAdapter();
-
-        present = new WatchFacesPresent(this, getActivity().getApplicationContext());
-
-
+        present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
         return rootView;
     }
 
