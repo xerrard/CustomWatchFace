@@ -23,13 +23,6 @@ public interface IWatchFaceEditContract {
 
         void updatebackground(Bitmap bitmap);
 
-        /**
-         * Crop需要使用drawable
-         *
-         * @param drawable
-         */
-        void updatebackground(Drawable drawable);
-
         void updateScale(Bitmap bitmap);
 
         void updatePoint(Map<PointView.Type, Bitmap> map);

@@ -78,6 +78,13 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
     @Override
     public void updateWatchSent(WatchFaceBean watchFace) {
         Toast.makeText(this, watchFace.getName() + "has sent", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    @Override
+    public void showThrowable(Throwable e) {
+        Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
+        finish();
     }
 
 

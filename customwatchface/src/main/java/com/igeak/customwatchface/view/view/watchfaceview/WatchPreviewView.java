@@ -68,11 +68,6 @@ public class WatchPreviewView extends View {
         invalidate();
     }
 
-    public void setBackground(Drawable drawable) {
-        mElements.put(Type.BACKGROUND, new BackGround(context, drawable));
-        //requestLayout();
-        invalidate();
-    }
 
     public void setScale(Bitmap bitmap) {
         mElements.put(Type.DIALSCALE, new DialScale(context, bitmap));
@@ -81,8 +76,8 @@ public class WatchPreviewView extends View {
 
     public void setPoint(Map<PointView.Type, Bitmap> map) {
         mElements.put(Type.HOUR, new Hour(context, map.get(PointView.Type.HOUR)));
-        mElements.put(Type.MINUTE, new Hour(context, map.get(PointView.Type.MINUTE)));
-        mElements.put(Type.SECOND, new Hour(context, map.get(PointView.Type.SECOND)));
+        mElements.put(Type.MINUTE, new Minute(context, map.get(PointView.Type.MINUTE)));
+        mElements.put(Type.SECOND, new Second(context, map.get(PointView.Type.SECOND)));
         invalidate();
     }
 

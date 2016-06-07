@@ -15,6 +15,8 @@ public interface IWatchFaceDetailContract {
         void updateWatchFaceDetailView(WatchFace watchFace);
 
         void updateWatchSent(WatchFaceBean watchFace);
+
+        void showThrowable(Throwable e);
     }
 
     interface IWatchFaceDetailPresent extends IPresenter<IWatchFaceDetailView> {

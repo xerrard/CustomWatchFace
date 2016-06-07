@@ -67,7 +67,7 @@ public class WatchFaceDetailPresent implements IWatchFaceDetailContract.IWatchFa
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mWatchFaceView.showThrowable(e);
                     }
 
                     @Override

@@ -11,6 +11,7 @@ import android.view.animation.Transformation;
 
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.PicUtil;
+import com.orhanobut.logger.Logger;
 
 
 /**
@@ -61,9 +62,6 @@ public abstract class BaseElement {
         mDrawable = PicUtil.bitmap2Drawable(bitmap);
     }
 
-    //public abstract BitmapDrawable loadDefaultDrawable(Context context);
-
-
     public static class DisPlayLevel {
 
         public static int LEVEL_BACKGROUND = 10;
@@ -106,7 +104,8 @@ public abstract class BaseElement {
     }
 
     public void onDraw(Canvas canvas) {
-        Log.d(Const.TAG, "onDraw Type = " + mType);
+        //Log.d(Const.TAG, "onDraw Type = " + mType + "mRotate = " + mRotate);
+
         canvas.save();
 
         float x = start_x;
@@ -127,13 +126,8 @@ public abstract class BaseElement {
             mDrawable.getBitmap().getDensity();
             int w = drawable.getIntrinsicWidth();
             int h = drawable.getIntrinsicHeight();
-            Log.d(Const.TAG, " w = " + w + " h = " + h);
-            Log.d(Const.TAG, " mDrawable.getBitmap().getDensity(); = " + mDrawable.getBitmap()
-                    .getDensity());
-            Log.d(Const.TAG, " w = " + mDrawable.getBitmap().getWidth() + " h = " + mDrawable
-                    .getBitmap().getHeight());
-            Log.d(Const.TAG, " mDrawable.getBitmap().getScaledWidth() = " + mDrawable.getBitmap()
-                    .getScaledWidth(canvas));
+            Logger.d(Const.TAG + "onDraw Type = " + mType + "   mRotate = " + mRotate + "   " +
+                    "   width=" + w + "   height =" + h);
             drawable.setBounds((int) (x - (w / 2)), (int) (y - (h / 2)), (int) (x + (w / 2)),
                     (int) (y + (h / 2)));
             drawable.draw(canvas);

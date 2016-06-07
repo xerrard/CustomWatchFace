@@ -58,6 +58,7 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
         mRecycleViewAdapter = new RecycleViewAdapter();
 
         present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
+        present.getWatchfaceBeanList(facePath);
         return rootView;
     }
 
@@ -65,7 +66,7 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
     @Override
     public void onResume() {
         super.onResume();
-        present.getWatchfaceBeanList(facePath);
+
     }
 
 

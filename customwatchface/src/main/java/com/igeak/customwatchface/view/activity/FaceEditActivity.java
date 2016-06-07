@@ -70,15 +70,10 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
                 , pointEditFragment);
 
         saveBtn = (Button) findViewById(R.id.savewatch);
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         present.loadWatchimg(watchfacebean);
+
     }
+
 
     private void initFragment() {
         fragments = new ArrayList<Fragment>();
@@ -109,11 +104,6 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     @Override
     public void updatebackground(Bitmap bitmap) {
         watchPreviewView.setBackground(bitmap);
-    }
-
-    @Override
-    public void updatebackground(Drawable drawable) {
-        watchPreviewView.setBackground(drawable);
     }
 
     @Override

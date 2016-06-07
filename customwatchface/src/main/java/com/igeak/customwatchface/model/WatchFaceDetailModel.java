@@ -120,10 +120,16 @@ public class WatchFaceDetailModel {
                     MyApplication app = (MyApplication) activity.getApplication();
                     GeakApiClient mGoogleApiClient = app.mGoogleApiclent;
 
+
                     if (mGoogleApiClient.isConnected()) {
                         NodeApi.GetConnectedNodesResult result = Wearable.NodeApi.getConnectedNodes
                                 (mGoogleApiClient).await();
                         List<Node> nodes = result.getNodes();
+
+                        if(nodes.isEmpty()){
+                            subscriber.onError(new Exception("please connect the watch"));
+                            return;
+                        }
                         Iterator it = nodes.iterator();
                         while (it.hasNext()) {
                             Node node = (Node) it.next();
@@ -131,12 +137,13 @@ public class WatchFaceDetailModel {
                                     Const.MESSAGE_DATA_PATH,
                                     bytes);
                         }
-                    }
-                    if (watchbeanface == null) {
-                        subscriber.onError(new Exception("User = null"));
-                    } else {
+                        if (watchbeanface == null) {
+                            subscriber.onError(new Exception("User = null"));
+                        }
                         subscriber.onNext(watchbeanface);
                         subscriber.onCompleted();
+                    }else {
+                        subscriber.onError(new Exception("please open the phone sync"));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);

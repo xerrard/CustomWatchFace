@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class PointEditFragment extends Fragment implements WatchFaceEditPresent.IPointView{
+public class PointEditFragment extends Fragment implements WatchFaceEditPresent.IPointView {
 
     private static final String TAG = "PointEditFragment";
     private static final int SPAN_COUNT = 2;
@@ -31,8 +31,7 @@ public class PointEditFragment extends Fragment implements WatchFaceEditPresent.
     RecycleViewAdapter adapter;
 
     WatchFaceEditPresent present;
-    List<Map<PointView.Type,Bitmap>> pointMaps;
-
+    List<Map<PointView.Type, Bitmap>> pointMaps = null;
 
 
     @Nullable
@@ -47,23 +46,10 @@ public class PointEditFragment extends Fragment implements WatchFaceEditPresent.
         mRecyclerView.setLayoutManager(gridLayoutManager);
         present = ((FaceEditActivity) getActivity()).present;
         adapter = new RecycleViewAdapter(pointMaps);
-
-        return rootView;
-    }
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
         pointMaps = present.loadPointImg();
-        if (!adapter.isSetAdapter()) {
-            adapter.setBitmap(pointMaps);
-            mRecyclerView.setAdapter(adapter);
-        } else {
-            adapter.setBitmap(pointMaps);
-            adapter.notifyDataSetChanged();
-        }
+        adapter.setBitmap(pointMaps);
+        mRecyclerView.setAdapter(adapter);
+        return rootView;
     }
 
 
@@ -71,6 +57,7 @@ public class PointEditFragment extends Fragment implements WatchFaceEditPresent.
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<Map<PointView.Type, Bitmap>> pointMaps;
+
         public boolean isSetAdapter() {
             return pointMaps != null;
         }
@@ -125,7 +112,7 @@ public class PointEditFragment extends Fragment implements WatchFaceEditPresent.
             @Override
             public void onClick(View v) {
                 int index = (int) getItemId();
-                Map<PointView.Type,Bitmap> pointmap = pointMaps.get(index);
+                Map<PointView.Type, Bitmap> pointmap = pointMaps.get(index);
                 present.changePointImg(pointmap);
             }
         }

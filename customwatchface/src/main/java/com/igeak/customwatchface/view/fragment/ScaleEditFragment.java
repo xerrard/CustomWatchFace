@@ -31,7 +31,7 @@ public class ScaleEditFragment extends Fragment implements WatchFaceEditPresent.
     RecycleViewAdapter adapter;
 
     WatchFaceEditPresent present;
-    List<Bitmap> bitmaps;
+    List<Bitmap> bitmaps = null;
 
     @Nullable
     @Override

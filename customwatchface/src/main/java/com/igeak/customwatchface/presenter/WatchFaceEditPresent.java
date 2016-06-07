@@ -120,18 +120,12 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract {
     public void handleCrop(int resultCode, Intent result) {
         try {
             if (resultCode == Activity.RESULT_OK) {
-                //resultView.setImageURI(Crop.getOutput(result));
-
                 Uri uri = Crop.getOutput(result);
                 InputStream stream;
                 stream = context.getContentResolver().openInputStream(uri);
                 Drawable drawable = Drawable.createFromStream(stream, null);
-                //Bitmap bitmap = PicUtil.InputStream2Bitmap(stream); Crop获得的是drawable，获得不到Bitmap
                 Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
-                //watchfaceview.updatebackground(drawable);
                 changeBackImg(bitmap);
-
-
             } else if (resultCode == Crop.RESULT_ERROR) {
                 Toast.makeText(context, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT)
                         .show();

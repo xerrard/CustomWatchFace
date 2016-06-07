@@ -57,6 +57,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecycleViewAdapter = new RecycleViewAdapter();
         present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
+        //present.getWatchfaceBeanList(facePath);
         return rootView;
     }
 

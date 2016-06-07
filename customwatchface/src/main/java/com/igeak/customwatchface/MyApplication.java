@@ -7,6 +7,7 @@ import com.igeak.android.common.ConnectionResult;
 import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.android.wearable.Wearable;
 import com.orhanobut.logger.Logger;
+import com.squareup.leakcanary.LeakCanary;
 
 import org.xerrard.util.CrashHandler;
 import org.xerrard.util.LogcatHelper;
@@ -23,9 +24,12 @@ public class MyApplication extends Application implements GeakApiClient.Connecti
     @Override
     public void onCreate() {
         super.onCreate();
+        LeakCanary.install(this);
+
         CrashHandler.getInstance().init(this);
-        LogcatHelper.getInstance(this).start();
+        //LogcatHelper.getInstance(this).start();
         Logger.init(YOUR_TAG);
+
         mGoogleApiclent = new GeakApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

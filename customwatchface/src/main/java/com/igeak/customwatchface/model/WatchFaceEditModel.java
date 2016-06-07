@@ -86,7 +86,7 @@ public class WatchFaceEditModel {
         return backImgs;
     }
 
-    public List<Bitmap> loadScaleImg() throws IOException{
+    public List<Bitmap> loadScaleImg() throws IOException {
         List<Bitmap> backImgs = new ArrayList<Bitmap>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.SCALE_FOLDER_NAME);
@@ -99,7 +99,7 @@ public class WatchFaceEditModel {
         return backImgs;
     }
 
-    public List<Map<PointView.Type, Bitmap>> loadPointImg() throws IOException{
+    public List<Map<PointView.Type, Bitmap>> loadPointImg() throws IOException {
         List<Map<PointView.Type, Bitmap>> pointImgs = new ArrayList<>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.POINT_FOLDER_NAME);
@@ -138,11 +138,32 @@ public class WatchFaceEditModel {
 
     public void savewatch() throws Exception {
         for (WatchPreviewView.Type type : modifyMaps.keySet()) {
+            String faceElement;
+            switch (type) {
+                case BACKGROUND:
+                    faceElement = watchfacebean.getBackground();
+                    break;
+                case DIALSCALE:
+                    faceElement = watchfacebean.getDialScale();
+                    break;
+                case HOUR:
+                    faceElement = watchfacebean.getHour();
+                    break;
+                case MINUTE:
+                    faceElement = watchfacebean.getMinute();
+                    break;
+                case SECOND:
+                    faceElement = watchfacebean.getSecond();
+                    break;
+                default:
+                    faceElement = watchfacebean.getBackground();
+            }
+
             PicUtil.saveBitmapToFile(
                     modifyMaps.get(type),
                     FileOperation.getWatchfacesElementFile(
                             watchfacebean.getName()
-                            , watchfacebean.getBackground()
+                            , faceElement
                     )
             );
         }
