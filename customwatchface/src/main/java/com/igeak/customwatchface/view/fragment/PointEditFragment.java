@@ -38,7 +38,7 @@ public class PointEditFragment extends Fragment implements WatchFaceEditPresent.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_backgroud, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
         rootView.setTag(TAG);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);

@@ -1,10 +1,14 @@
 package com.igeak.customwatchface.presenter.loader;
 
 import java.io.FileDescriptor;
+import java.io.InputStream;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.igeak.customwatchface.util.PicUtil;
 
 public class ImageResizer {
     private static final String TAG = "ImageResizer";
@@ -28,6 +32,21 @@ public class ImageResizer {
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
+    public static Bitmap decodeSampledBitmapFromStream(InputStream inputStream, int reqWidth, int reqHeight) {
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeStream(inputStream,null,options);
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth,
+                reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeStream(inputStream, null, options);
+    }
+
     public Bitmap decodeSampledBitmapFromFileDescriptor(FileDescriptor fd, int reqWidth, int reqHeight) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -43,7 +62,7 @@ public class ImageResizer {
         return BitmapFactory.decodeFileDescriptor(fd, null, options);
     }
 
-    public int calculateInSampleSize(BitmapFactory.Options options,
+    public static int calculateInSampleSize(BitmapFactory.Options options,
             int reqWidth, int reqHeight) {
         if (reqWidth == 0 || reqHeight == 0) {
             return 1;

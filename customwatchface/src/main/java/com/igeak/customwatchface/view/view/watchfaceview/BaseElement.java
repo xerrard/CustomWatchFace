@@ -13,6 +13,8 @@ import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.PicUtil;
 import com.orhanobut.logger.Logger;
 
+import java.io.InputStream;
+
 
 /**
  * Created by tangyi on 15-8-17.
@@ -24,6 +26,8 @@ public abstract class BaseElement {
     public String ResourcePath = "";
 
     public BitmapDrawable mDrawable;
+
+    public InputStream inputStream;
 
     public float width = 0;
     public float height = 0;
@@ -43,11 +47,12 @@ public abstract class BaseElement {
 
     public Context mContext;
 
-    private Matrix matrix = new Matrix();
+    protected Matrix matrix = new Matrix();
 
     private Transformation mTransformation = new Transformation();
 
     private String pngName = "";
+    private float length;
 
 
     public BaseElement(Context context, Drawable drawable) {
@@ -61,6 +66,7 @@ public abstract class BaseElement {
         isEnable = true;
         mDrawable = PicUtil.bitmap2Drawable(bitmap);
     }
+
 
     public static class DisPlayLevel {
 
@@ -78,7 +84,7 @@ public abstract class BaseElement {
 //起始坐标为中心点
         start_x = view_width / 2;
         start_y = view_height / 2;
-
+        length = Math.min(view_width,view_height);
         if (mType == WatchPreviewView.Type.HOUR) {
             mRotate = 320.0f;
         } else if (mType == WatchPreviewView.Type.MINUTE) {
@@ -120,6 +126,8 @@ public abstract class BaseElement {
 
         final Drawable drawable = mDrawable;
 
+
+
         if (drawable != null) {
 
             //BitmapDrawable
@@ -128,8 +136,8 @@ public abstract class BaseElement {
             int h = drawable.getIntrinsicHeight();
             Logger.d(Const.TAG + "onDraw Type = " + mType + "   mRotate = " + mRotate + "   " +
                     "   width=" + w + "   height =" + h);
-            drawable.setBounds((int) (x - (w / 2)), (int) (y - (h / 2)), (int) (x + (w / 2)),
-                    (int) (y + (h / 2)));
+            drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x + (length / 2)),
+                    (int) (y + (length / 2)));
             drawable.draw(canvas);
         }
 
