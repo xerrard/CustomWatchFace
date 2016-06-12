@@ -33,6 +33,6 @@ public interface IWatchFacesContract {
         void creatNewFace(final WatchFaceBean watchface);
         void loadWatchimg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
                           final WatchFacesModel.FacePath facePath);
-
+        void changeName(String name,List<WatchFaceBean> watchbeanlist,int position);
     }
 }

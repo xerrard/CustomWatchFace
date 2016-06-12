@@ -1,9 +1,11 @@
 package com.igeak.customwatchface.view.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -40,8 +43,6 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
     RecycleViewAdapter mRecycleViewAdapter = null;
     WatchFaceListPresent present = null;
     private WatchFacesModel.FacePath facePath = WatchFacesModel.FacePath.FACE_CUSTOM;
-
-
 
 
     @Nullable
@@ -182,6 +183,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                 if (item.getItemId() == R.id.option_delete) {
                     return true;
                 } else if (item.getItemId() == R.id.option_rename) {
+                    renameOperation();
                     return true;
                 } else if (item.getItemId() == R.id.option_edit) {
                     Intent intent = new Intent(getContext(), FaceEditActivity.class);
@@ -192,6 +194,25 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                 }
 
                 return false;
+            }
+
+            private void renameOperation() {
+                final EditText et = new EditText(getContext());
+
+                new AlertDialog.Builder(getContext())
+                        .setTitle("请输入")
+                        .setIcon(
+                        android.R.drawable.ic_dialog_info)
+                        .setView(et)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String name = et.getText().toString();
+                                present.changeName(name,watchfaceList,(int)getItemId());
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
             }
         }
     }

@@ -11,11 +11,15 @@ import com.igeak.customwatchface.util.FileUtil;
 import com.igeak.customwatchface.util.PicUtil;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,6 +133,15 @@ public class FileOperation {
     }
 
 
+    public static void javaBean2Json(WatchFaceBean bean, File jsonfile) throws
+            IOException {
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream
+                (jsonfile)));
+        Gson gson = new Gson();
+        gson.toJson(bean,bw);
+
+    }
+
     /**
      * 获取表盘元素的drawable
      *
@@ -206,4 +219,26 @@ public class FileOperation {
     }
 
 
+    public static void changeWatchName(WatchFaceBean watchFaceBean, String tarName) throws Exception {
+
+
+
+        String oriName = watchFaceBean.getName();
+        File watchFolder = getWatchFaceFile(oriName);
+        File[] files = watchFolder.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return filename.endsWith(Const.JSON_EXNAME);
+            }
+        });
+
+        FileUtil.changeDirName(watchFolder, tarName);
+
+
+        File jsonfile = files[0];
+
+        watchFaceBean.setName(tarName);
+        javaBean2Json(watchFaceBean,jsonfile);
+
+    }
 }

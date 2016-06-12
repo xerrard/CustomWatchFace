@@ -3,7 +3,9 @@ package com.igeak.customwatchface.model;
 import android.content.Context;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
+import com.igeak.customwatchface.util.FileUtil;
 
+import java.io.File;
 import java.util.List;
 
 import rx.Observable;
@@ -13,6 +15,7 @@ import rx.Subscriber;
  * Created by xuqiang on 16-5-19.
  */
 public class WatchFacesModel {
+
 
     public enum FacePath {
         FACE_INNER,
@@ -76,7 +79,7 @@ public class WatchFacesModel {
                 watchFace.setShowDate(watchFaceBean.isShowDate());
                 watchFace.setShowWeek(watchFaceBean.isShowWeek());
                 try {
-                    if(facePath.equals(FacePath.FACE_CUSTOM)) {
+                    if (facePath.equals(FacePath.FACE_CUSTOM)) {
                         watchFace.setBackground(FileOperation.getWatchfacesElementImg(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getBackground()));
@@ -92,7 +95,7 @@ public class WatchFacesModel {
                         watchFace.setSecond(FileOperation.getWatchfacesElementImg(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getSecond()));
-                    }else {
+                    } else {
                         watchFace.setBackground(AssetsOperation.getWatchfacesElementImg(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getBackground()));
@@ -120,6 +123,23 @@ public class WatchFacesModel {
                 }
             }
         });
+    }
+
+    public Observable changeName(final String name, final List<WatchFaceBean> watchbeanlist,
+                                 final int position) {
+        return Observable.create(new Observable.OnSubscribe<List<WatchFaceBean>>() {
+            @Override
+            public void call(Subscriber<? super List<WatchFaceBean>> subscriber) {
+                try {
+                    WatchFaceBean currentbean = watchbeanlist.get(position);
+                    FileOperation.changeWatchName(currentbean, name);
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
     }
 
 

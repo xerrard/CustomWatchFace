@@ -286,4 +286,8 @@ public class FileUtil {
         // 目录此时为空，可以删除
         return dir.delete();
     }
+
+    public static void changeDirName(File watchFolder,String tarName) {
+        watchFolder.renameTo(new File(watchFolder.getParent(),tarName));
+    }
 }
