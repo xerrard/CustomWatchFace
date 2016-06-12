@@ -1,7 +1,10 @@
 package com.igeak.customwatchface.view.fragment;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +21,7 @@ import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.soundcloud.android.crop.Crop;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -34,7 +38,6 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
 
     WatchFaceEditPresent present;
     List<Bitmap> bitmaps;
-
 
 
     @Nullable
@@ -70,6 +73,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<Bitmap> bitmaps;
+
         public boolean isSetAdapter() {
             return bitmaps != null;
         }
@@ -133,10 +137,26 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
                     present.changeBackImg(bitmap);
                 } else {
                     Crop.pickImage(getActivity());
+                   // Crop.pickImage(BackgroudEditFragment.this);
+
                 }
             }
         }
     }
 
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent result) {
+//        if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
+//            Uri destination = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
+//            //Crop.of(result.getData(), destination).asSquare().start(this);
+//            boolean isCircleCrop = true;
+//            new Crop(result.getData()).output(destination).setCropType(isCircleCrop).start
+//                    (getActivity());
+//
+//
+//        } else if (requestCode == Crop.REQUEST_CROP) {
+//            present.handleCrop(resultCode, result);
+//        }
+//    }
 
 }

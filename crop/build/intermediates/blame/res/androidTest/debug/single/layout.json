@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/xuqiang/Project/CustomWatchFace/crop/build/intermediates/res/merged/androidTest/debug/layout/crop__activity_crop.xml",
+        "source": "/home/xuqiang/Project/CustomWatchFace/crop/build/intermediates/bundles/debug/res/layout/crop__activity_crop.xml"
+    },
+    {
+        "merged": "/home/xuqiang/Project/CustomWatchFace/crop/build/intermediates/res/merged/androidTest/debug/layout/activity_main.xml",
+        "source": "/home/xuqiang/Project/CustomWatchFace/crop/build/intermediates/bundles/debug/res/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/xuqiang/Project/CustomWatchFace/crop/build/intermediates/res/merged/androidTest/debug/layout/crop__layout_done_cancel.xml",
+        "source": "/home/xuqiang/Project/CustomWatchFace/crop/build/intermediates/bundles/debug/res/layout/crop__layout_done_cancel.xml"
+    }
+]

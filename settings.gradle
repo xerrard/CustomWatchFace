@@ -1,1 +1,1 @@
-include ':customwatchface', ':customwatchwear'
+include ':customwatchface', ':customwatchwear',':crop'

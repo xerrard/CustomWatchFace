@@ -35,7 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FaceEditActivity extends BaseActivity implements IWatchFaceEditContract.IWatchFaceEditView {
+public class FaceEditActivity extends BaseActivity implements IWatchFaceEditContract
+        .IWatchFaceEditView {
 
     ViewPager viewPager = null;
     MainActivityPagerAdapter mMyPagerAdapter = null;
@@ -49,8 +50,6 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     ScaleEditFragment scaleEditFragment = new ScaleEditFragment();
     PointEditFragment pointEditFragment = new PointEditFragment();
     Button saveBtn;
-
-
 
 
     @Override
@@ -119,17 +118,21 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-            if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
-                Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
-                Crop.of(result.getData(), destination).asSquare().start(this);
-            } else if (requestCode == Crop.REQUEST_CROP) {
-                present.handleCrop(resultCode, result);
-            }
+        if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
+            Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
+            //Crop.of(result.getData(), destination).asSquare().start(this);
+            boolean isCircleCrop = true;
+            new Crop(result.getData()).output(destination).setCropType(isCircleCrop).start(this);
+
+
+        } else if (requestCode == Crop.REQUEST_CROP) {
+            present.handleCrop(resultCode, result);
+        }
     }
 
     public void savewatch(View view) throws Exception {
         present.savewatch();
-        Toast.makeText(this,"watchface saved",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "watchface saved", Toast.LENGTH_LONG).show();
         finish();
     }
 

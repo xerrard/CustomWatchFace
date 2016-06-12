@@ -9,20 +9,13 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
-import com.igeak.customwatchface.Const;
-import com.igeak.customwatchface.model.FileOperation;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFaceEditModel;
 import com.igeak.customwatchface.util.PicUtil;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
-import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.soundcloud.android.crop.Crop;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

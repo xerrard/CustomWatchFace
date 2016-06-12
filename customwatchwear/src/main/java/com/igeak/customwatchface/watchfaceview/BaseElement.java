@@ -12,6 +12,7 @@ import android.view.animation.Transformation;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.MyWatchFace;
 import com.igeak.customwatchface.PicUtil;
+import com.orhanobut.logger.Logger;
 
 
 /**
@@ -47,6 +48,7 @@ public abstract class BaseElement {
 
     private String pngName = "";
 
+    private float length;
     float view_width;
     float view_height;
 
@@ -75,13 +77,12 @@ public abstract class BaseElement {
 
 
     public void layout(float view_width, float view_height, Time mTime) {
-        Log.d(Const.TAG, " view_width = " + view_width + " view_height = " + view_height);
 //起始坐标为中心点
         this.view_height = view_height;
         this.view_width = view_width;
         start_x = view_width / 2;
         start_y = view_height / 2;
-
+        length = Math.min(view_width,view_height);
         if (mType == MyWatchFace.Type.HOUR) {
             mRotate = 360.0f * mTime.hour / 24.0f;
         } else if (mType == MyWatchFace.Type.MINUTE) {
@@ -117,32 +118,13 @@ public abstract class BaseElement {
         if (drawable != null) {
 
             //BitmapDrawable
-            int density = mDrawable.getBitmap().getDensity();
-
-            int w = drawable.getIntrinsicWidth();
-            int h = drawable.getIntrinsicHeight();
-
-            int width = (int) (density / 160.0f * w);
-            int height = (int) (density / 160.0f * h);
-            Log.d(Const.TAG, " w = " + w + " h = " + h);
-            Log.d(Const.TAG, " mDrawable.getBitmap().getDensity(); = " + mDrawable.getBitmap()
-                    .getDensity());
-            Log.d(Const.TAG, " w = " + mDrawable.getBitmap().getWidth() + " h = " + mDrawable
-                    .getBitmap().getHeight());
-            Log.d(Const.TAG, " mDrawable.getBitmap().getScaledWidth() = " + mDrawable.getBitmap()
-                    .getScaledWidth(canvas));
-
-
-            if (mType.equals(MyWatchFace.Type.BACKGROUND)||mType.equals(MyWatchFace.Type.DIALSCALE)) {
-                drawable.setBounds((int) (x - (view_width / 2)), (int) (y - (view_height / 2)),
-                        (int) (x +
-                                (view_width / 2)),
-                        (int) (y + (view_height / 2)));
-            } else {
-                drawable.setBounds((int) (x - (width / 2)), (int) (y - (height / 2)), (int) (x +
-                                (width / 2)),
-                        (int) (y + (height / 2)));
-            }
+//            mDrawable.getBitmap().getDensity();
+//            int w = drawable.getIntrinsicWidth();
+//            int h = drawable.getIntrinsicHeight();
+//            Logger.d(Const.TAG + "onDraw Type = " + mType + "   mRotate = " + mRotate + "   " +
+//                    "   width=" + w + "   height =" + h);
+            drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x + (length / 2)),
+                    (int) (y + (length / 2)));
             drawable.draw(canvas);
         }
 

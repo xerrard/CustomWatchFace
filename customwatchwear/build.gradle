@@ -18,6 +18,10 @@ repositories {
     maven {
         url "${rootProject.projectDir}/google-play-services-7-8-87"
     }
+
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 
@@ -49,4 +53,5 @@ dependencies {
 // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.1.5'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.github.orhanobut:logger:1.12'
 }
