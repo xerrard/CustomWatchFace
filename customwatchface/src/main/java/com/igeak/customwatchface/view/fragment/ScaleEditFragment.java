@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.igeak.customwatchface.R;
+import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class ScaleEditFragment extends Fragment implements WatchFaceEditPresent.IScaleView {
+public class ScaleEditFragment extends Fragment implements IWatchFaceEditContract.IScaleView {
 
     private static final String TAG = "ScaleEditFragment";
     private static final int SPAN_COUNT = 2;

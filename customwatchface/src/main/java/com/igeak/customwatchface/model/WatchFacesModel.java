@@ -135,12 +135,37 @@ public class WatchFacesModel {
                     FileOperation.changeWatchName(currentbean, name);
 
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    //throw new RuntimeException(e);
+                    subscriber.onError(new Exception(e));
                 }
+                subscriber.onNext(watchbeanlist);
+                subscriber.onCompleted();
+
             }
         });
 
     }
+
+    public Observable deleteWatchFace(final List<WatchFaceBean> watchbeanlist,
+                                 final int position) {
+        return Observable.create(new Observable.OnSubscribe<List<WatchFaceBean>>() {
+            @Override
+            public void call(Subscriber<? super List<WatchFaceBean>> subscriber) {
+                try {
+                    WatchFaceBean currentbean = watchbeanlist.get(position);
+                    FileOperation.deleteFolder(currentbean.getName());
+                    watchbeanlist.remove(position);
+                } catch (Exception e) {
+                    //throw new RuntimeException(e);
+                    subscriber.onError(new Exception(e));
+                }
+                subscriber.onNext(watchbeanlist);
+                subscriber.onCompleted();
+            }
+        });
+
+    }
+
 
 
 }

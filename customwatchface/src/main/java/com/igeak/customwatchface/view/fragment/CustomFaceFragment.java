@@ -181,6 +181,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.option_delete) {
+                    deleteOperation();
                     return true;
                 } else if (item.getItemId() == R.id.option_rename) {
                     renameOperation();
@@ -189,6 +190,8 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                     Intent intent = new Intent(getContext(), FaceEditActivity.class);
                     intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
                             getItemId()));
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
+                            (WatchFacesModel.FacePath.FACE_CUSTOM));
                     startActivity(intent);
                     return true;
                 }
@@ -196,19 +199,25 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                 return false;
             }
 
+            private void deleteOperation() {
+                present.deleteWatchFace(watchfaceList,(int)getItemId());
+            }
+
             private void renameOperation() {
                 final EditText et = new EditText(getContext());
-
+                String name = watchfaceList.get((int) getItemId()).getName();
+                et.setText(name);
+                et.setSelection(name.length());
                 new AlertDialog.Builder(getContext())
                         .setTitle("请输入")
                         .setIcon(
-                        android.R.drawable.ic_dialog_info)
+                                android.R.drawable.ic_dialog_info)
                         .setView(et)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String name = et.getText().toString();
-                                present.changeName(name,watchfaceList,(int)getItemId());
+                                present.changeName(name, watchfaceList, (int) getItemId());
                             }
                         })
                         .setNegativeButton("取消", null)

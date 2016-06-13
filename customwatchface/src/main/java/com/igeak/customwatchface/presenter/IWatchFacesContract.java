@@ -34,5 +34,7 @@ public interface IWatchFacesContract {
         void loadWatchimg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
                           final WatchFacesModel.FacePath facePath);
         void changeName(String name,List<WatchFaceBean> watchbeanlist,int position);
+
+        void deleteWatchFace(List<WatchFaceBean> watchfaceList, int itemId);
     }
 }

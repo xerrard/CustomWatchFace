@@ -144,5 +144,28 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
                 });
     }
 
+    @Override
+    public void deleteWatchFace(List<WatchFaceBean> watchbeanlist, int position) {
+        mWatchFacesModel.deleteWatchFace(watchbeanlist,position)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<WatchFaceBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<WatchFaceBean> watchFaceBeanList) {
+                        mWatchFaceView.updateWatchFaceBeanList(watchFaceBeanList);
+                    }
+                });
+    }
+
 
 }

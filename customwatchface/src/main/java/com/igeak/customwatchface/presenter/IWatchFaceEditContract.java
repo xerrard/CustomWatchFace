@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.WatchFace;
+import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.view.IView;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 
@@ -26,6 +27,8 @@ public interface IWatchFaceEditContract {
         void updateScale(Bitmap bitmap);
 
         void updatePoint(Map<PointView.Type, Bitmap> map);
+
+        void updateSaved();
     }
 
     interface IBackgroundView {
@@ -48,8 +51,9 @@ public interface IWatchFaceEditContract {
         void changeScaleImg(Bitmap bitmap);
         List<Map<PointView.Type, Bitmap>> loadPointImg();
         void changePointImg(Map<PointView.Type, Bitmap> point);
-        void loadWatchimg(final WatchFaceBean watchFaceBean);
+        void loadWatchimg(final WatchFaceBean watchFaceBean,final WatchFacesModel.FacePath facePath);
         void handleCrop(int resultCode, Intent result);
-        void savewatch();
+        void savewatch(String name);
+        void creatNewFace(String name);
     }
 }

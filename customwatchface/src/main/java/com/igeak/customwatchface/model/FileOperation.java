@@ -5,17 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonWriter;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.FileUtil;
 import com.igeak.customwatchface.util.PicUtil;
+import com.orhanobut.logger.Logger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -61,14 +65,20 @@ public class FileOperation {
      */
     public static File[] getWatchFaceFileList() throws Exception {
         File[] watchfaces;
-        watchfaces = getCustomWatchfacesFolder().listFiles(new FilenameFilter() {
+//        watchfaces = getCustomWatchfacesFolder().listFiles(new FilenameFilter() {
+//            @Override
+//            public boolean accept(File dir, String filename) {
+//                return filename.contains(Const.ASSETS_WATCH_START_NAME)
+//                        || filename.contains(Const.WATCH_START_NAME);
+//            }
+//        });
+
+        watchfaces = getCustomWatchfacesFolder().listFiles(new FileFilter() {
             @Override
-            public boolean accept(File dir, String filename) {
-                return filename.contains(Const.ASSETS_WATCH_START_NAME)
-                        || filename.contains(Const.WATCH_START_NAME);
+            public boolean accept(File pathname) {
+                return pathname.isDirectory();
             }
         });
-
         return watchfaces;
     }
 
@@ -124,22 +134,35 @@ public class FileOperation {
     }
 
 
-    public static WatchFaceBean jsonToJavaBean(File jsonfile) throws FileNotFoundException {
+    public static WatchFaceBean jsonToJavaBean(File jsonfile) throws IOException {
         BufferedReader bf = new BufferedReader(new InputStreamReader(
                 new FileInputStream(jsonfile)));
         Gson gson = new Gson();
         WatchFaceBean watchFaceBean = gson.fromJson(bf, WatchFaceBean.class);
+        bf.close();
         return watchFaceBean;
     }
 
 
     public static void javaBean2Json(WatchFaceBean bean, File jsonfile) throws
             IOException {
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream
-                (jsonfile)));
-        Gson gson = new Gson();
-        gson.toJson(bean,bw);
-
+        if (jsonfile.exists()) {
+            jsonfile.delete();
+            jsonfile.createNewFile();
+        }
+        if (jsonfile.canWrite()) {
+            FileWriter fw = new FileWriter(jsonfile);
+            BufferedWriter bw = new BufferedWriter(fw);
+            Gson gson = new Gson();
+            gson.toJson(bean, bw);
+            //bw.flush();
+            bw.close();
+            //fw.flush();
+            fw.close();
+        }
+        //String str = gson.toJson(bean);
+        //System.out.print(str);
+        //Logger.i(str);
     }
 
     /**
@@ -219,26 +242,29 @@ public class FileOperation {
     }
 
 
-    public static void changeWatchName(WatchFaceBean watchFaceBean, String tarName) throws Exception {
-
+    public static void changeWatchName(WatchFaceBean watchFaceBean, String tarName) throws
+            Exception {
 
 
         String oriName = watchFaceBean.getName();
         File watchFolder = getWatchFaceFile(oriName);
-        File[] files = watchFolder.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return filename.endsWith(Const.JSON_EXNAME);
-            }
-        });
+        File[] files = null;
+        if (watchFolder != null && watchFolder.isDirectory()) {
+            files = watchFolder.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String filename) {
+                    return filename.endsWith(Const.JSON_EXNAME);
+                }
+            });
+        }
 
-        FileUtil.changeDirName(watchFolder, tarName);
 
-
-        File jsonfile = files[0];
-
+        File jsonfile = null;
+        if (files.length > 0) {
+            jsonfile = files[0];
+        }
         watchFaceBean.setName(tarName);
-        javaBean2Json(watchFaceBean,jsonfile);
-
+        javaBean2Json(watchFaceBean, jsonfile);
+        FileUtil.changeDirName(watchFolder, tarName);
     }
 }

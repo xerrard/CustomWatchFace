@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFaceEditModel;
+import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.util.PicUtil;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 import com.soundcloud.android.crop.Crop;
@@ -26,19 +27,19 @@ import rx.schedulers.Schedulers;
 /**
  * Created by xuqiang on 16-5-27.
  */
-public class WatchFaceEditPresent implements IWatchFaceEditContract {
+public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEditPresent {
     private Context context;
     private WatchFaceEditModel model;
-    private IWatchFaceEditView watchfaceview;
-    private IBackgroundView backgroundView;
-    private IScaleView scaleView;
-    private IPointView pointView;
+    private IWatchFaceEditContract.IWatchFaceEditView watchfaceview;
+    private IWatchFaceEditContract.IBackgroundView backgroundView;
+    private IWatchFaceEditContract.IScaleView scaleView;
+    private IWatchFaceEditContract.IPointView pointView;
 
     public WatchFaceEditPresent(Context context
-            , IWatchFaceEditView watchfaceview
-            , IBackgroundView backgroundView
-            , IScaleView scaleView
-            , IPointView pointView) {
+            , IWatchFaceEditContract.IWatchFaceEditView watchfaceview
+            , IWatchFaceEditContract.IBackgroundView backgroundView
+            , IWatchFaceEditContract.IScaleView scaleView
+            , IWatchFaceEditContract.IPointView pointView) {
         this.context = context;
         model = new WatchFaceEditModel(context);
         this.watchfaceview = watchfaceview;
@@ -88,8 +89,8 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract {
     }
 
 
-    public void loadWatchimg(final WatchFaceBean watchFaceBean) {
-        model.loadWatchimg(watchFaceBean)
+    public void loadWatchimg(final WatchFaceBean watchFaceBean,final WatchFacesModel.FacePath facePath) {
+        model.loadWatchimg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WatchFace>() {
@@ -128,15 +129,55 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract {
         }
     }
 
-    public void savewatch() {
-        try {
-            model.savewatch();
+    @Override
+    public void savewatch(String name) {
+        model.savewatch(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchFaceBean>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(WatchFaceBean watchFace) {
+                        //watchfaceview.updateWatchFace(watchFace);
+                        watchfaceview.updateSaved();
+                    }
+
+                });
+
 
     }
 
 
+    @Override
+    public void creatNewFace(String name) {
+        model.createNewFace(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchFaceBean>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(WatchFaceBean watchFace) {
+                        //watchfaceview.updateWatchFace(watchFace);
+                        watchfaceview.updateSaved();
+                    }
+
+                });
+
+    }
 }

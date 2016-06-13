@@ -32,7 +32,8 @@ public class WatchFaceEditModel {
         modifyMaps = new HashMap<>();
     }
 
-    public Observable<WatchFace> loadWatchimg(final WatchFaceBean watchFaceBean) {
+    public Observable<WatchFace> loadWatchimg(final WatchFaceBean watchFaceBean, final
+    WatchFacesModel.FacePath facePath) {
         this.watchfacebean = watchFaceBean;
         return Observable.create(new Observable.OnSubscribe<WatchFace>() {
             @Override
@@ -45,22 +46,40 @@ public class WatchFaceEditModel {
                 watchFace.setShowDate(watchFaceBean.isShowDate());
                 watchFace.setShowWeek(watchFaceBean.isShowWeek());
                 try {
-
-                    watchFace.setBackground(FileOperation.getWatchfacesElementImg(
-                            watchFaceBean.getName(),
-                            watchFaceBean.getBackground()));
-                    watchFace.setDialScale(FileOperation.getWatchfacesElementImg(
-                            watchFaceBean.getName(),
-                            watchFaceBean.getDialScale()));
-                    watchFace.setHour(FileOperation.getWatchfacesElementImg(
-                            watchFaceBean.getName(),
-                            watchFaceBean.getHour()));
-                    watchFace.setMinute(FileOperation.getWatchfacesElementImg(
-                            watchFaceBean.getName(),
-                            watchFaceBean.getMinute()));
-                    watchFace.setSecond(FileOperation.getWatchfacesElementImg(
-                            watchFaceBean.getName(),
-                            watchFaceBean.getSecond()));
+                    if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
+                        watchFace.setBackground(FileOperation.getWatchfacesElementImg(
+                                watchFaceBean.getName(),
+                                watchFaceBean.getBackground()));
+                        watchFace.setDialScale(FileOperation.getWatchfacesElementImg(
+                                watchFaceBean.getName(),
+                                watchFaceBean.getDialScale()));
+                        watchFace.setHour(FileOperation.getWatchfacesElementImg(
+                                watchFaceBean.getName(),
+                                watchFaceBean.getHour()));
+                        watchFace.setMinute(FileOperation.getWatchfacesElementImg(
+                                watchFaceBean.getName(),
+                                watchFaceBean.getMinute()));
+                        watchFace.setSecond(FileOperation.getWatchfacesElementImg(
+                                watchFaceBean.getName(),
+                                watchFaceBean.getSecond()));
+                    }
+                    else {
+                        watchFace.setBackground(AssetsOperation.getWatchfacesElementImg(context,
+                                watchFaceBean.getName(),
+                                watchFaceBean.getBackground()));
+                        watchFace.setDialScale(AssetsOperation.getWatchfacesElementImg(context,
+                                watchFaceBean.getName(),
+                                watchFaceBean.getDialScale()));
+                        watchFace.setHour(AssetsOperation.getWatchfacesElementImg(context,
+                                watchFaceBean.getName(),
+                                watchFaceBean.getHour()));
+                        watchFace.setMinute(AssetsOperation.getWatchfacesElementImg(context,
+                                watchFaceBean.getName(),
+                                watchFaceBean.getMinute()));
+                        watchFace.setSecond(AssetsOperation.getWatchfacesElementImg(context,
+                                watchFaceBean.getName(),
+                                watchFaceBean.getSecond()));
+                    }
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -136,36 +155,105 @@ public class WatchFaceEditModel {
         modifyMaps.put(WatchPreviewView.Type.SECOND, point.get(PointView.Type.SECOND));
     }
 
-    public void savewatch() throws Exception {
-        for (WatchPreviewView.Type type : modifyMaps.keySet()) {
-            String faceElement;
-            switch (type) {
-                case BACKGROUND:
-                    faceElement = watchfacebean.getBackground();
-                    break;
-                case DIALSCALE:
-                    faceElement = watchfacebean.getDialScale();
-                    break;
-                case HOUR:
-                    faceElement = watchfacebean.getHour();
-                    break;
-                case MINUTE:
-                    faceElement = watchfacebean.getMinute();
-                    break;
-                case SECOND:
-                    faceElement = watchfacebean.getSecond();
-                    break;
-                default:
-                    faceElement = watchfacebean.getBackground();
-            }
+    public Observable<WatchFaceBean> savewatch(final String name) {
+        return Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {
+            @Override
+            public void call(Subscriber<? super WatchFaceBean> subscriber) {
+                try {
 
-            PicUtil.saveBitmapToFile(
-                    modifyMaps.get(type),
-                    FileOperation.getWatchfacesElementFile(
-                            watchfacebean.getName()
-                            , faceElement
-                    )
-            );
-        }
+                    for (WatchPreviewView.Type type : modifyMaps.keySet()) {
+                        String faceElement;
+                        switch (type) {
+                            case BACKGROUND:
+                                faceElement = watchfacebean.getBackground();
+                                break;
+                            case DIALSCALE:
+                                faceElement = watchfacebean.getDialScale();
+                                break;
+                            case HOUR:
+                                faceElement = watchfacebean.getHour();
+                                break;
+                            case MINUTE:
+                                faceElement = watchfacebean.getMinute();
+                                break;
+                            case SECOND:
+                                faceElement = watchfacebean.getSecond();
+                                break;
+                            default:
+                                faceElement = watchfacebean.getBackground();
+                        }
+
+                        PicUtil.saveBitmapToFile(
+                                modifyMaps.get(type),
+                                FileOperation.getWatchfacesElementFile(
+                                        watchfacebean.getName()
+                                        , faceElement
+                                )
+                        );
+
+                        FileOperation.changeWatchName(watchfacebean, name);
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                    //subscriber.onError(e);
+                }
+                subscriber.onNext(watchfacebean);
+                subscriber.onCompleted();
+
+            }
+        });
+
+
     }
+
+    public Observable<WatchFaceBean> createNewFace(final String name) {
+        return Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {
+            @Override
+            public void call(Subscriber<? super WatchFaceBean> subscriber) {
+                try {
+                    AssetsOperation.assert2Folder(context, watchfacebean.getName());
+                    for (WatchPreviewView.Type type : modifyMaps.keySet()) {
+                        String faceElement;
+                        switch (type) {
+                            case BACKGROUND:
+                                faceElement = watchfacebean.getBackground();
+                                break;
+                            case DIALSCALE:
+                                faceElement = watchfacebean.getDialScale();
+                                break;
+                            case HOUR:
+                                faceElement = watchfacebean.getHour();
+                                break;
+                            case MINUTE:
+                                faceElement = watchfacebean.getMinute();
+                                break;
+                            case SECOND:
+                                faceElement = watchfacebean.getSecond();
+                                break;
+                            default:
+                                faceElement = watchfacebean.getBackground();
+                        }
+
+                        PicUtil.saveBitmapToFile(
+                                modifyMaps.get(type),
+                                FileOperation.getWatchfacesElementFile(
+                                        watchfacebean.getName()
+                                        , faceElement
+                                )
+                        );
+                        FileOperation.changeWatchName(watchfacebean, name);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                    //subscriber.onError(e);
+                }
+                subscriber.onNext(watchfacebean);
+                subscriber.onCompleted();
+
+            }
+        });
+    }
+
+
 }

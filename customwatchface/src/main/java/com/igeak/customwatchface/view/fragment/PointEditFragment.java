@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.igeak.customwatchface.R;
+import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
@@ -23,7 +24,7 @@ import java.util.Map;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class PointEditFragment extends Fragment implements WatchFaceEditPresent.IPointView {
+public class PointEditFragment extends Fragment implements IWatchFaceEditContract.IPointView {
 
     private static final String TAG = "PointEditFragment";
     private static final int SPAN_COUNT = 2;

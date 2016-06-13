@@ -1,6 +1,7 @@
 package com.igeak.customwatchface.view.activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,14 +10,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.WatchFace;
+import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.fragment.BackgroudEditFragment;
@@ -48,6 +52,7 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     ScaleEditFragment scaleEditFragment = new ScaleEditFragment();
     PointEditFragment pointEditFragment = new PointEditFragment();
     Button saveBtn;
+    WatchFacesModel.FacePath facePath;
 
 
     @Override
@@ -56,6 +61,8 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         setContentView(R.layout.activity_face_edit);
         Intent intent = getIntent();
         watchfacebean = intent.getParcelableExtra(Const.INTENT_EXTRA_KEY_WATCHFACE);
+        facePath = intent.getBooleanExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, false) ? WatchFacesModel
+                .FacePath.FACE_CUSTOM : WatchFacesModel.FacePath.FACE_INNER;
         setTitle(watchfacebean.getName());
         watchPreviewView = (WatchPreviewView) findViewById(R.id.watch_view);
         initFragment();
@@ -67,7 +74,7 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
                 , pointEditFragment);
 
         saveBtn = (Button) findViewById(R.id.savewatch);
-        present.loadWatchimg(watchfacebean);
+        present.loadWatchimg(watchfacebean,facePath);
 
     }
 
@@ -113,6 +120,17 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         watchPreviewView.setPoint(map);
     }
 
+    @Override
+    public void updateSaved() {
+        if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)){
+            Toast.makeText(this, "watchface saved", Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "watchface created", Toast.LENGTH_LONG).show();
+        }
+
+        finish();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
@@ -128,10 +146,43 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         }
     }
 
-    public void savewatch(View view) throws Exception {
-        present.savewatch();
-        Toast.makeText(this, "watchface saved", Toast.LENGTH_LONG).show();
-        finish();
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        savewatch(null);
+    }
+
+    public void savewatch(View view){
+
+            final EditText et = new EditText(this);
+            String name = watchfacebean.getName();
+            et.setText(name);
+            et.setSelection(name.length());
+            new AlertDialog.Builder(this)
+                    .setTitle("保存表盘")
+                    .setIcon(
+                            android.R.drawable.ic_dialog_info)
+                    .setView(et)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String name = et.getText().toString();
+                            if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)){
+                                present.savewatch(name);
+                            }else {
+                                present.creatNewFace(name);
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .show();
+
     }
 
 

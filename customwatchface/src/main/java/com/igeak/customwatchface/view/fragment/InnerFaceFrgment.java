@@ -89,14 +89,12 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
 
     @Override
     public void onWatchCreated(WatchFaceBean watchFaceBean) {
-        Intent intent = new Intent(getContext(), FaceEditActivity.class);
-        intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchFaceBean);
-        intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
-                (WatchFacesModel.FacePath.FACE_CUSTOM));
-        startActivity(intent);
+//        Intent intent = new Intent(getContext(), FaceEditActivity.class);
+//        intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchFaceBean);
+//        intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
+//                (WatchFacesModel.FacePath.FACE_CUSTOM));
+//        startActivity(intent);
     }
-
-
 
 
     //继承自 RecyclerView.Adapter
@@ -186,7 +184,13 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.option_new) {
-                    present.creatNewFace(watchfaceList.get((int) getItemId()));
+                    //present.creatNewFace(watchfaceList.get((int) getItemId()));
+                    Intent intent = new Intent(getContext(), FaceEditActivity.class);
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
+                            getItemId()));
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
+                            (WatchFacesModel.FacePath.FACE_CUSTOM));
+                    startActivity(intent);
                     return true;
                 }
                 return false;
