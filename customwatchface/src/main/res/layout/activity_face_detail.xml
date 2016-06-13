@@ -26,8 +26,7 @@
             app:layout_heightPercent="50%"
             app:layout_widthPercent="50%"
             android:layout_alignParentTop="true"
-            app:layout_marginLeftPercent = "25%"
-            android:background="@color/blue"/>
+            app:layout_marginLeftPercent = "25%"/>
 
         <Button
             android:id="@+id/sendwatch"
