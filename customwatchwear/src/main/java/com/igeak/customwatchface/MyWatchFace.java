@@ -47,6 +47,7 @@ import com.igeak.customwatchface.watchfaceview.DialScale;
 import com.igeak.customwatchface.watchfaceview.Hour;
 import com.igeak.customwatchface.watchfaceview.Minute;
 import com.igeak.customwatchface.watchfaceview.Second;
+import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -136,6 +137,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
 
+            Logger.init();
             setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT) //以单行高度显示通知卡片
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)

@@ -78,15 +78,19 @@ public abstract class BaseElement {
 
     public void layout(float view_width, float view_height, Time mTime) {
 //起始坐标为中心点
+
+        Logger.i("     mTime.hour=" + mTime.hour);
+        Logger.i("     mTime.minute=" + mTime.minute);
+        Logger.i("     mTime.second=" + mTime.second);
         this.view_height = view_height;
         this.view_width = view_width;
         start_x = view_width / 2;
         start_y = view_height / 2;
-        length = Math.min(view_width,view_height);
+        length = Math.min(view_width, view_height);
         if (mType == MyWatchFace.Type.HOUR) {
-            mRotate = 360.0f * mTime.hour / 24.0f;
+            mRotate = 360.0f * (mTime.hour - 12.0f + mTime.minute / 60.0f) / 12.0f;
         } else if (mType == MyWatchFace.Type.MINUTE) {
-            mRotate = 360.0f * mTime.minute / 60.0f;
+            mRotate = 360.0f * (mTime.minute + mTime.second / 60.0f) / 60.0f;
         } else if (mType == MyWatchFace.Type.SECOND) {
             mRotate = 360.0f * mTime.second / 60.0f;
         } else {
@@ -123,7 +127,8 @@ public abstract class BaseElement {
 //            int h = drawable.getIntrinsicHeight();
 //            Logger.d(Const.TAG + "onDraw Type = " + mType + "   mRotate = " + mRotate + "   " +
 //                    "   width=" + w + "   height =" + h);
-            drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x + (length / 2)),
+            drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x +
+                    (length / 2)),
                     (int) (y + (length / 2)));
             drawable.draw(canvas);
         }
