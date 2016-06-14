@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -164,6 +165,22 @@ public class FileOperation {
         //System.out.print(str);
         //Logger.i(str);
     }
+
+
+    /**
+     * 获取表盘元素的drawable
+     *
+     * @param faceItem    表盘名
+     * @param faceElement 表盘元素
+     * @return
+     * @throws Exception
+     */
+    public static InputStream getWatchfacesElementStream(final String faceItem, String
+            faceElement) throws Exception {
+
+        return new FileInputStream(getWatchfacesElementFile(faceItem, faceElement));
+    }
+
 
     /**
      * 获取表盘元素的drawable

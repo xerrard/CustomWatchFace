@@ -47,35 +47,35 @@ public class WatchFaceDetailModel {
                 watchFace.setShowWeek(watchFaceBean.isShowWeek());
                 try {
                     if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-                        watchFace.setBackground(FileOperation.getWatchfacesElementImg(
+                        watchFace.setBackground(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getBackground()));
-                        watchFace.setDialScale(FileOperation.getWatchfacesElementImg(
+                        watchFace.setDialScale(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getDialScale()));
-                        watchFace.setHour(FileOperation.getWatchfacesElementImg(
+                        watchFace.setHour(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getHour()));
-                        watchFace.setMinute(FileOperation.getWatchfacesElementImg(
+                        watchFace.setMinute(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getMinute()));
-                        watchFace.setSecond(FileOperation.getWatchfacesElementImg(
+                        watchFace.setSecond(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getSecond()));
                     } else {
-                        watchFace.setBackground(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setBackground(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getBackground()));
-                        watchFace.setDialScale(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setDialScale(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getDialScale()));
-                        watchFace.setHour(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setHour(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getHour()));
-                        watchFace.setMinute(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setMinute(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getMinute()));
-                        watchFace.setSecond(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setSecond(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getSecond()));
                     }

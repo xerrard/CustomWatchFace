@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.animation.Transformation;
 
 import com.igeak.customwatchface.Const;
+import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.util.PicUtil;
 import com.orhanobut.logger.Logger;
 
@@ -25,6 +26,8 @@ public abstract class BaseElement {
 
     public BitmapDrawable mDrawable;
 
+    public InputStream inputStream;
+
     public float mRotate = 0.0f;
     public float start_x = 0;
     public float start_y = 0;
@@ -38,10 +41,18 @@ public abstract class BaseElement {
 
     private float length;
 
-    public BaseElement(Context context, Bitmap bitmap) {
+    public BaseElement(Context context, InputStream bitmap, int view_width, int view_height) {
         mContext = context;
         isEnable = true;
-        mDrawable = PicUtil.bitmap2Drawable(bitmap);
+        //mDrawable = PicUtil.bitmap2Drawable(bitmap);
+        inputStream = bitmap;
+
+        try {
+            Bitmap bitmap2 = PicOperation.InputStream2Bitmap(bitmap,  view_width, view_height);
+            mDrawable = new BitmapDrawable(bitmap2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -58,10 +69,12 @@ public abstract class BaseElement {
 
     public void layout(float view_width, float view_height) {
 
+
 //起始坐标为中心点
         start_x = view_width / 2;
         start_y = view_height / 2;
-        length = Math.min(view_width,view_height);
+
+        length = Math.min(view_width, view_height);
         if (mType == WatchPreviewView.Type.HOUR) {
             mRotate = 320.0f;
         } else if (mType == WatchPreviewView.Type.MINUTE) {
@@ -100,8 +113,6 @@ public abstract class BaseElement {
         canvas.translate(-x, -y);
 
         final Drawable drawable = mDrawable;
-
-
 
         if (drawable != null) {
 

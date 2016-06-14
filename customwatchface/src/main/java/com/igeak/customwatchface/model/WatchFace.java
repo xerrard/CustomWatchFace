@@ -3,17 +3,19 @@ package com.igeak.customwatchface.model;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
+import java.io.InputStream;
+
 /**
  * Created by xuqiang on 16-5-18.
  */
 public class WatchFace {
 
     private String name;
-    private Bitmap background;
-    private Bitmap dialScale;
-    private Bitmap hour;
-    private Bitmap minute;
-    private Bitmap second;
+    private InputStream background;
+    private InputStream dialScale;
+    private InputStream hour;
+    private InputStream minute;
+    private InputStream second;
     private boolean isAmPm;
     private boolean haveTemperature;
     private boolean showDate;
@@ -27,43 +29,43 @@ public class WatchFace {
         this.name = name;
     }
 
-    public Bitmap getBackground() {
+    public InputStream getBackground() {
         return background;
     }
 
-    public void setBackground(Bitmap background) {
+    public void setBackground(InputStream background) {
         this.background = background;
     }
 
-    public Bitmap getDialScale() {
+    public InputStream getDialScale() {
         return dialScale;
     }
 
-    public void setDialScale(Bitmap dialScale) {
+    public void setDialScale(InputStream dialScale) {
         this.dialScale = dialScale;
     }
 
-    public Bitmap getHour() {
+    public InputStream getHour() {
         return hour;
     }
 
-    public void setHour(Bitmap hour) {
+    public void setHour(InputStream hour) {
         this.hour = hour;
     }
 
-    public Bitmap getMinute() {
+    public InputStream getMinute() {
         return minute;
     }
 
-    public void setMinute(Bitmap minute) {
+    public void setMinute(InputStream minute) {
         this.minute = minute;
     }
 
-    public Bitmap getSecond() {
+    public InputStream getSecond() {
         return second;
     }
 
-    public void setSecond(Bitmap second) {
+    public void setSecond(InputStream second) {
         this.second = second;
     }
 

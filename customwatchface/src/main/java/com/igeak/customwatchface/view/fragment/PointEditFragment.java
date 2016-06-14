@@ -17,6 +17,7 @@ import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
     RecycleViewAdapter adapter;
 
     WatchFaceEditPresent present;
-    List<Map<PointView.Type, Bitmap>> pointMaps = null;
+    List<Map<PointView.Type, InputStream>> pointMaps = null;
 
 
     @Nullable
@@ -57,17 +58,17 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
-        private List<Map<PointView.Type, Bitmap>> pointMaps;
+        private List<Map<PointView.Type, InputStream>> pointMaps;
 
         public boolean isSetAdapter() {
             return pointMaps != null;
         }
 
-        public void setBitmap(List<Map<PointView.Type, Bitmap>> pointMaps) {
+        public void setBitmap(List<Map<PointView.Type, InputStream>> pointMaps) {
             this.pointMaps = pointMaps;
         }
 
-        public RecycleViewAdapter(List<Map<PointView.Type, Bitmap>> pointMaps) {
+        public RecycleViewAdapter(List<Map<PointView.Type, InputStream>> pointMaps) {
             this.pointMaps = pointMaps;
             setHasStableIds(true); //必须要加的代码，默认为false，当true，getItemId才有效
         }
@@ -113,7 +114,7 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
             @Override
             public void onClick(View v) {
                 int index = (int) getItemId();
-                Map<PointView.Type, Bitmap> pointmap = pointMaps.get(index);
+                Map<PointView.Type, InputStream> pointmap = pointMaps.get(index);
                 present.changePointImg(pointmap);
             }
         }

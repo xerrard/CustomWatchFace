@@ -50,7 +50,7 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         this.pointView = pointView;
     }
 
-    public List<Bitmap> loadbackImg() {
+    public List<InputStream> loadbackImg() {
         try {
             return model.loadbackImg();
         } catch (Exception e) {
@@ -58,12 +58,12 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         }
     }
 
-    public void changeBackImg(Bitmap bitmap) {
+    public void changeBackImg(InputStream bitmap) {
         watchfaceview.updatebackground(bitmap);
         model.saveBackImg(bitmap);
     }
 
-    public List<Bitmap> loadScaleImg() {
+    public List<InputStream> loadScaleImg() {
         try {
             return model.loadScaleImg();
         } catch (Exception e) {
@@ -71,13 +71,13 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         }
     }
 
-    public void changeScaleImg(Bitmap bitmap) {
+    public void changeScaleImg(InputStream bitmap) {
         watchfaceview.updateScale(bitmap);
         model.saveScaleImg(bitmap);
 
     }
 
-    public List<Map<PointView.Type, Bitmap>> loadPointImg() {
+    public List<Map<PointView.Type, InputStream>> loadPointImg() {
         try {
             return model.loadPointImg();
         } catch (Exception e) {
@@ -85,7 +85,7 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         }
     }
 
-    public void changePointImg(Map<PointView.Type, Bitmap> point) {
+    public void changePointImg(Map<PointView.Type, InputStream> point) {
         watchfaceview.updatePoint(point);
         model.savePointImg(point);
     }
@@ -126,7 +126,7 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
                 Logger.i("   photo.getWidth() = " + photo.getWidth()
                         + "   photo.getHeight() = " + photo.getHeight());
                 Bitmap bitmap = PicUtil.InputStream2Bitmap(stream);
-                changeBackImg(bitmap);
+                changeBackImg(stream);
             } else if (resultCode == Crop.RESULT_ERROR) {
                 Toast.makeText(context, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT)
                         .show();

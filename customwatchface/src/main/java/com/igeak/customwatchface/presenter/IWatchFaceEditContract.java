@@ -10,6 +10,7 @@ import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.view.IView;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +23,11 @@ public interface IWatchFaceEditContract {
     interface IWatchFaceEditView extends IView {
         void updateWatchFace(WatchFace watchFace);
 
-        void updatebackground(Bitmap bitmap);
+        void updatebackground(InputStream bitmap);
 
-        void updateScale(Bitmap bitmap);
+        void updateScale(InputStream bitmap);
 
-        void updatePoint(Map<PointView.Type, Bitmap> map);
+        void updatePoint(Map<PointView.Type, InputStream> map);
 
         void updateSaved();
     }
@@ -45,12 +46,12 @@ public interface IWatchFaceEditContract {
 
 
     interface IWatchFaceEditPresent extends IPresenter<IWatchFaceEditView>{
-        List<Bitmap> loadbackImg();
-        void changeBackImg(Bitmap bitmap);
-        List<Bitmap> loadScaleImg();
-        void changeScaleImg(Bitmap bitmap);
-        List<Map<PointView.Type, Bitmap>> loadPointImg();
-        void changePointImg(Map<PointView.Type, Bitmap> point);
+        List<InputStream> loadbackImg();
+        void changeBackImg(InputStream bitmap);
+        List<InputStream> loadScaleImg();
+        void changeScaleImg(InputStream bitmap);
+        List<Map<PointView.Type, InputStream>> loadPointImg();
+        void changePointImg(Map<PointView.Type, InputStream> point);
         void loadWatchimg(final WatchFaceBean watchFaceBean,final WatchFacesModel.FacePath facePath);
         void handleCrop(int resultCode, Intent result);
         void savewatch(String name);

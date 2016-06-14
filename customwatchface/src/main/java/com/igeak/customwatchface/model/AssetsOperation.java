@@ -66,6 +66,25 @@ public class AssetsOperation {
     }
 
     /**
+     * 获取表盘元素的drawable
+     *
+     * @param context
+     * @param faceItem    表盘名
+     * @param faceElement 表盘元素
+     * @return
+     * @throws Exception
+     */
+    public static InputStream getWatchfacesElementStream(Context context, final String faceItem, String
+            faceElement) throws Exception {
+
+        String filepath = Const.FOLDER_NAME + "/" + faceItem + "/" + faceElement + Const.PNG_EXNAME;
+        InputStream is = context.getAssets().open(filepath);
+        return is;
+    }
+
+
+
+    /**
      * 将需要发送的表盘打包
      * assert打包的过程比较特别，需要先复制到T卡，然后打包
      *

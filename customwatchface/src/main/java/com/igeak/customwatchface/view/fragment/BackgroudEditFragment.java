@@ -22,6 +22,7 @@ import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -37,7 +38,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
     RecycleViewAdapter adapter;
 
     WatchFaceEditPresent present;
-    List<Bitmap> bitmaps;
+    List<InputStream> bitmaps;
 
 
     @Nullable
@@ -72,17 +73,17 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
-        private List<Bitmap> bitmaps;
+        private List<InputStream> bitmaps;
 
         public boolean isSetAdapter() {
             return bitmaps != null;
         }
 
-        public void setBitmaps(List<Bitmap> bitmaps) {
+        public void setBitmaps(List<InputStream> bitmaps) {
             this.bitmaps = bitmaps;
         }
 
-        public RecycleViewAdapter(List<Bitmap> bitmaps) {
+        public RecycleViewAdapter(List<InputStream> bitmaps) {
             this.bitmaps = bitmaps;
             setHasStableIds(true); //必须要加的代码，默认为false，当true，getItemId才有效
         }
@@ -100,7 +101,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
             if (i > 0) {
-                viewHolder.imageView.setImageBitmap(bitmaps.get(i - 1));
+                //viewHolder.imageView.setImageBitmap(bitmaps.get(i - 1));
             } else {
                 viewHolder.imageView.setImageResource(R.drawable.card_background);
             }
@@ -133,7 +134,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
             public void onClick(View v) {
                 int index = (int) getItemId();
                 if (index > 0) {
-                    Bitmap bitmap = bitmaps.get(index - 1);
+                    InputStream bitmap = bitmaps.get(index - 1);
                     present.changeBackImg(bitmap);
                 } else {
                     Crop.pickImage(getActivity());

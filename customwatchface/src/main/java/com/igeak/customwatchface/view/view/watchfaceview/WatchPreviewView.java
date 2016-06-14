@@ -10,7 +10,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.igeak.customwatchface.model.WatchFace;
+import com.igeak.customwatchface.util.PicUtil;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,39 +47,49 @@ public class WatchPreviewView extends View {
     }
 
     public void setElements(WatchFace watchface) {
+
+
         mElements.clear();
         mElements.put(Type.BACKGROUND, new BackGround(context, watchface
-                .getBackground()));
+                .getBackground(), (int) view_width, (int) view_height));
         mElements.put(Type.DIALSCALE, new DialScale(context, watchface
-                .getDialScale()));
-        mElements.put(Type.HOUR, new Hour(context, watchface.getHour()));
-        mElements.put(Type.MINUTE, new Minute(context, watchface.getMinute()));
-        mElements.put(Type.SECOND, new Second(context, watchface.getSecond()));
+                .getDialScale(), (int) view_width, (int) view_height));
+        mElements.put(Type.HOUR, new Hour(context, watchface.getHour(), (int) view_width, (int)
+                view_height));
+        mElements.put(Type.MINUTE, new Minute(context, watchface.getMinute(), (int) view_width,
+                (int) view_height));
+        mElements.put(Type.SECOND, new Second(context, watchface.getSecond(), (int) view_width,
+                (int) view_height));
         //requestLayout();
         invalidate();
     }
 
 
-    public Map<Type,BaseElement> getElements(){
+    public Map<Type, BaseElement> getElements() {
         return mElements;
     }
 
-    public void setBackground(Bitmap bitmap) {
-        mElements.put(Type.BACKGROUND, new BackGround(context, bitmap));
+    public void setBackground(InputStream bitmap) {
+        mElements.put(Type.BACKGROUND, new BackGround(context, bitmap, (int) view_width, (int)
+                view_height));
         //requestLayout();
         invalidate();
     }
 
 
-    public void setScale(Bitmap bitmap) {
-        mElements.put(Type.DIALSCALE, new DialScale(context, bitmap));
+    public void setScale(InputStream bitmap) {
+        mElements.put(Type.DIALSCALE, new DialScale(context, bitmap, (int) view_width, (int)
+                view_height));
         invalidate();
     }
 
-    public void setPoint(Map<PointView.Type, Bitmap> map) {
-        mElements.put(Type.HOUR, new Hour(context, map.get(PointView.Type.HOUR)));
-        mElements.put(Type.MINUTE, new Minute(context, map.get(PointView.Type.MINUTE)));
-        mElements.put(Type.SECOND, new Second(context, map.get(PointView.Type.SECOND)));
+    public void setPoint(Map<PointView.Type, InputStream> map) {
+        mElements.put(Type.HOUR, new Hour(context, map.get(PointView.Type.HOUR), (int)
+                view_width, (int) view_height));
+        mElements.put(Type.MINUTE, new Minute(context, map.get(PointView.Type.MINUTE), (int)
+                view_width, (int) view_height));
+        mElements.put(Type.SECOND, new Second(context, map.get(PointView.Type.SECOND), (int)
+                view_width, (int) view_height));
         invalidate();
     }
 

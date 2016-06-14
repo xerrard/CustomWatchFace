@@ -32,6 +32,7 @@ import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -106,17 +107,17 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     }
 
     @Override
-    public void updatebackground(Bitmap bitmap) {
+    public void updatebackground(InputStream bitmap) {
         watchPreviewView.setBackground(bitmap);
     }
 
     @Override
-    public void updateScale(Bitmap bitmap) {
+    public void updateScale(InputStream bitmap) {
         watchPreviewView.setScale(bitmap);
     }
 
     @Override
-    public void updatePoint(Map<PointView.Type, Bitmap> map) {
+    public void updatePoint(Map<PointView.Type, InputStream> map) {
         watchPreviewView.setPoint(map);
     }
 

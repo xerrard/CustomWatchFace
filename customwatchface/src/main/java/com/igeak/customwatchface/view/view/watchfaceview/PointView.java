@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,27 +42,33 @@ public class PointView extends View {
         mElements = new HashMap<Type, BaseElement>();
     }
 
-    public void setPointElement(Map<Type,Bitmap> map) {
+    public void setPointElement(Map<Type, InputStream> map) {
         mElements.clear();
-        mElements.put(Type.HOUR, new Hour(context, map.get(Type.HOUR)));
-        mElements.put(Type.MINUTE, new Minute(context, map.get(Type.MINUTE)));
-        mElements.put(Type.SECOND, new Second(context, map.get(Type.SECOND)));
+        mElements.put(Type.HOUR, new Hour(context, map.get(Type.HOUR), (int) view_width, (int)
+                view_height));
+        mElements.put(Type.MINUTE, new Minute(context, map.get(Type.MINUTE), (int) view_width,
+                (int) view_height));
+        mElements.put(Type.SECOND, new Second(context, map.get(Type.SECOND), (int) view_width,
+                (int) view_height));
         //requestLayout();
         invalidate();
     }
 
-    public void setHour(Bitmap bitmap){
-        mElements.put(Type.HOUR,new DialScale(context,bitmap));
+    public void setHour(InputStream bitmap) {
+        mElements.put(Type.HOUR, new DialScale(context, bitmap, (int) view_width, (int)
+                view_height));
         invalidate();
     }
 
-    public void setMinute(Bitmap bitmap){
-        mElements.put(Type.MINUTE,new DialScale(context,bitmap));
+    public void setMinute(InputStream bitmap) {
+        mElements.put(Type.MINUTE, new DialScale(context, bitmap, (int) view_width, (int)
+                view_height));
         invalidate();
     }
 
-    public void setSecond(Bitmap bitmap){
-        mElements.put(Type.SECOND,new DialScale(context,bitmap));
+    public void setSecond(InputStream bitmap) {
+        mElements.put(Type.SECOND, new DialScale(context, bitmap, (int) view_width, (int)
+                view_height));
         invalidate();
     }
 
@@ -85,7 +92,7 @@ public class PointView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.i(TAG,"onDraw");
+        Log.i(TAG, "onDraw");
         super.onDraw(canvas);
         view_width = this.getWidth();
         view_height = this.getHeight();

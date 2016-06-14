@@ -24,7 +24,7 @@ import rx.Subscriber;
  */
 public class WatchFaceEditModel {
     private Context context;
-    private Map<WatchPreviewView.Type, Bitmap> modifyMaps;
+    private Map<WatchPreviewView.Type, InputStream> modifyMaps;
     private WatchFaceBean watchfacebean;
 
     public WatchFaceEditModel(Context context) {
@@ -47,36 +47,36 @@ public class WatchFaceEditModel {
                 watchFace.setShowWeek(watchFaceBean.isShowWeek());
                 try {
                     if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-                        watchFace.setBackground(FileOperation.getWatchfacesElementImg(
+                        watchFace.setBackground(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getBackground()));
-                        watchFace.setDialScale(FileOperation.getWatchfacesElementImg(
+                        watchFace.setDialScale(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getDialScale()));
-                        watchFace.setHour(FileOperation.getWatchfacesElementImg(
+                        watchFace.setHour(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getHour()));
-                        watchFace.setMinute(FileOperation.getWatchfacesElementImg(
+                        watchFace.setMinute(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getMinute()));
-                        watchFace.setSecond(FileOperation.getWatchfacesElementImg(
+                        watchFace.setSecond(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getSecond()));
                     }
                     else {
-                        watchFace.setBackground(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setBackground(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getBackground()));
-                        watchFace.setDialScale(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setDialScale(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getDialScale()));
-                        watchFace.setHour(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setHour(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getHour()));
-                        watchFace.setMinute(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setMinute(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getMinute()));
-                        watchFace.setSecond(AssetsOperation.getWatchfacesElementImg(context,
+                        watchFace.setSecond(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getSecond()));
                     }
@@ -94,62 +94,62 @@ public class WatchFaceEditModel {
         });
     }
 
-    public List<Bitmap> loadbackImg() throws Exception {
-        List<Bitmap> backImgs = new ArrayList<Bitmap>();
+    public List<InputStream> loadbackImg() throws Exception {
+        List<InputStream> backImgs = new ArrayList<InputStream>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.BACK_FOLDER_NAME);
         for (String str : backgrounds) {
             InputStream is = context.getAssets().open(Const.BACK_FOLDER_NAME + "/" + str);
-            backImgs.add(PicUtil.InputStream2Bitmap(is));
+            backImgs.add(is);
         }
         return backImgs;
     }
 
-    public List<Bitmap> loadScaleImg() throws Exception {
-        List<Bitmap> backImgs = new ArrayList<Bitmap>();
+    public List<InputStream> loadScaleImg() throws Exception {
+        List<InputStream> backImgs = new ArrayList<InputStream>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.SCALE_FOLDER_NAME);
 
         for (String str : backgrounds) {
             InputStream is = context.getAssets().open(Const.SCALE_FOLDER_NAME + "/" + str);
-            backImgs.add(PicUtil.InputStream2Bitmap(is));
+            backImgs.add(is);
         }
 
         return backImgs;
     }
 
-    public List<Map<PointView.Type, Bitmap>> loadPointImg() throws Exception {
-        List<Map<PointView.Type, Bitmap>> pointImgs = new ArrayList<>();
+    public List<Map<PointView.Type, InputStream>> loadPointImg() throws Exception {
+        List<Map<PointView.Type, InputStream>> pointImgs = new ArrayList<>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.POINT_FOLDER_NAME);
 
         for (String str : backgrounds) {
-            Map<PointView.Type, Bitmap> map = new HashMap<>();
+            Map<PointView.Type, InputStream> map = new HashMap<>();
 
-            map.put(PointView.Type.HOUR, PicUtil.InputStream2Bitmap(context.getAssets().open
+            map.put(PointView.Type.HOUR, context.getAssets().open
                     (Const.POINT_FOLDER_NAME + "/" + str +
-                            "/" + Const.HOUR_NAME + Const.PNG_EXNAME)));
-            map.put(PointView.Type.MINUTE, PicUtil.InputStream2Bitmap(context.getAssets().open
+                            "/" + Const.HOUR_NAME + Const.PNG_EXNAME));
+            map.put(PointView.Type.MINUTE, context.getAssets().open
                     (Const.POINT_FOLDER_NAME + "/" + str +
-                            "/" + Const.MINUTE_NAME + Const.PNG_EXNAME)));
-            map.put(PointView.Type.SECOND, PicUtil.InputStream2Bitmap(context.getAssets().open
+                            "/" + Const.MINUTE_NAME + Const.PNG_EXNAME));
+            map.put(PointView.Type.SECOND, context.getAssets().open
                     (Const.POINT_FOLDER_NAME + "/" + str +
-                            "/" + Const.SECOND_NAME + Const.PNG_EXNAME)));
+                            "/" + Const.SECOND_NAME + Const.PNG_EXNAME));
             pointImgs.add(map);
         }
 
         return pointImgs;
     }
 
-    public void saveBackImg(Bitmap bitmap) {
+    public void saveBackImg(InputStream bitmap) {
         modifyMaps.put(WatchPreviewView.Type.BACKGROUND, bitmap);
     }
 
-    public void saveScaleImg(Bitmap bitmap) {
+    public void saveScaleImg(InputStream bitmap) {
         modifyMaps.put(WatchPreviewView.Type.DIALSCALE, bitmap);
     }
 
-    public void savePointImg(Map<PointView.Type, Bitmap> point) {
+    public void savePointImg(Map<PointView.Type, InputStream> point) {
         modifyMaps.put(WatchPreviewView.Type.HOUR, point.get(PointView.Type.HOUR));
         modifyMaps.put(WatchPreviewView.Type.MINUTE, point.get(PointView.Type.MINUTE));
         modifyMaps.put(WatchPreviewView.Type.SECOND, point.get(PointView.Type.SECOND));
@@ -183,13 +183,13 @@ public class WatchFaceEditModel {
                                 faceElement = watchfacebean.getBackground();
                         }
 
-                        PicUtil.saveBitmapToFile(
-                                modifyMaps.get(type),
-                                FileOperation.getWatchfacesElementFile(
-                                        watchfacebean.getName()
-                                        , faceElement
-                                )
-                        );
+//                        PicUtil.saveBitmapToFile(
+//                                modifyMaps.get(type),
+//                                FileOperation.getWatchfacesElementFile(
+//                                        watchfacebean.getName()
+//                                        , faceElement
+//                                )
+//                        );
 
                         FileOperation.changeWatchName(watchfacebean, name);
 
@@ -235,13 +235,13 @@ public class WatchFaceEditModel {
                                 faceElement = watchfacebean.getBackground();
                         }
 
-                        PicUtil.saveBitmapToFile(
-                                modifyMaps.get(type),
-                                FileOperation.getWatchfacesElementFile(
-                                        watchfacebean.getName()
-                                        , faceElement
-                                )
-                        );
+//                        PicUtil.saveBitmapToFile(
+//                                modifyMaps.get(type),
+//                                FileOperation.getWatchfacesElementFile(
+//                                        watchfacebean.getName()
+//                                        , faceElement
+//                                )
+//                        );
                         FileOperation.changeWatchName(watchfacebean, name);
                     }
                 } catch (Exception e) {
