@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
@@ -14,6 +15,7 @@ import com.igeak.customwatchface.model.WatchFaceEditModel;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.util.PicUtil;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
+import com.orhanobut.logger.Logger;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.InputStream;
@@ -89,7 +91,7 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
     }
 
 
-    public void loadWatchimg(final WatchFaceBean watchFaceBean,final WatchFacesModel.FacePath facePath) {
+    public void loadWatchimg(final WatchFaceBean watchFaceBean, final WatchFacesModel.FacePath facePath) {
         model.loadWatchimg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -115,10 +117,15 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         try {
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = Crop.getOutput(result);
-                InputStream stream;
-                stream = context.getContentResolver().openInputStream(uri);
-                Drawable drawable = Drawable.createFromStream(stream, null);
-                Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
+
+                Bitmap photo = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                InputStream stream = context.getContentResolver().openInputStream(uri);
+                //Drawable drawable = Drawable.createFromStream(stream, null);
+                //Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
+
+                Logger.i("   photo.getWidth() = " + photo.getWidth()
+                        + "   photo.getHeight() = " + photo.getHeight());
+                Bitmap bitmap = PicUtil.InputStream2Bitmap(stream);
                 changeBackImg(bitmap);
             } else if (resultCode == Crop.RESULT_ERROR) {
                 Toast.makeText(context, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT)

@@ -6,12 +6,16 @@ import android.os.Environment;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -24,7 +28,7 @@ public class FileUtil {
     /**
      * 压缩文件,文件夹
      *
-     * @param srcFile 要压缩的文件/文件夹
+     * @param srcFile     要压缩的文件/文件夹
      * @param zipFilePath 指定压缩的目的和名字
      * @throws Exception
      */
@@ -43,8 +47,8 @@ public class FileUtil {
     /**
      * 压缩文件
      *
-     * @param file     原文件夹
-     * @param zipOut   输出的ZIP文件
+     * @param file   原文件夹
+     * @param zipOut 输出的ZIP文件
      * @throws Exception
      */
     private static void zipFiles(File file, ZipOutputStream zipOut) throws Exception {
@@ -82,13 +86,12 @@ public class FileUtil {
                 zipOut.closeEntry();
             }
             //如果有子文件, 遍历子文件
-            for (File srcfile:fileList) {
-                zipFiles(srcfile,zipOut);
+            for (File srcfile : fileList) {
+                zipFiles(srcfile, zipOut);
             }
         }//end of if
 
     }//end of func
-
 
 
     /**
@@ -114,8 +117,6 @@ public class FileUtil {
         outZip.close();
 
     }//end of func
-
-
 
 
     /**
@@ -199,8 +200,6 @@ public class FileUtil {
     }
 
 
-
-
     public static File jsonObject2File(JSONObject jsonObject, String filename) throws Exception {
         String json = jsonObject.toString();
 
@@ -267,16 +266,17 @@ public class FileUtil {
 
     /**
      * 递归删除目录下的所有文件及子目录下所有文件
+     *
      * @param dir 将要删除的文件目录
      * @return boolean Returns "true" if all deletions were successful.
-     *                 If a deletion fails, the method stops attempting to
-     *                 delete and returns "false".
+     * If a deletion fails, the method stops attempting to
+     * delete and returns "false".
      */
     public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
             //递归删除目录中的子目录下
-            for (int i=0; i<children.length; i++) {
+            for (int i = 0; i < children.length; i++) {
                 boolean success = deleteDir(new File(dir, children[i]));
                 if (!success) {
                     return false;
@@ -287,7 +287,60 @@ public class FileUtil {
         return dir.delete();
     }
 
-    public static void changeDirName(File watchFolder,String tarName) {
-        watchFolder.renameTo(new File(watchFolder.getParent(),tarName));
+    public static void changeDirName(File watchFolder, String tarName) {
+        watchFolder.renameTo(new File(watchFolder.getParent(), tarName));
+    }
+
+    public static int copy(InputStream input, OutputStream output) throws IOException {
+
+        int IO_BUFFER_SIZE = 1024;
+        byte[] buffer = new byte[IO_BUFFER_SIZE];
+
+        int count = 0;
+
+        int n = 0;
+
+        while (-1 != (n = input.read(buffer))) {
+
+            output.write(buffer, 0, n);
+
+            count += n;
+
+        }
+
+        return count;
+    }
+
+
+    /**
+     * 将InputStream转换成byte数组
+     *
+     * @param in InputStream
+     * @return byte[]
+     * @throws IOException
+     */
+    public static byte[] InputStreamTOByte(InputStream in) throws IOException {
+
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        byte[] data = new byte[1024 * 16];
+        int count = -1;
+        while ((count = in.read(data, 0, 1024 * 16)) != -1)
+            outStream.write(data, 0, count);
+
+        data = null;
+        return outStream.toByteArray();
+    }
+
+    /**
+     * 将byte数组转换成InputStream
+     *
+     * @param in
+     * @return
+     * @throws Exception
+     */
+    public static InputStream byteTOInputStream(byte[] in) throws Exception {
+
+        ByteArrayInputStream is = new ByteArrayInputStream(in);
+        return is;
     }
 }

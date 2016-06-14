@@ -23,24 +23,11 @@ public abstract class BaseElement {
 
     public WatchPreviewView.Type mType = WatchPreviewView.Type.NULL;
 
-    public String ResourcePath = "";
-
     public BitmapDrawable mDrawable;
 
-    public InputStream inputStream;
-
-    public float width = 0;
-    public float height = 0;
-
     public float mRotate = 0.0f;
-
-    public float scale = 1.0f;
-
-    public int alpha = 255;
-
     public float start_x = 0;
     public float start_y = 0;
-
     public boolean isEnable = false;
 
     public int window_level = 0;
@@ -49,17 +36,7 @@ public abstract class BaseElement {
 
     protected Matrix matrix = new Matrix();
 
-    private Transformation mTransformation = new Transformation();
-
-    private String pngName = "";
     private float length;
-
-
-    public BaseElement(Context context, Drawable drawable) {
-        mContext = context;
-        isEnable = true;
-        mDrawable = (BitmapDrawable) drawable;
-    }
 
     public BaseElement(Context context, Bitmap bitmap) {
         mContext = context;
@@ -100,7 +77,6 @@ public abstract class BaseElement {
         mDrawable = drawable;
     }
 
-
     public void setBitmap(Bitmap bitmap) {
         mDrawable = PicUtil.bitmap2Drawable(bitmap);
     }
@@ -110,7 +86,6 @@ public abstract class BaseElement {
     }
 
     public void onDraw(Canvas canvas) {
-        //Log.d(Const.TAG, "onDraw Type = " + mType + "mRotate = " + mRotate);
 
         canvas.save();
 
@@ -130,12 +105,6 @@ public abstract class BaseElement {
 
         if (drawable != null) {
 
-            //BitmapDrawable
-            mDrawable.getBitmap().getDensity();
-            int w = drawable.getIntrinsicWidth();
-            int h = drawable.getIntrinsicHeight();
-            Logger.d(Const.TAG + "onDraw Type = " + mType + "   mRotate = " + mRotate + "   " +
-                    "   width=" + w + "   height =" + h);
             drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x + (length / 2)),
                     (int) (y + (length / 2)));
             drawable.draw(canvas);

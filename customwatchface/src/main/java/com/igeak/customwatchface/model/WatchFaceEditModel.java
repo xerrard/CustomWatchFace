@@ -94,7 +94,7 @@ public class WatchFaceEditModel {
         });
     }
 
-    public List<Bitmap> loadbackImg() throws IOException {
+    public List<Bitmap> loadbackImg() throws Exception {
         List<Bitmap> backImgs = new ArrayList<Bitmap>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.BACK_FOLDER_NAME);
@@ -105,7 +105,7 @@ public class WatchFaceEditModel {
         return backImgs;
     }
 
-    public List<Bitmap> loadScaleImg() throws IOException {
+    public List<Bitmap> loadScaleImg() throws Exception {
         List<Bitmap> backImgs = new ArrayList<Bitmap>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.SCALE_FOLDER_NAME);
@@ -118,7 +118,7 @@ public class WatchFaceEditModel {
         return backImgs;
     }
 
-    public List<Map<PointView.Type, Bitmap>> loadPointImg() throws IOException {
+    public List<Map<PointView.Type, Bitmap>> loadPointImg() throws Exception {
         List<Map<PointView.Type, Bitmap>> pointImgs = new ArrayList<>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.POINT_FOLDER_NAME);
