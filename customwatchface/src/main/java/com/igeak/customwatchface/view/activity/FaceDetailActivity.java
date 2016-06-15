@@ -67,7 +67,7 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
     public void updateWatchFaceDetailView(WatchFace watchFace) {
         this.watchface = watchFace;
         watchview.setElements(watchface); //更新预览图
-        //watchview.invalidate();
+
         if (!mRecycleViewAdapter.isSetAdapter()) {
             mRecyclerView.setAdapter(mRecycleViewAdapter);
         } else {

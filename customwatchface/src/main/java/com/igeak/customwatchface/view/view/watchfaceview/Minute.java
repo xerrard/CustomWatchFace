@@ -19,5 +19,11 @@ public class Minute extends   BaseElement {
         mType = WatchPreviewView.Type.MINUTE;
     }
 
+    public Minute(Context context, Bitmap bitmap) {
+        super(context, bitmap);
+        window_level = DisPlayLevel.LEVEL_MINUTE;
+        mType = WatchPreviewView.Type.MINUTE;
+
+    }
 
 }

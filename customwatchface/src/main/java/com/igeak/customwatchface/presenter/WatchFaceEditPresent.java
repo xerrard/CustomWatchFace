@@ -50,6 +50,7 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         this.pointView = pointView;
     }
 
+    @Override
     public List<InputStream> loadbackImg() {
         try {
             return model.loadbackImg();
@@ -58,11 +59,15 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         }
     }
 
-    public void changeBackImg(InputStream bitmap) {
+    @Override
+    public void changeBackImg(Bitmap bitmap) {
         watchfaceview.updatebackground(bitmap);
         model.saveBackImg(bitmap);
     }
 
+
+
+    @Override
     public List<InputStream> loadScaleImg() {
         try {
             return model.loadScaleImg();
@@ -71,12 +76,14 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         }
     }
 
-    public void changeScaleImg(InputStream bitmap) {
+    @Override
+    public void changeScaleImg(Bitmap bitmap) {
         watchfaceview.updateScale(bitmap);
         model.saveScaleImg(bitmap);
 
     }
 
+    @Override
     public List<Map<PointView.Type, InputStream>> loadPointImg() {
         try {
             return model.loadPointImg();
@@ -85,12 +92,14 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
         }
     }
 
-    public void changePointImg(Map<PointView.Type, InputStream> point) {
+    @Override
+    public void changePointImg(Map<PointView.Type, Bitmap> point) {
         watchfaceview.updatePoint(point);
         model.savePointImg(point);
     }
 
 
+    @Override
     public void loadWatchimg(final WatchFaceBean watchFaceBean, final WatchFacesModel.FacePath facePath) {
         model.loadWatchimg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
@@ -118,15 +127,15 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = Crop.getOutput(result);
 
-                Bitmap photo = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                //Bitmap photo = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
                 InputStream stream = context.getContentResolver().openInputStream(uri);
                 //Drawable drawable = Drawable.createFromStream(stream, null);
                 //Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
 
-                Logger.i("   photo.getWidth() = " + photo.getWidth()
-                        + "   photo.getHeight() = " + photo.getHeight());
-                Bitmap bitmap = PicUtil.InputStream2Bitmap(stream);
-                changeBackImg(stream);
+                //Logger.i("   photo.getWidth() = " + photo.getWidth()
+                //        + "   photo.getHeight() = " + photo.getHeight());
+                //Bitmap bitmap = PicUtil.InputStream2Bitmap(stream);
+                //changeBackImg(stream);
             } else if (resultCode == Crop.RESULT_ERROR) {
                 Toast.makeText(context, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT)
                         .show();

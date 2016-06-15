@@ -21,7 +21,6 @@ public interface IWatchFacesContract {
 
         void updateWatchFace(WatchPreviewView imageview, WatchFace watchFace);
 
-        void onWatchCreated(WatchFaceBean watchFaceBean);
     }
 
 
@@ -30,7 +29,7 @@ public interface IWatchFacesContract {
      */
     interface IWatchFacesPresent extends IPresenter<IWatchFacesView> {
         void getWatchfaceBeanList(WatchFacesModel.FacePath facePath);
-        void creatNewFace(final WatchFaceBean watchface);
+
         void loadWatchimg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
                           final WatchFacesModel.FacePath facePath);
         void changeName(String name,List<WatchFaceBean> watchbeanlist,int position);

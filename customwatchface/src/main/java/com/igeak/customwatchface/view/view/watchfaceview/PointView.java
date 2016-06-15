@@ -51,8 +51,18 @@ public class PointView extends View {
         mElements.put(Type.SECOND, new Second(context, map.get(Type.SECOND), (int) view_width,
                 (int) view_height));
         //requestLayout();
-        invalidate();
+        //invalidate();
     }
+
+    public void setPointElementBitmap(Map<Type, Bitmap> map) {
+        mElements.clear();
+        mElements.put(Type.HOUR, new Hour(context, map.get(Type.HOUR)));
+        mElements.put(Type.MINUTE, new Minute(context, map.get(Type.MINUTE)));
+        mElements.put(Type.SECOND, new Second(context, map.get(Type.SECOND)));
+        //requestLayout();
+        //invalidate();
+    }
+
 
     public void setHour(InputStream bitmap) {
         mElements.put(Type.HOUR, new DialScale(context, bitmap, (int) view_width, (int)

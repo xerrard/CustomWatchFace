@@ -57,23 +57,6 @@ public class AssetsOperation {
      * @return
      * @throws Exception
      */
-    public static Bitmap getWatchfacesElementImg(Context context, final String faceItem, String
-            faceElement) throws Exception {
-
-        String filepath = Const.FOLDER_NAME + "/" + faceItem + "/" + faceElement + Const.PNG_EXNAME;
-        InputStream is = context.getAssets().open(filepath);
-        return PicUtil.InputStream2Bitmap(is);
-    }
-
-    /**
-     * 获取表盘元素的drawable
-     *
-     * @param context
-     * @param faceItem    表盘名
-     * @param faceElement 表盘元素
-     * @return
-     * @throws Exception
-     */
     public static InputStream getWatchfacesElementStream(Context context, final String faceItem, String
             faceElement) throws Exception {
 

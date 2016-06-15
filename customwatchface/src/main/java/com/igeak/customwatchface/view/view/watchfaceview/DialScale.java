@@ -18,6 +18,12 @@ public class DialScale extends BaseElement {
 
     }
 
+    public DialScale(Context context, Bitmap bitmap) {
+        super(context, bitmap);
+        window_level = DisPlayLevel.LEVEL_DIALSCALE;
+        mType = WatchPreviewView.Type.DIALSCALE;
+
+    }
 
 
 }

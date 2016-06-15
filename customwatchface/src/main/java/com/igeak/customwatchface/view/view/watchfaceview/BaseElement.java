@@ -55,6 +55,13 @@ public abstract class BaseElement {
         }
     }
 
+    public BaseElement(Context context, Bitmap bitmap) {
+        mContext = context;
+        isEnable = true;
+        mDrawable = PicUtil.bitmap2Drawable(bitmap);
+
+    }
+
 
     public static class DisPlayLevel {
 

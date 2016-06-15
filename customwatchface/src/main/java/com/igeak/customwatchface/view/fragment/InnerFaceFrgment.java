@@ -29,6 +29,11 @@ import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by xuqiang on 16-5-11.
  */
@@ -64,13 +69,6 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
 
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-
-    @Override
     public void updateWatchFaceBeanList(List<WatchFaceBean> watchFaceBeanList) {
 
         if (!mRecycleViewAdapter.isSetAdapter()) {
@@ -83,17 +81,37 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
     }
 
     @Override
-    public void updateWatchFace(WatchPreviewView imageView, WatchFace watchFace) {
-        imageView.setElements(watchFace);
-    }
+    public void updateWatchFace(final WatchPreviewView imageView, final WatchFace watchFace) {
 
-    @Override
-    public void onWatchCreated(WatchFaceBean watchFaceBean) {
-//        Intent intent = new Intent(getContext(), FaceEditActivity.class);
-//        intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchFaceBean);
-//        intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
-//                (WatchFacesModel.FacePath.FACE_CUSTOM));
-//        startActivity(intent);
+
+        Observable.create(new Observable.OnSubscribe<WatchPreviewView>() {
+            @Override
+            public void call(Subscriber<? super WatchPreviewView> subscriber) {
+                imageView.setElements(watchFace);
+                subscriber.onNext(imageView);
+                subscriber.onCompleted();
+
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchPreviewView>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(WatchPreviewView imageView) {
+                        imageView.invalidate();
+                    }
+                });
+
+
     }
 
 
@@ -184,7 +202,6 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.option_new) {
-                    //present.creatNewFace(watchfaceList.get((int) getItemId()));
                     Intent intent = new Intent(getContext(), FaceEditActivity.class);
                     intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
                             getItemId()));

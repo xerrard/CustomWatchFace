@@ -20,6 +20,7 @@ import android.util.TypedValue;
 import com.igeak.customwatchface.presenter.loader.ImageResizer;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,33 +36,12 @@ public class PicUtil {
 
 
     public static Bitmap file2Bitmap(File file) throws Exception {
-        //BufferedInputStream bf = new BufferedInputStream(new FileInputStream(file));
-        FileInputStream fileInputStream = new FileInputStream(file);
-        return InputStream2Bitmap(fileInputStream);
+        return BitmapFactory.decodeFile(file.getAbsolutePath());
     }
-
 
     public static BitmapDrawable bitmap2Drawable(Bitmap bitmap) {
         BitmapDrawable bd = new BitmapDrawable(bitmap);
         return bd;
-    }
-
-
-    public static Bitmap InputStream2Bitmap(InputStream is) throws Exception {
-        InputStream copyiInputStream1;
-        InputStream copyiInputStream2;
-        byte[] data = FileUtil.InputStreamTOByte(is);
-        //copyiInputStream1 = FileUtil.byteTOInputStream(data);
-        copyiInputStream2 = FileUtil.byteTOInputStream(data);
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(is, null, options);
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = ImageResizer.calculateInSampleSize(options, 320, 320);
-        Bitmap bitmap = BitmapFactory.decodeStream(copyiInputStream2, null, options);
-        return bitmap;
-
     }
 
 
@@ -89,6 +69,28 @@ public class PicUtil {
     }
 
 
+    public static boolean saveStream2File(InputStream is, File file) throws IOException {
+        if (is != null && file != null) {
+            BufferedInputStream bis = new BufferedInputStream(is);
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+
+            int i;
+
+            do {
+                i = bis.read();
+                if (i != -1) {
+                    bos.write(i);
+                }
+            } while (i != -1);
+
+            bis.close();
+            bos.close();
+
+            return true;
+        }
+        return false;
+    }
+
     public static boolean saveBitmapToFile(Bitmap bm, File file) throws IOException {
         if (bm != null && file != null) {
             FileOutputStream output = null;
@@ -108,7 +110,6 @@ public class PicUtil {
         }
         return false;
     }
-
 
 
 }

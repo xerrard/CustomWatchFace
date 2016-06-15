@@ -55,45 +55,6 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
                 });
     }
 
-    @Override
-    public void creatNewFace(final WatchFaceBean watchface) {
-        Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {
-            @Override
-            public void call(Subscriber<? super WatchFaceBean> subscriber) {
-                try {
-                    AssetsOperation.assert2Folder(context, watchface.getName());
-                    if (watchface == null) {
-                        subscriber.onError(new Exception("User = null"));
-                    } else {
-                        subscriber.onNext(watchface);
-                        subscriber.onCompleted();
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WatchFaceBean>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(WatchFaceBean watchFaceBean) {
-                        mWatchFaceView.onWatchCreated(watchFaceBean);
-                    }
-                });
-
-
-    }
 
 
 

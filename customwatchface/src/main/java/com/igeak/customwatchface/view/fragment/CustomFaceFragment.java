@@ -32,6 +32,11 @@ import com.igeak.customwatchface.view.activity.FaceEditActivity;
 
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by xuqiang on 16-5-11.
  */
@@ -82,15 +87,40 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
     }
 
     @Override
-    public void updateWatchFace(WatchPreviewView imageView, WatchFace watchFace) {
-        imageView.setElements(watchFace);
-        //imageView.invalidate();
+    public void updateWatchFace(final WatchPreviewView imageView, final WatchFace watchFace) {
+
+
+        Observable.create(new Observable.OnSubscribe<WatchPreviewView>() {
+            @Override
+            public void call(Subscriber<? super WatchPreviewView> subscriber) {
+                imageView.setElements(watchFace);
+                subscriber.onNext(imageView);
+                subscriber.onCompleted();
+
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchPreviewView>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(WatchPreviewView imageView) {
+                        imageView.invalidate();
+                    }
+                });
+
+
+
     }
 
-    @Override
-    public void onWatchCreated(WatchFaceBean watchFaceBean) {
-
-    }
 
 
     //继承自 RecyclerView.Adapter

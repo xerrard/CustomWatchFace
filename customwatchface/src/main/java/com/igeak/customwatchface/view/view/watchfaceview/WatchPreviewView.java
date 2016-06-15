@@ -61,37 +61,33 @@ public class WatchPreviewView extends View {
         mElements.put(Type.SECOND, new Second(context, watchface.getSecond(), (int) view_width,
                 (int) view_height));
         //requestLayout();
+        //invalidate();
+    }
+
+
+    public void setPoint(Map<PointView.Type, Bitmap> map) {
+        mElements.put(Type.HOUR, new Hour(context, map.get(PointView.Type.HOUR)));
+        mElements.put(Type.MINUTE, new Minute(context, map.get(PointView.Type.MINUTE)));
+        mElements.put(Type.SECOND, new Second(context, map.get(PointView.Type.SECOND)));
         invalidate();
     }
 
 
-    public Map<Type, BaseElement> getElements() {
-        return mElements;
-    }
 
-    public void setBackground(InputStream bitmap) {
-        mElements.put(Type.BACKGROUND, new BackGround(context, bitmap, (int) view_width, (int)
-                view_height));
+    public void setBackground(Bitmap bitmap) {
+        mElements.put(Type.BACKGROUND, new BackGround(context, bitmap));
         //requestLayout();
         invalidate();
     }
 
 
-    public void setScale(InputStream bitmap) {
-        mElements.put(Type.DIALSCALE, new DialScale(context, bitmap, (int) view_width, (int)
-                view_height));
+    public void setScale(Bitmap bitmap) {
+        mElements.put(Type.DIALSCALE, new DialScale(context, bitmap));
         invalidate();
     }
 
-    public void setPoint(Map<PointView.Type, InputStream> map) {
-        mElements.put(Type.HOUR, new Hour(context, map.get(PointView.Type.HOUR), (int)
-                view_width, (int) view_height));
-        mElements.put(Type.MINUTE, new Minute(context, map.get(PointView.Type.MINUTE), (int)
-                view_width, (int) view_height));
-        mElements.put(Type.SECOND, new Second(context, map.get(PointView.Type.SECOND), (int)
-                view_width, (int) view_height));
-        invalidate();
-    }
+
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

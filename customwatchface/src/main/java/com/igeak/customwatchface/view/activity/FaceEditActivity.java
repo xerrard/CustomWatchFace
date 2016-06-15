@@ -107,17 +107,17 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     }
 
     @Override
-    public void updatebackground(InputStream bitmap) {
+    public void updatebackground(Bitmap bitmap) {
         watchPreviewView.setBackground(bitmap);
     }
 
     @Override
-    public void updateScale(InputStream bitmap) {
+    public void updateScale(Bitmap bitmap) {
         watchPreviewView.setScale(bitmap);
     }
 
     @Override
-    public void updatePoint(Map<PointView.Type, InputStream> map) {
+    public void updatePoint(Map<PointView.Type, Bitmap> map) {
         watchPreviewView.setPoint(map);
     }
 

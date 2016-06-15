@@ -23,11 +23,14 @@ public interface IWatchFaceEditContract {
     interface IWatchFaceEditView extends IView {
         void updateWatchFace(WatchFace watchFace);
 
-        void updatebackground(InputStream bitmap);
+        //void updatebackground(InputStream bitmap);
 
-        void updateScale(InputStream bitmap);
+        void updatebackground(Bitmap bitmap);
 
-        void updatePoint(Map<PointView.Type, InputStream> map);
+        void updateScale(Bitmap bitmap);
+
+        void updatePoint(Map<PointView.Type, Bitmap> map);
+
 
         void updateSaved();
     }
@@ -47,12 +50,17 @@ public interface IWatchFaceEditContract {
 
     interface IWatchFaceEditPresent extends IPresenter<IWatchFaceEditView>{
         List<InputStream> loadbackImg();
-        void changeBackImg(InputStream bitmap);
+        void changeBackImg(Bitmap bitmap);
+
         List<InputStream> loadScaleImg();
-        void changeScaleImg(InputStream bitmap);
+        void changeScaleImg(Bitmap bitmap);
+
         List<Map<PointView.Type, InputStream>> loadPointImg();
-        void changePointImg(Map<PointView.Type, InputStream> point);
+        void changePointImg(Map<PointView.Type, Bitmap> point);
+
         void loadWatchimg(final WatchFaceBean watchFaceBean,final WatchFacesModel.FacePath facePath);
+
+
         void handleCrop(int resultCode, Intent result);
         void savewatch(String name);
         void creatNewFace(String name);

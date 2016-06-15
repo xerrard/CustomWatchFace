@@ -24,7 +24,7 @@ import rx.Subscriber;
  */
 public class WatchFaceEditModel {
     private Context context;
-    private Map<WatchPreviewView.Type, InputStream> modifyMaps;
+    private Map<WatchPreviewView.Type, Bitmap> modifyMaps;
     private WatchFaceBean watchfacebean;
 
     public WatchFaceEditModel(Context context) {
@@ -94,6 +94,11 @@ public class WatchFaceEditModel {
         });
     }
 
+    /**
+     *  加载背景的数据
+     * @return
+     * @throws Exception
+     */
     public List<InputStream> loadbackImg() throws Exception {
         List<InputStream> backImgs = new ArrayList<InputStream>();
         String[] backgrounds;
@@ -141,15 +146,15 @@ public class WatchFaceEditModel {
         return pointImgs;
     }
 
-    public void saveBackImg(InputStream bitmap) {
+    public void saveBackImg(Bitmap bitmap) {
         modifyMaps.put(WatchPreviewView.Type.BACKGROUND, bitmap);
     }
 
-    public void saveScaleImg(InputStream bitmap) {
+    public void saveScaleImg(Bitmap bitmap) {
         modifyMaps.put(WatchPreviewView.Type.DIALSCALE, bitmap);
     }
 
-    public void savePointImg(Map<PointView.Type, InputStream> point) {
+    public void savePointImg(Map<PointView.Type, Bitmap> point) {
         modifyMaps.put(WatchPreviewView.Type.HOUR, point.get(PointView.Type.HOUR));
         modifyMaps.put(WatchPreviewView.Type.MINUTE, point.get(PointView.Type.MINUTE));
         modifyMaps.put(WatchPreviewView.Type.SECOND, point.get(PointView.Type.SECOND));
@@ -183,7 +188,7 @@ public class WatchFaceEditModel {
                                 faceElement = watchfacebean.getBackground();
                         }
 
-//                        PicUtil.saveBitmapToFile(
+//                        PicUtil.saveStream2File(
 //                                modifyMaps.get(type),
 //                                FileOperation.getWatchfacesElementFile(
 //                                        watchfacebean.getName()
@@ -235,7 +240,7 @@ public class WatchFaceEditModel {
                                 faceElement = watchfacebean.getBackground();
                         }
 
-//                        PicUtil.saveBitmapToFile(
+//                        PicUtil.saveStream2File(
 //                                modifyMaps.get(type),
 //                                FileOperation.getWatchfacesElementFile(
 //                                        watchfacebean.getName()

@@ -19,5 +19,11 @@ public class BackGround extends BaseElement {
 
     }
 
+    public BackGround(Context context, Bitmap bitmap) {
+        super(context, bitmap);
+        window_level = DisPlayLevel.LEVEL_BACKGROUND;
+        mType = WatchPreviewView.Type.BACKGROUND;
+
+    }
 
 }

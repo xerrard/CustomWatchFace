@@ -18,4 +18,11 @@ public class Second extends   BaseElement {
         mType = WatchPreviewView.Type.SECOND;
     }
 
+    public Second(Context context, Bitmap bitmap) {
+        super(context, bitmap);
+        window_level = DisPlayLevel.LEVEL_SECOND;
+        mType = WatchPreviewView.Type.SECOND;
+
+    }
+
 }

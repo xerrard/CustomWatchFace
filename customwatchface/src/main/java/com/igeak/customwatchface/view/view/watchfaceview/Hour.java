@@ -18,5 +18,11 @@ public class Hour extends   BaseElement {
         mType = WatchPreviewView.Type.HOUR;
     }
 
+    public Hour(Context context, Bitmap bitmap) {
+        super(context, bitmap);
+        window_level = DisPlayLevel.LEVEL_HOUR;
+        mType = WatchPreviewView.Type.HOUR;
+
+    }
 
 }

@@ -10,16 +10,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.igeak.customwatchface.R;
+import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
+import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -58,6 +68,7 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
+        private List<Map<PointView.Type, Bitmap>> pointbitMaps = new ArrayList<>();
         private List<Map<PointView.Type, InputStream>> pointMaps;
 
         public boolean isSetAdapter() {
@@ -84,8 +95,61 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
 
         //将数据绑定到子View，会自动复用View
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, int i) {
-            viewHolder.pointView.setPointElement(pointMaps.get(i));
+        public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+
+            final Map<PointView.Type, InputStream> pointMap = pointMaps.get(i);
+            final PointView pointView = viewHolder.pointView;
+            final int height = pointView.getHeight();
+            final int width = pointView.getWidth();
+            final Map<PointView.Type, Bitmap> pointbitMap = new HashMap<>();
+            Observable.create(new Observable.OnSubscribe<Map<PointView.Type, Bitmap>>() {
+                @Override
+                public void call(Subscriber<? super Map<PointView.Type, Bitmap>> subscriber) {
+
+                    try {
+                        Bitmap bitmaphour = PicOperation.InputStream2Bitmap(pointMap.get
+                                (PointView.Type
+                                        .HOUR), width, height);
+                        Bitmap bitmapminute = PicOperation.InputStream2Bitmap(pointMap.get
+                                (PointView.Type
+                                        .MINUTE), width, height);
+                        Bitmap bitmapsecond = PicOperation.InputStream2Bitmap(pointMap.get
+                                (PointView.Type
+                                        .SECOND), width, height);
+
+                        pointbitMap.put(PointView.Type.HOUR,bitmaphour);
+                        pointbitMap.put(PointView.Type.MINUTE,bitmapminute);
+                        pointbitMap.put(PointView.Type.SECOND,bitmapsecond);
+                        pointView.setPointElementBitmap(pointbitMap);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    subscriber.onNext(pointbitMap);
+                    subscriber.onCompleted();
+
+                }
+            })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Map<PointView.Type, Bitmap>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Map<PointView.Type, Bitmap> pointbitMap) {
+                            pointView.invalidate();
+                            pointbitMaps.add(i,pointbitMap);
+                        }
+                    });
+
+
         }
 
         @Override
@@ -114,8 +178,8 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
             @Override
             public void onClick(View v) {
                 int index = (int) getItemId();
-                Map<PointView.Type, InputStream> pointmap = pointMaps.get(index);
-                present.changePointImg(pointmap);
+                //Map<PointView.Type, InputStream> pointmap = pointMaps.get(index);
+                present.changePointImg(pointbitMaps.get(index));
             }
         }
     }
