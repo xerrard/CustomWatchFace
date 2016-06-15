@@ -1,18 +1,17 @@
 package com.igeak.customwatchface.util;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.List;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.List;
 
 public class MyUtils {
 
@@ -66,4 +65,10 @@ public class MyUtils {
         new Thread(runnable).start();
     }
 
+    public static void addAtPos(List list, int index, Object o) {
+        while (list.size() < index) {
+            list.add(null);
+        }
+        list.add(index, o);
+    }
 }

@@ -10,15 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
+import com.igeak.customwatchface.util.MyUtils;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
-import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -120,7 +119,11 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
                         pointbitMap.put(PointView.Type.HOUR,bitmaphour);
                         pointbitMap.put(PointView.Type.MINUTE,bitmapminute);
                         pointbitMap.put(PointView.Type.SECOND,bitmapsecond);
+
+                        //pointbitMaps.add(i,pointbitMap);
+                        MyUtils.addAtPos(pointbitMaps,i,pointbitMap);
                         pointView.setPointElementBitmap(pointbitMap);
+
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -145,7 +148,7 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
                         @Override
                         public void onNext(Map<PointView.Type, Bitmap> pointbitMap) {
                             pointView.invalidate();
-                            pointbitMaps.add(i,pointbitMap);
+
                         }
                     });
 

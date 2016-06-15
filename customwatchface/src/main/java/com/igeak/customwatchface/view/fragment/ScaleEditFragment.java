@@ -16,6 +16,7 @@ import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
+import com.igeak.customwatchface.util.MyUtils;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 
 import java.io.InputStream;
@@ -110,7 +111,8 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
                 public void call(Subscriber<? super Bitmap> subscriber) {
                     try {
                         Bitmap bitmap = PicOperation.InputStream2Bitmap(is, width, height);
-
+                        MyUtils.addAtPos(bitmaps,i,bitmap);
+                        //bitmaps.add(i,bitmap);
                         subscriber.onNext(bitmap);
                         subscriber.onCompleted();
                     } catch (Exception e) {
@@ -135,7 +137,7 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
                         @Override
                         public void onNext(Bitmap bitmap) {
                             imageView.setImageBitmap(bitmap);
-                            bitmaps.add(i,bitmap);
+
                         }
                     });
 

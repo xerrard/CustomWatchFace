@@ -16,6 +16,7 @@ import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
+import com.igeak.customwatchface.util.MyUtils;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.soundcloud.android.crop.Crop;
 
@@ -57,12 +58,6 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
         present = ((FaceEditActivity) getActivity()).present;
         adapter = new RecycleViewAdapter(bitmaps);
         mRecyclerView.setAdapter(adapter);
-        return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         bitmaps = present.loadbackImg();
         if (!adapter.isSetAdapter()) {
             adapter.setInputStreams(bitmaps);
@@ -71,13 +66,20 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
             adapter.setInputStreams(bitmaps);
             adapter.notifyDataSetChanged();
         }
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<InputStream> inputStreams;
-        private List<Bitmap> bitmaps = new ArrayList<>();
+        private List<Bitmap> bitmaps;
 
         public boolean isSetAdapter() {
             return inputStreams != null;
@@ -85,6 +87,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
 
         public void setInputStreams(List<InputStream> inputStreams) {
             this.inputStreams = inputStreams;
+            bitmaps = new ArrayList<Bitmap>(inputStreams.size());
         }
 
         public RecycleViewAdapter(List<InputStream> inputStreams) {
@@ -115,6 +118,8 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
                     public void call(Subscriber<? super Bitmap> subscriber) {
                         try {
                             Bitmap bitmap = PicOperation.InputStream2Bitmap(is, width, height);
+                            //bitmaps.add(index-1,bitmap);
+                            MyUtils.addAtPos(bitmaps,index-1,bitmap);
                             subscriber.onNext(bitmap);
                             subscriber.onCompleted();
                         } catch (Exception e) {
@@ -139,7 +144,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
                             @Override
                             public void onNext(Bitmap bitmap) {
                                 imageView.setImageBitmap(bitmap);
-                                bitmaps.add(index-1,bitmap);
+
                             }
                         });
 
