@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
@@ -23,6 +24,7 @@ import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
+import com.igeak.customwatchface.util.FileUtil;
 import com.igeak.customwatchface.view.fragment.BackgroudEditFragment;
 import com.igeak.customwatchface.view.fragment.PointEditFragment;
 import com.igeak.customwatchface.view.fragment.ScaleEditFragment;
@@ -32,7 +34,6 @@ import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
                 , pointEditFragment);
 
         saveBtn = (Button) findViewById(R.id.savewatch);
-        present.loadWatchimg(watchfacebean,facePath);
+        present.loadWatchimg(watchfacebean, facePath);
 
     }
 
@@ -109,6 +110,8 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     @Override
     public void updatebackground(Bitmap bitmap) {
         watchPreviewView.setBackground(bitmap);
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setImageBitmap(bitmap);
     }
 
     @Override
@@ -123,9 +126,9 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
 
     @Override
     public void updateSaved() {
-        if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)){
+        if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
             Toast.makeText(this, "watchface saved", Toast.LENGTH_LONG).show();
-        }else {
+        } else {
             Toast.makeText(this, "watchface created", Toast.LENGTH_LONG).show();
         }
 
@@ -136,14 +139,11 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
-            Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
-            //Crop.of(result.getData(), destination).asSquare().start(this);
-            boolean isCircleCrop = true;
-            new Crop(result.getData()).output(destination).setCropType(isCircleCrop).start(this);
-
-
+            Uri destination = Uri.fromFile(new File(FileUtil.getExternalStoragePath(), "cropped"));
+            Crop.of(result.getData(), destination).asCircle(true).asPng(true).start(this);
         } else if (requestCode == Crop.REQUEST_CROP) {
-            present.handleCrop(resultCode, result);
+            present.handleCrop(resultCode, result, watchPreviewView.getWidth(), watchPreviewView
+                    .getHeight());
         }
     }
 
@@ -154,35 +154,35 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         savewatch(null);
     }
 
-    public void savewatch(View view){
+    public void savewatch(View view) {
 
-            final EditText et = new EditText(this);
-            String name = watchfacebean.getName();
-            et.setText(name);
-            et.setSelection(name.length());
-            new AlertDialog.Builder(this)
-                    .setTitle("保存表盘")
-                    .setIcon(
-                            android.R.drawable.ic_dialog_info)
-                    .setView(et)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String name = et.getText().toString();
-                            if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)){
-                                present.savewatch(name);
-                            }else {
-                                present.creatNewFace(name);
-                            }
+        final EditText et = new EditText(this);
+        String name = watchfacebean.getName();
+        et.setText(name);
+        et.setSelection(name.length());
+        new AlertDialog.Builder(this)
+                .setTitle("保存表盘")
+                .setIcon(
+                        android.R.drawable.ic_dialog_info)
+                .setView(et)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = et.getText().toString();
+                        if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
+                            present.savewatch(name);
+                        } else {
+                            present.creatNewFace(name);
                         }
-                    })
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .show();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .show();
 
     }
 

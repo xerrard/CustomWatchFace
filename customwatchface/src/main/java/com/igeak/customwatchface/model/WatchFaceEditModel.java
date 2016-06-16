@@ -62,8 +62,7 @@ public class WatchFaceEditModel {
                         watchFace.setSecond(FileOperation.getWatchfacesElementStream(
                                 watchFaceBean.getName(),
                                 watchFaceBean.getSecond()));
-                    }
-                    else {
+                    } else {
                         watchFace.setBackground(AssetsOperation.getWatchfacesElementStream(context,
                                 watchFaceBean.getName(),
                                 watchFaceBean.getBackground()));
@@ -95,7 +94,8 @@ public class WatchFaceEditModel {
     }
 
     /**
-     *  加载背景的数据
+     * 加载背景的数据
+     *
      * @return
      * @throws Exception
      */
@@ -188,13 +188,13 @@ public class WatchFaceEditModel {
                                 faceElement = watchfacebean.getBackground();
                         }
 
-//                        PicUtil.saveStream2File(
-//                                modifyMaps.get(type),
-//                                FileOperation.getWatchfacesElementFile(
-//                                        watchfacebean.getName()
-//                                        , faceElement
-//                                )
-//                        );
+                        PicUtil.saveBitmapToFile(
+                                modifyMaps.get(type),
+                                FileOperation.getWatchfacesElementFile(
+                                        watchfacebean.getName()
+                                        , faceElement
+                                )
+                        );
 
                         FileOperation.changeWatchName(watchfacebean, name);
 
@@ -240,13 +240,13 @@ public class WatchFaceEditModel {
                                 faceElement = watchfacebean.getBackground();
                         }
 
-//                        PicUtil.saveStream2File(
-//                                modifyMaps.get(type),
-//                                FileOperation.getWatchfacesElementFile(
-//                                        watchfacebean.getName()
-//                                        , faceElement
-//                                )
-//                        );
+                        PicUtil.saveBitmapToFile(
+                                modifyMaps.get(type),
+                                FileOperation.getWatchfacesElementFile(
+                                        watchfacebean.getName()
+                                        , faceElement
+                                )
+                        );
                         FileOperation.changeWatchName(watchfacebean, name);
                     }
                 } catch (Exception e) {

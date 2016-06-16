@@ -8,7 +8,10 @@ import android.graphics.Rect;
 import android.graphics.Region;
 import android.view.View;
 
-
+/**
+ * @author JianTao.Young
+ * @time: 2015-1-28 下午5:56:28
+ */
 public class CircleHighlightView extends HighlightView {
 
     public CircleHighlightView(View context) {
@@ -20,7 +23,7 @@ public class CircleHighlightView extends HighlightView {
         canvas.save();
         Path path = new Path();
         outlinePaint.setStrokeWidth( outlineWidth);
-        if(!hasFocus()) {//û�����ǣ�ֱ�ӻ�һ����ɫ�ľ��ο�
+        if(!hasFocus()) {//没焦点是，直接画一个黑色的矩形框
             outlinePaint.setColor( Color.BLACK);
             canvas.drawRect( drawRect, outlinePaint);
         }
@@ -28,21 +31,21 @@ public class CircleHighlightView extends HighlightView {
             Rect viewDrawingRect = new Rect();
             viewContext.getDrawingRect( viewDrawingRect);
 
-            //�Ѳü���drawRect�����Բ�İ뾶
+            //已裁剪框drawRect，算出圆的半径
             float radius = (drawRect.right - drawRect.left) / 2;
-            //���һ��Բ��
+            //添加一个圆形
             path.addCircle( drawRect.left + radius, drawRect.top + radius, radius, Direction.CW);
             outlinePaint.setColor( highlightColor);
 
-            //�ü�������path֮���������outsidePaint���
+            //裁剪画布，path之外的区域，以outsidePaint填充
             canvas.clipPath( path, Region.Op.DIFFERENCE);
             canvas.drawRect( viewDrawingRect, outsidePaint);
 
             canvas.restore();
-            //����Բ�ϸ����ߣ�����outlinePaint�����Paint.Style.STROKE����ʾֻ���Ƽ���ͼ�ε�������
+            //绘制圆上高亮线，这里outlinePaint定义的Paint.Style.STROKE：表示只绘制几何图形的轮廓。
             canvas.drawPath( path, outlinePaint);
-            
-            //��modifyModeΪgrowʱ������handles,Ҳ�������ĸ�СԲ
+
+            //当modifyMode为grow时，绘制handles,也就是那四个小圆
             if(handleMode == HandleMode.Always || (handleMode == HandleMode.Changing && modifyMode == ModifyMode.Grow)) {
                 drawHandles( canvas);
             }
@@ -70,9 +73,9 @@ public class CircleHighlightView extends HighlightView {
             if(((GROW_TOP_EDGE | GROW_BOTTOM_EDGE) & edge) == 0) {
                 dy = 0;
             }
-            // �Ǹ�����仯���ȡ�����ο�;Ĭ�ϲο�dx
+            // 那个方向变化大就取其做参考;默认参考dx
             if(Math.abs( dx) < Math.abs( dy)) {
-                dx = 0.0f;// dx����Ϊ0��growBy�ͻ���dy�ο�������1:1�����dx
+                dx = 0.0f;// dx设置为0，growBy就会以dy参考，按照1:1计算出dx
             }
             float xDelta = dx * (cropRect.width() / r.width());
             float yDelta = dy * (cropRect.height() / r.height());
@@ -81,7 +84,7 @@ public class CircleHighlightView extends HighlightView {
     }
 
     /**
-     * ���x,y��꣬��������Բ�Ĺ�ϵ��Բ�ϡ�Բ�ڡ�Բ�⣩
+     * 根据x,y坐标，计算其与圆的关系（圆上、圆内、圆外）
      * @param x
      * @param y
      * @return
@@ -94,13 +97,13 @@ public class CircleHighlightView extends HighlightView {
 
         int centerX = r.left + radius;
         int centerY = r.top + radius;
-        
-        //�жϴ���λ���Ƿ���Բ��
+
+        //判断触摸位置是否在圆上
         float ret = (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY);
         double rRadius = Math.sqrt( ret);
         double gap = Math.abs( rRadius - radius);
 
-        if(gap <= hysteresis) {// Բ�ϡ����������Ǽ̳���HighlightView�����ƾ��ο�ģ������?����ģ�ⷵ�����������£���Ǵ�Բ�ϣ��ײ���á���Ҳ�����Զ��塣
+        if(gap <= hysteresis) {// 圆上。这里由于是继承至HighlightView（绘制矩形框的）来处理，所以模拟返回了左右上下，而非纯圆上，亲测可用。你也可以自定义。
             if(x < centerX) {// left
                 retval |= GROW_LEFT_EDGE;
             }
@@ -118,7 +121,7 @@ public class CircleHighlightView extends HighlightView {
         else if(rRadius > radius) {// outside
             retval = GROW_NONE;
         }
-        else if(rRadius < radius) {// inside��Բ�ھ�ִ��move
+        else if(rRadius < radius) {// inside，圆内就执行move
             retval = MOVE;
         }
 

@@ -31,8 +31,6 @@ import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.young.imagecropper.R;
-
 /*
  * Modified from version in AOSP.
  *
@@ -68,6 +66,7 @@ class HighlightView {
 
     protected View viewContext; // View displaying image
     private boolean showThirds;
+    private boolean showCircle;
     protected int highlightColor;
 
     protected ModifyMode modifyMode = ModifyMode.None;
@@ -89,6 +88,7 @@ class HighlightView {
         TypedArray attributes = context.obtainStyledAttributes(outValue.resourceId, R.styleable.CropImageView);
         try {
             showThirds = attributes.getBoolean(R.styleable.CropImageView_showThirds, false);
+            showCircle = attributes.getBoolean(R.styleable.CropImageView_showCircle, false);
             highlightColor = attributes.getColor(R.styleable.CropImageView_highlightColor,
                     DEFAULT_HIGHLIGHT_COLOR);
             handleMode = HandleMode.values()[attributes.getInt(R.styleable.CropImageView_showHandles, 0)];
@@ -152,6 +152,10 @@ class HighlightView {
                 drawThirds(canvas);
             }
 
+            if (showCircle) {
+                drawCircle(canvas);
+            }
+
             if (handleMode == HandleMode.Always ||
                     (handleMode == HandleMode.Changing && modifyMode == ModifyMode.Grow)) {
                 drawHandles(canvas);
@@ -162,7 +166,7 @@ class HighlightView {
     /*
      * Fall back to naive method for darkening outside crop area
      */
-    protected void drawOutsideFallback(Canvas canvas) {
+    private void drawOutsideFallback(Canvas canvas) {
         canvas.drawRect(0, 0, canvas.getWidth(), drawRect.top, outsidePaint);
         canvas.drawRect(0, drawRect.bottom, canvas.getWidth(), canvas.getHeight(), outsidePaint);
         canvas.drawRect(0, drawRect.top, drawRect.left, drawRect.bottom, outsidePaint);
@@ -175,7 +179,7 @@ class HighlightView {
      * - ICS & ICS MR1 with hardware acceleration turned on
      */
     @SuppressLint("NewApi")
-    protected boolean isClipPathSupported(Canvas canvas) {
+    private boolean isClipPathSupported(Canvas canvas) {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return false;
         } else if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -209,6 +213,11 @@ class HighlightView {
                 drawRect.right, drawRect.top + yThird, outlinePaint);
         canvas.drawLine(drawRect.left, drawRect.top + yThird * 2,
                 drawRect.right, drawRect.top + yThird * 2, outlinePaint);
+    }
+
+    private void drawCircle(Canvas canvas) {
+        outlinePaint.setStrokeWidth(1);
+        canvas.drawOval(new RectF(drawRect), outlinePaint);
     }
 
     public void setMode(ModifyMode mode) {
@@ -268,7 +277,7 @@ class HighlightView {
             if (((GROW_TOP_EDGE | GROW_BOTTOM_EDGE) & edge) == 0) {
                 dy = 0;
             }
-            System.out.println(" handleMotion edge:"+edge+" ; dx:"+dx+" ; dy:"+dy);
+
             // Convert to image space before sending to growBy()
             float xDelta = dx * (cropRect.width() / r.width());
             float yDelta = dy * (cropRect.height() / r.height());

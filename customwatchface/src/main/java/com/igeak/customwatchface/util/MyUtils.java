@@ -66,9 +66,14 @@ public class MyUtils {
     }
 
     public static void addAtPos(List list, int index, Object o) {
-        while (list.size() < index) {
-            list.add(null);
+        if (index >= list.size()) {
+            while (list.size() < index) {
+                list.add(null);
+            }
+            list.add( o);
+        }else{
+            list.remove(index);
+            list.add(index, o);
         }
-        list.add(index, o);
     }
 }

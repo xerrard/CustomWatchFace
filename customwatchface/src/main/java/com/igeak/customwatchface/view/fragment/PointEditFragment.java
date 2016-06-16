@@ -100,7 +100,7 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
             final PointView pointView = viewHolder.pointView;
             final int height = pointView.getHeight();
             final int width = pointView.getWidth();
-            final Map<PointView.Type, Bitmap> pointbitMap = new HashMap<>();
+
             Observable.create(new Observable.OnSubscribe<Map<PointView.Type, Bitmap>>() {
                 @Override
                 public void call(Subscriber<? super Map<PointView.Type, Bitmap>> subscriber) {
@@ -115,7 +115,7 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
                         Bitmap bitmapsecond = PicOperation.InputStream2Bitmap(pointMap.get
                                 (PointView.Type
                                         .SECOND), width, height);
-
+                        final Map<PointView.Type, Bitmap> pointbitMap = new HashMap<>();
                         pointbitMap.put(PointView.Type.HOUR,bitmaphour);
                         pointbitMap.put(PointView.Type.MINUTE,bitmapminute);
                         pointbitMap.put(PointView.Type.SECOND,bitmapsecond);
@@ -123,13 +123,13 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
                         //pointbitMaps.add(i,pointbitMap);
                         MyUtils.addAtPos(pointbitMaps,i,pointbitMap);
                         pointView.setPointElementBitmap(pointbitMap);
-
+                        subscriber.onNext(pointbitMap);
+                        subscriber.onCompleted();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 
-                    subscriber.onNext(pointbitMap);
-                    subscriber.onCompleted();
+
 
                 }
             })

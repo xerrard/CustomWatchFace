@@ -61,7 +61,6 @@ public interface IWatchFaceEditContract {
         void loadWatchimg(final WatchFaceBean watchFaceBean,final WatchFacesModel.FacePath facePath);
 
 
-        void handleCrop(int resultCode, Intent result);
         void savewatch(String name);
         void creatNewFace(String name);
     }

@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.igeak.customwatchface.Bean.WatchFaceBean;
+import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFaceEditModel;
 import com.igeak.customwatchface.model.WatchFacesModel;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -122,20 +124,49 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
                 });
     }
 
-    public void handleCrop(int resultCode, Intent result) {
+    public void handleCrop(int resultCode, Intent result, final int width, final int height) {
         try {
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = Crop.getOutput(result);
 
                 //Bitmap photo = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-                InputStream stream = context.getContentResolver().openInputStream(uri);
+                final InputStream stream = context.getContentResolver().openInputStream(uri);
                 //Drawable drawable = Drawable.createFromStream(stream, null);
                 //Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
 
                 //Logger.i("   photo.getWidth() = " + photo.getWidth()
                 //        + "   photo.getHeight() = " + photo.getHeight());
                 //Bitmap bitmap = PicUtil.InputStream2Bitmap(stream);
-                //changeBackImg(stream);
+                Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                    @Override
+                    public void call(Subscriber<? super Bitmap> subscriber) {
+                        try {
+                            Bitmap bitmap = PicOperation.InputStream2Bitmap(stream,width,height);
+                            subscriber.onNext(bitmap);
+                            subscriber.onCompleted();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<Bitmap>() {
+                            @Override
+                            public void onCompleted() {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(Bitmap bitmap) {
+                                changeBackImg(bitmap);
+                            }
+
+                        });
             } else if (resultCode == Crop.RESULT_ERROR) {
                 Toast.makeText(context, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT)
                         .show();
