@@ -103,7 +103,7 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
         //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = getLayoutInflater().inflate(R.layout.detail_recycler_item, null);
+            View v = getLayoutInflater().inflate(R.layout.recycler_item_detail, null);
             return new ViewHolder(v);
         }
 

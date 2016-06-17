@@ -83,6 +83,7 @@ public class Crop {
 
     /**
      * Set whether to save the result as a PNG or not. Helpful to preserve alpha.
+     *
      * @param asPng whether to save the result as a PNG or not
      */
     public Crop asPng(boolean asPng) {
@@ -91,9 +92,9 @@ public class Crop {
     }
 
 
-    public Crop asCircle(boolean isCircle){
-        cropIntent.putExtra( Extra.IS_CIRCLE_CROP, isCircle);
-        if(isCircle){
+    public Crop asCircle(boolean isCircle) {
+        cropIntent.putExtra(Extra.IS_CIRCLE_CROP, isCircle);
+        if (isCircle) {
             asSquare();
         }
         return this;
@@ -257,7 +258,8 @@ public class Crop {
      * @param fragment    Fragment to receive result
      * @param requestCode requestCode for result
      */
-    public static void pickImage(Context context, android.support.v4.app.Fragment fragment, int requestCode) {
+    public static void pickImage(Context context, android.support.v4.app.Fragment fragment, int
+            requestCode) {
         try {
             fragment.startActivityForResult(getImagePicker(), requestCode);
         } catch (ActivityNotFoundException e) {
@@ -270,7 +272,8 @@ public class Crop {
     }
 
     private static void showImagePickerError(Context context) {
-        Toast.makeText(context.getApplicationContext(), R.string.crop__pick_error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context.getApplicationContext(), R.string.crop__pick_error, Toast
+                .LENGTH_SHORT).show();
     }
 
 }

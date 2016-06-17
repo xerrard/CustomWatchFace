@@ -110,8 +110,6 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     @Override
     public void updatebackground(Bitmap bitmap) {
         watchPreviewView.setBackground(bitmap);
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageBitmap(bitmap);
     }
 
     @Override
@@ -135,17 +133,16 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         finish();
     }
 
+    @Override
+    public int getWatchWidth() {
+        return watchPreviewView.getWidth();
+    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-        if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
-            Uri destination = Uri.fromFile(new File(FileUtil.getExternalStoragePath(), "cropped"));
-            Crop.of(result.getData(), destination).asCircle(true).asPng(true).start(this);
-        } else if (requestCode == Crop.REQUEST_CROP) {
-            present.handleCrop(resultCode, result, watchPreviewView.getWidth(), watchPreviewView
-                    .getHeight());
-        }
+    public int getWatchHeight() {
+        return watchPreviewView.getHeight();
     }
+
 
 
     @Override

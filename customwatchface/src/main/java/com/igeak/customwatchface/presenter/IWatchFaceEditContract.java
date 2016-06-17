@@ -33,6 +33,10 @@ public interface IWatchFaceEditContract {
 
 
         void updateSaved();
+
+        int getWatchWidth();
+
+        int getWatchHeight();
     }
 
     interface IBackgroundView {

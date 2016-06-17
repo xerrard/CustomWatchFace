@@ -23,7 +23,6 @@ import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
-import com.igeak.customwatchface.presenter.IPresenter;
 import com.igeak.customwatchface.presenter.IWatchFacesContract;
 import com.igeak.customwatchface.presenter.WatchFaceListPresent;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
@@ -54,7 +53,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_face, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_facelist, container, false);
         rootView.setTag(TAG);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
@@ -144,7 +143,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
         //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item, null);
+            View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_face, null);
             return new ViewHolder(v);
         }
 

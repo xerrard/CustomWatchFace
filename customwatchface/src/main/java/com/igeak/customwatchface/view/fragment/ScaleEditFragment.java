@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
 public class ScaleEditFragment extends Fragment implements IWatchFaceEditContract.IScaleView {
 
     private static final String TAG = "ScaleEditFragment";
-    private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 3;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter adapter;
 
@@ -101,7 +101,8 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
 
         //将数据绑定到子View，会自动复用View
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, final int i) {
+        public void onBindViewHolder(ViewHolder viewHolder, int i) {
+            final int index = i;
             final InputStream is = inputStreams.get(i);
             final ImageView imageView = viewHolder.imageView;
             final int height = imageView.getHeight();
@@ -110,11 +111,19 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
                 @Override
                 public void call(Subscriber<? super Bitmap> subscriber) {
                     try {
-                        Bitmap bitmap = PicOperation.InputStream2Bitmap(is, width, height);
-                        MyUtils.addAtPos(bitmaps,i,bitmap);
-                        //bitmaps.add(i,bitmap);
+                        Bitmap bitmap;
+                        if ((bitmaps.size() <= index) || (bitmaps.get(index) == null)) {
+                            //如果当前已经有图片，就不要再重复加载了
+                            bitmap = PicOperation.InputStream2Bitmap(is, width, height);
+                            //bitmaps.add(index-1,bitmap);
+                            MyUtils.addAtPos(bitmaps, index, bitmap);
+                        }else {
+                            bitmap = bitmaps.get(index);
+                        }
                         subscriber.onNext(bitmap);
                         subscriber.onCompleted();
+
+
                     } catch (Exception e) {
                         throw new RuntimeException(e);
 

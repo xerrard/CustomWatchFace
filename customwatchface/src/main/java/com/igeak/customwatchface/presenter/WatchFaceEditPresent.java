@@ -124,7 +124,9 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
                 });
     }
 
-    public void handleCrop(int resultCode, Intent result, final int width, final int height) {
+    public void handleCrop(int resultCode, Intent result) {
+        final int width = watchfaceview.getWatchWidth();
+        final int height = watchfaceview.getWatchHeight();
         try {
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = Crop.getOutput(result);

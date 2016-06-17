@@ -37,7 +37,7 @@ import rx.schedulers.Schedulers;
 public class PointEditFragment extends Fragment implements IWatchFaceEditContract.IPointView {
 
     private static final String TAG = "PointEditFragment";
-    private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 3;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter adapter;
 
@@ -94,7 +94,8 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
 
         //将数据绑定到子View，会自动复用View
         @Override
-        public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+        public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+            final int index = i;
 
             final Map<PointView.Type, InputStream> pointMap = pointMaps.get(i);
             final PointView pointView = viewHolder.pointView;
@@ -106,22 +107,29 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
                 public void call(Subscriber<? super Map<PointView.Type, Bitmap>> subscriber) {
 
                     try {
-                        Bitmap bitmaphour = PicOperation.InputStream2Bitmap(pointMap.get
-                                (PointView.Type
-                                        .HOUR), width, height);
-                        Bitmap bitmapminute = PicOperation.InputStream2Bitmap(pointMap.get
-                                (PointView.Type
-                                        .MINUTE), width, height);
-                        Bitmap bitmapsecond = PicOperation.InputStream2Bitmap(pointMap.get
-                                (PointView.Type
-                                        .SECOND), width, height);
-                        final Map<PointView.Type, Bitmap> pointbitMap = new HashMap<>();
-                        pointbitMap.put(PointView.Type.HOUR,bitmaphour);
-                        pointbitMap.put(PointView.Type.MINUTE,bitmapminute);
-                        pointbitMap.put(PointView.Type.SECOND,bitmapsecond);
+                        Map<PointView.Type, Bitmap> pointbitMap = new HashMap<>();
+                        if ((pointbitMaps.size() <= index) || (pointbitMaps.get(index) == null)) {
 
-                        //pointbitMaps.add(i,pointbitMap);
-                        MyUtils.addAtPos(pointbitMaps,i,pointbitMap);
+
+                            Bitmap bitmaphour = PicOperation.InputStream2Bitmap(pointMap.get
+                                    (PointView.Type
+                                            .HOUR), width, height);
+                            Bitmap bitmapminute = PicOperation.InputStream2Bitmap(pointMap.get
+                                    (PointView.Type
+                                            .MINUTE), width, height);
+                            Bitmap bitmapsecond = PicOperation.InputStream2Bitmap(pointMap.get
+                                    (PointView.Type
+                                            .SECOND), width, height);
+
+                            pointbitMap.put(PointView.Type.HOUR, bitmaphour);
+                            pointbitMap.put(PointView.Type.MINUTE, bitmapminute);
+                            pointbitMap.put(PointView.Type.SECOND, bitmapsecond);
+
+                            MyUtils.addAtPos(pointbitMaps, index, pointbitMap);
+
+                        }else {
+                            pointbitMap = pointbitMaps.get(index);
+                        }
                         pointView.setPointElementBitmap(pointbitMap);
                         subscriber.onNext(pointbitMap);
                         subscriber.onCompleted();

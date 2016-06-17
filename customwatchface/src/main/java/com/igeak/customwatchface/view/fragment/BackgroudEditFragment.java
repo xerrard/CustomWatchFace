@@ -1,7 +1,10 @@
 package com.igeak.customwatchface.view.fragment;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,10 +19,12 @@ import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
+import com.igeak.customwatchface.util.FileUtil;
 import com.igeak.customwatchface.util.MyUtils;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.soundcloud.android.crop.Crop;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +42,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
         .IBackgroundView {
 
     private static final String TAG = "InnerFaceFrgment";
-    private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 3;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter adapter;
 
@@ -87,7 +92,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
 
         public void setInputStreams(List<InputStream> inputStreams) {
             this.inputStreams = inputStreams;
-            bitmaps = new ArrayList<Bitmap>(inputStreams.size());
+            bitmaps = new ArrayList<Bitmap>();
         }
 
         public RecycleViewAdapter(List<InputStream> inputStreams) {
@@ -117,9 +122,15 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
                     @Override
                     public void call(Subscriber<? super Bitmap> subscriber) {
                         try {
-                            Bitmap bitmap = PicOperation.InputStream2Bitmap(is, width, height);
-                            //bitmaps.add(index-1,bitmap);
-                            MyUtils.addAtPos(bitmaps,index-1,bitmap);
+                            Bitmap bitmap;
+                            if ((bitmaps.size() <= (index-1)) || (bitmaps.get(index - 1) == null)) {
+                                //如果当前已经有图片，就不要再重复加载了
+                                bitmap = PicOperation.InputStream2Bitmap(is, width, height);
+                                //bitmaps.add(index-1,bitmap);
+                                MyUtils.addAtPos(bitmaps, index - 1, bitmap);
+                            }else {
+                                bitmap = bitmaps.get(index-1);
+                            }
                             subscriber.onNext(bitmap);
                             subscriber.onCompleted();
                         } catch (Exception e) {
@@ -183,11 +194,23 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
                     Bitmap bitmap = bitmaps.get(index - 1);
                     present.changeBackImg(bitmap);
                 } else {
-                    Crop.pickImage(getActivity());
+                    //Crop.pickImage(getActivity());
+                    Crop.pickImage(getContext(), BackgroudEditFragment.this);
                 }
             }
         }
+
+
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent result) {
+        if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
+            Uri destination = Uri.fromFile(new File(FileUtil.getExternalStoragePath(), "cropped"));
+            Crop.of(result.getData(), destination).asCircle(true).asPng(true).start(getContext(),
+                    this);
+        } else if (requestCode == Crop.REQUEST_CROP) {
+            present.handleCrop(resultCode, result);
+        }
+    }
 }
