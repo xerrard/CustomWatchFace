@@ -77,6 +77,7 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
 
         private List<InputStream> inputStreams;
         private List<Bitmap> bitmaps = new ArrayList<>();
+
         public boolean isSetAdapter() {
             return inputStreams != null;
         }
@@ -102,53 +103,60 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
         //将数据绑定到子View，会自动复用View
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
+            final ImageView imageView = viewHolder.imageView;
             final int index = i;
             final InputStream is = inputStreams.get(i);
-            final ImageView imageView = viewHolder.imageView;
-            final int height = imageView.getHeight();
-            final int width = imageView.getWidth();
-            Observable.create(new Observable.OnSubscribe<Bitmap>() {
+
+            imageView.post(new Runnable() {
                 @Override
-                public void call(Subscriber<? super Bitmap> subscriber) {
-                    try {
-                        Bitmap bitmap;
-                        if ((bitmaps.size() <= index) || (bitmaps.get(index) == null)) {
-                            //如果当前已经有图片，就不要再重复加载了
-                            bitmap = PicOperation.InputStream2Bitmap(is, width, height);
-                            //bitmaps.add(index-1,bitmap);
-                            MyUtils.addAtPos(bitmaps, index, bitmap);
-                        }else {
-                            bitmap = bitmaps.get(index);
+                public void run() {
+                    final int width = imageView.getWidth();
+                    final int height = imageView.getHeight();
+                    Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                        @Override
+                        public void call(Subscriber<? super Bitmap> subscriber) {
+                            try {
+                                Bitmap bitmap;
+                                if ((bitmaps.size() <= index) || (bitmaps.get(index) == null)) {
+                                    //如果当前已经有图片，就不要再重复加载了
+                                    bitmap = PicOperation.InputStream2Bitmap(is, width, height);
+                                    //bitmaps.add(index-1,bitmap);
+                                    MyUtils.addAtPos(bitmaps, index, bitmap);
+                                } else {
+                                    bitmap = bitmaps.get(index);
+                                }
+                                subscriber.onNext(bitmap);
+                                subscriber.onCompleted();
+
+
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+
+                            }
+
                         }
-                        subscriber.onNext(bitmap);
-                        subscriber.onCompleted();
+                    })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<Bitmap>() {
+                                @Override
+                                public void onCompleted() {
+                                }
 
+                                @Override
+                                public void onError(Throwable e) {
 
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                                }
 
-                    }
+                                @Override
+                                public void onNext(Bitmap bitmap) {
+                                    imageView.setImageBitmap(bitmap);
 
+                                }
+                            });
                 }
-            })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<Bitmap>() {
-                        @Override
-                        public void onCompleted() {
-                        }
+            });
 
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(Bitmap bitmap) {
-                            imageView.setImageBitmap(bitmap);
-
-                        }
-                    });
 
         }
 

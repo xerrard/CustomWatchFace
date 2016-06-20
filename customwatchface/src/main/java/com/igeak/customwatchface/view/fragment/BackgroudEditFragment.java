@@ -113,52 +113,57 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
             if (i > 0) {
-                final InputStream is = inputStreams.get(i - 1);
                 final ImageView imageView = viewHolder.imageView;
-                final int height = imageView.getHeight();
-                final int width = imageView.getWidth();
                 final int index = i;
-                Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                final InputStream is = inputStreams.get(i - 1);
+                imageView.post(new Runnable() {
                     @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-                        try {
-                            Bitmap bitmap;
-                            if ((bitmaps.size() <= (index-1)) || (bitmaps.get(index - 1) == null)) {
-                                //如果当前已经有图片，就不要再重复加载了
-                                bitmap = PicOperation.InputStream2Bitmap(is, width, height);
-                                //bitmaps.add(index-1,bitmap);
-                                MyUtils.addAtPos(bitmaps, index - 1, bitmap);
-                            }else {
-                                bitmap = bitmaps.get(index-1);
+                    public void run() {
+                        final int height = imageView.getHeight();
+                        final int width = imageView.getWidth();
+                        Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                            @Override
+                            public void call(Subscriber<? super Bitmap> subscriber) {
+                                try {
+                                    Bitmap bitmap;
+                                    if ((bitmaps.size() <= (index - 1)) || (bitmaps.get(index -
+                                            1) == null)) {
+                                        //如果当前已经有图片，就不要再重复加载了
+                                        bitmap = PicOperation.InputStream2Bitmap(is, width, height);
+                                        //bitmaps.add(index-1,bitmap);
+                                        MyUtils.addAtPos(bitmaps, index - 1, bitmap);
+                                    } else {
+                                        bitmap = bitmaps.get(index - 1);
+                                    }
+                                    subscriber.onNext(bitmap);
+                                    subscriber.onCompleted();
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+
+                                }
+
                             }
-                            subscriber.onNext(bitmap);
-                            subscriber.onCompleted();
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                        })
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<Bitmap>() {
+                                    @Override
+                                    public void onCompleted() {
+                                    }
 
-                        }
+                                    @Override
+                                    public void onError(Throwable e) {
 
+                                    }
+
+                                    @Override
+                                    public void onNext(Bitmap bitmap) {
+                                        imageView.setImageBitmap(bitmap);
+
+                                    }
+                                });
                     }
-                })
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<Bitmap>() {
-                            @Override
-                            public void onCompleted() {
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(Bitmap bitmap) {
-                                imageView.setImageBitmap(bitmap);
-
-                            }
-                        });
-
+                });
             } else {
                 viewHolder.imageView.setImageResource(R.drawable.card_background);
             }
@@ -206,7 +211,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
-            Uri destination = Uri.fromFile(new File(FileUtil.getExternalStoragePath(), "cropped"));
+            Uri destination = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
             Crop.of(result.getData(), destination).asCircle(true).asPng(true).start(getContext(),
                     this);
         } else if (requestCode == Crop.REQUEST_CROP) {

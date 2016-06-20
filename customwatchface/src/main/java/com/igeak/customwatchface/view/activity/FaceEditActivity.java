@@ -95,6 +95,7 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     private void initViewpager() {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mMyPagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(mMyPagerAdapter);
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setDistributeEvenly(true);
