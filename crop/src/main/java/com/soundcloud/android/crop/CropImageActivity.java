@@ -247,7 +247,7 @@ public class CropImageActivity extends MonitoredActivity {
             @SuppressWarnings("SuspiciousNameCombination")
             int cropHeight = cropWidth;
 
-            if (!isCircleCrop &&aspectX != 0 && aspectY != 0) {
+            if (!isCircleCrop && aspectX != 0 && aspectY != 0) {
                 if (aspectX > aspectY) {
                     cropHeight = cropWidth * aspectY / aspectX;
                 } else {
@@ -324,22 +324,25 @@ public class CropImageActivity extends MonitoredActivity {
 
 
     private Bitmap cropCircleView(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap( bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas( output);
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config
+                .ARGB_8888);
+        Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;
         final Paint paint = new Paint();
-        final Rect rect = new Rect( 0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-        paint.setAntiAlias( true);
-        paint.setFilterBitmap( true);
-        paint.setDither( true);
-        canvas.drawARGB( 0, 0, 0, 0);
-        paint.setColor( color);
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+        paint.setDither(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
         //在画布上绘制一个圆
-        canvas.drawCircle( bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
-        paint.setXfermode( new PorterDuffXfermode( PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap( bitmap, rect, rect, paint);
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2,
+                paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        bitmap.recycle();
         return output;
     }
 
@@ -429,7 +432,7 @@ public class CropImageActivity extends MonitoredActivity {
                 outputStream = getContentResolver().openOutputStream(saveUri);
                 if (outputStream != null) {
                     croppedImage.compress(saveAsPng ? Bitmap.CompressFormat.PNG : Bitmap
-                            .CompressFormat.JPEG,
+                                    .CompressFormat.JPEG,
                             90,     // note: quality is ignored when using PNG
                             outputStream);
                 }

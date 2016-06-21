@@ -1,17 +1,19 @@
 <resources>
     <string name="app_name">CustomWatchFace</string>
-    <string name="innerface">内置表盘</string>
-    <string name="myface">我的表盘</string>
-    <string name="rename">重命名</string>
-    <string name="edit">编辑</string>
-    <string name="delete">删除</string>
-    <string name="facefuction">表盘功能</string>
-    <string name="sendtowatch">发送到手表</string>
-    <string name="backgroud">背景</string>
-    <string name="scale">刻度</string>
-    <string name="pointer">指针</string>
-    <string name="newwatch">新表盘</string>
+    <string name="innerface">Inner Face</string>
+    <string name="myface">My Face</string>
+    <string name="rename">Rename</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="facefuction">Fuction</string>
+    <string name="sendtowatch">Send to Watch</string>
+    <string name="backgroud">Background</string>
+    <string name="scale">Scale</string>
+    <string name="pointer">Pointer</string>
+    <string name="newwatch">new WatchFace</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="save">save</string>
-
+    <string name="save">Save</string>
+    <string name="watchface_saved">watchface saved</string>
+    <string name="watchface_created">watchface created</string>
+    <string name="save_watchface">Save watchface?</string>
 </resources>

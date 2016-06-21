@@ -126,11 +126,10 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     @Override
     public void updateSaved() {
         if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-            Toast.makeText(this, "watchface saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.watchface_saved, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "watchface created", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.watchface_created, Toast.LENGTH_LONG).show();
         }
-
         finish();
     }
 
@@ -143,7 +142,6 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     public int getWatchHeight() {
         return watchPreviewView.getHeight();
     }
-
 
 
     @Override
@@ -159,11 +157,10 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         et.setText(name);
         et.setSelection(name.length());
         new AlertDialog.Builder(this)
-                .setTitle("保存表盘")
-                .setIcon(
-                        android.R.drawable.ic_dialog_info)
+                .setTitle(getString(R.string.save_watchface))
                 .setView(et)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(android.R.string.ok), new DialogInterface
+                        .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String name = et.getText().toString();
@@ -174,7 +171,8 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
                         }
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(android.R.string.cancel), new DialogInterface
+                        .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
