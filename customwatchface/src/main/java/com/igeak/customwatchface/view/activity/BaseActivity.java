@@ -80,7 +80,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
+            //finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

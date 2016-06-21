@@ -195,10 +195,8 @@ public class WatchFaceEditModel {
                                         , faceElement
                                 )
                         );
-
-                        FileOperation.changeWatchName(watchfacebean, name);
-
                     }
+                    FileOperation.changeWatchName(watchfacebean, name);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                     //subscriber.onError(e);
@@ -247,8 +245,9 @@ public class WatchFaceEditModel {
                                         , faceElement
                                 )
                         );
-                        FileOperation.changeWatchName(watchfacebean, name);
+
                     }
+                    FileOperation.changeWatchName(watchfacebean, name);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                     //subscriber.onError(e);
