@@ -2,6 +2,7 @@ package com.igeak.customwatchface.presenter;
 
 import android.content.Context;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.AssetsOperation;
 import com.igeak.customwatchface.model.WatchFace;
@@ -124,6 +125,31 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
                     @Override
                     public void onNext(List<WatchFaceBean> watchFaceBeanList) {
                         mWatchFaceView.updateWatchFaceBeanList(watchFaceBeanList);
+                    }
+                });
+    }
+
+
+    @Override
+    public void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
+                                      final WatchFacesModel.FacePath facePath) {
+        mWatchFacesModel.zipFileAndSentToWatch(googleApiClient, watchface, facePath)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchFaceBean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mWatchFaceView.showThrowable(e);
+                    }
+
+                    @Override
+                    public void onNext(WatchFaceBean watchFaceBean) {
+                        mWatchFaceView.updateWatchSent(watchFaceBean);
                     }
                 });
     }

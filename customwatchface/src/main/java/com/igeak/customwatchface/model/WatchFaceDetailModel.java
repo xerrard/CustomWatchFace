@@ -93,7 +93,7 @@ public class WatchFaceDetailModel {
     }
 
 
-    public Observable<WatchFaceBean> zipFileAndSentToWatch(final Activity activity, final
+    public Observable<WatchFaceBean> zipFileAndSentToWatch(final GeakApiClient googleApiClient, final
     WatchFaceBean watchbeanface,
                                                            final WatchFacesModel.FacePath
                                                                    facePath) {
@@ -117,8 +117,7 @@ public class WatchFaceDetailModel {
                     /**
                      * 2.通过通道，将数据发送出去
                      */
-                    MyApplication app = (MyApplication) activity.getApplication();
-                    GeakApiClient mGoogleApiClient = app.mGoogleApiclent;
+                    GeakApiClient mGoogleApiClient = googleApiClient;
 
 
                     if (mGoogleApiClient.isConnected()) {

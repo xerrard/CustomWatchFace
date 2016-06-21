@@ -3,6 +3,7 @@ package com.igeak.customwatchface.presenter;
 import android.app.Activity;
 import android.content.Context;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFaceDetailModel;
@@ -54,9 +55,9 @@ public class WatchFaceDetailPresent implements IWatchFaceDetailContract.IWatchFa
     }
 
     @Override
-    public void zipFileAndSentToWatch(final Activity activity, final WatchFaceBean watchface,
+    public void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
                                       final WatchFacesModel.FacePath facePath) {
-        mWatchFaceDetailModel.zipFileAndSentToWatch(activity, watchface, facePath)
+        mWatchFaceDetailModel.zipFileAndSentToWatch(googleApiClient, watchface, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WatchFaceBean>() {

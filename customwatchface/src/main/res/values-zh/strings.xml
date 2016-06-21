@@ -16,4 +16,7 @@
     <string name="watchface_saved">表盘已保存</string>
     <string name="watchface_created">表盘已建好</string>
     <string name="save_watchface">保存表盘?</string>
+    <string name="please_connect_watch">请连接手表！</string>
+    <string name="please_open_phone_sync">请打开手表助手！</string>
+    <string name="has_sent">已经发送</string>
 </resources>

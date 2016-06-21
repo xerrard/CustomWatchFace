@@ -16,4 +16,8 @@
     <string name="watchface_saved">watchface saved</string>
     <string name="watchface_created">watchface created</string>
     <string name="save_watchface">Save watchface?</string>
+    <string name="please_connect_watch">please connect the watch</string>
+    <string name="please_open_phone_sync">please open the phone sync</string>
+    <string name="has_sent">has sent</string>
+
 </resources>

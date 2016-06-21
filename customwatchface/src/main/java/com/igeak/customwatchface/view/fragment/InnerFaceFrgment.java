@@ -14,9 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
+import com.igeak.customwatchface.MyApplication;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.IWatchFacesContract;
@@ -208,9 +211,36 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
                             (WatchFacesModel.FacePath.FACE_CUSTOM));
                     startActivity(intent);
                     return true;
+                } else if (item.getItemId() == R.id.option_sent2watch) {
+                    sendToWatch(watchfaceList.get((int) getItemId()));
                 }
                 return false;
             }
+
         }
     }
+
+    public void sendToWatch(WatchFaceBean watchfacebean) {
+        MyApplication myApplication = (MyApplication) getActivity().getApplication();
+        GeakApiClient googleApiClient = myApplication.mGoogleApiclent;
+        present.zipFileAndSentToWatch(googleApiClient, watchfacebean, facePath);
+    }
+
+
+
+    @Override
+    public void updateWatchSent(WatchFaceBean watchFace) {
+        Toast.makeText(getActivity().getApplicationContext()
+                , watchFace.getName() + getString(R.string.has_sent)
+                , Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void showThrowable(Throwable e) {
+        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG)
+                .show();
+
+    }
+
 }

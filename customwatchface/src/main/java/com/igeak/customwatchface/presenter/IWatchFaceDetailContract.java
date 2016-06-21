@@ -2,6 +2,7 @@ package com.igeak.customwatchface.presenter;
 
 import android.app.Activity;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
@@ -23,7 +24,7 @@ public interface IWatchFaceDetailContract {
         void loadWatchimg(final WatchFaceBean watchFaceBean,
                           final WatchFacesModel.FacePath facePath);
 
-        void zipFileAndSentToWatch(final Activity activity, final WatchFaceBean watchface,
+        void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
                                    final WatchFacesModel.FacePath facePath);
     }
 }

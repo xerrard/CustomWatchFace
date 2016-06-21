@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
+import com.igeak.customwatchface.MyApplication;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.IWatchFaceDetailContract;
@@ -60,7 +62,9 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
     }
 
     public void sendToWatch(View v) {
-        present.zipFileAndSentToWatch(this, watchfacebean, facePath);
+        MyApplication myApplication = (MyApplication) getApplication();
+        GeakApiClient googleApiClient = myApplication.mGoogleApiclent;
+        present.zipFileAndSentToWatch(googleApiClient, watchfacebean, facePath);
     }
 
     @Override
