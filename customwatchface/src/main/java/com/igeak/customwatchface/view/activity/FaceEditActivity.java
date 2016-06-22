@@ -150,7 +150,8 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         savewatch(null);
     }
 
-    public void savewatch(View view) {
+
+    public void savewatch(final View view) {
 
         final EditText et = new EditText(this);
         String name = watchfacebean.getName();
@@ -175,7 +176,10 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
                         .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+
+                        if (view == null) {//如果是退出状态，则cancel退出界面
+                            finish();
+                        }
                     }
                 })
                 .show();
