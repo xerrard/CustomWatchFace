@@ -35,7 +35,7 @@ public class MainActivity extends BaseActivity {
         initViewpager();
     }
 
-    private void initFragment(){
+    private void initFragment() {
         InnerFaceFrgment innerFaceFrgment = new InnerFaceFrgment();
         CustomFaceFragment myFaceFragment = new CustomFaceFragment();
         fragments = new ArrayList<Fragment>();
@@ -46,11 +46,13 @@ public class MainActivity extends BaseActivity {
         titlelist.add(getResources().getString(R.string.myface));
     }
 
-    private void initViewpager(){
+    private void initViewpager() {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mMyPagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mMyPagerAdapter);
-        mSlidingTabLayout = (SlidingTabLayout)findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(android.R.color
+                .holo_red_light));
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setViewPager(viewPager);
     }
@@ -76,8 +78,6 @@ public class MainActivity extends BaseActivity {
             return titlelist.get(position);
         }
     }
-
-
 
 
 }

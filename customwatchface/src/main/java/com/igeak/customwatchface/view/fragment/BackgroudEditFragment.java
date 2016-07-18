@@ -74,11 +74,6 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {

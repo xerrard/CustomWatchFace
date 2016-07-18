@@ -26,6 +26,7 @@ import com.igeak.customwatchface.presenter.IWatchFacesContract;
 import com.igeak.customwatchface.presenter.WatchFaceListPresent;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
+import com.igeak.customwatchface.view.view.DividerItemDecoration;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 
@@ -62,6 +63,8 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), R.drawable
+                .divider));
         mRecycleViewAdapter = new RecycleViewAdapter();
 
         present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
@@ -225,7 +228,6 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
         GeakApiClient googleApiClient = myApplication.mGoogleApiclent;
         present.zipFileAndSentToWatch(googleApiClient, watchfacebean, facePath);
     }
-
 
 
     @Override

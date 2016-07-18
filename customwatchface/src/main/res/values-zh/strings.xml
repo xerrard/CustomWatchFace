@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">表盘制作工具</string>
+    <string name="app_name">表盘制作</string>
     <string name="innerface">内置表盘</string>
     <string name="myface">我的表盘</string>
     <string name="rename">重命名</string>
