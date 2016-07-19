@@ -5,6 +5,7 @@
     <string name="rename">Rename</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="share">Share</string>
     <string name="facefuction">Fuction</string>
     <string name="sendtowatch">Send to Watch</string>
     <string name="backgroud">Background</string>
@@ -19,5 +20,5 @@
     <string name="please_connect_watch">please connect the watch</string>
     <string name="please_open_phone_sync">please open the phone sync</string>
     <string name="has_sent">has sent</string>
-
+    <string name="default_face">default face</string>
 </resources>

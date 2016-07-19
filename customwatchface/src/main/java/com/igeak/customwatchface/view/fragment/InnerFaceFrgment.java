@@ -26,7 +26,7 @@ import com.igeak.customwatchface.presenter.IWatchFacesContract;
 import com.igeak.customwatchface.presenter.WatchFaceListPresent;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
-import com.igeak.customwatchface.view.view.DividerItemDecoration;
+import com.igeak.customwatchface.view.view.ItemDecorationAlbumColumns;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 
@@ -63,8 +63,10 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), R.drawable
-                .divider));
+        mRecyclerView.addItemDecoration(new ItemDecorationAlbumColumns(
+                getResources().getDimensionPixelSize(R.dimen.divider_spacing_horizon),
+                getResources().getDimensionPixelSize(R.dimen.divider_spacing_vertical),
+                SPAN_COUNT));
         mRecycleViewAdapter = new RecycleViewAdapter();
 
         present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
@@ -141,7 +143,7 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
         //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_face, null);
+            View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_face_inner, null);
             return new ViewHolder(v);
         }
 
@@ -195,11 +197,18 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
                             (WatchFacesModel.FacePath.FACE_CUSTOM));
                     startActivity(intent);
                 } else if (v.getId() == R.id.option_menu) {
-                    PopupMenu popup = new PopupMenu(getActivity(), v);
-                    MenuInflater inflater = popup.getMenuInflater();
-                    inflater.inflate(R.menu.option_menu_inner, popup.getMenu());
-                    popup.show();
-                    popup.setOnMenuItemClickListener(this);
+//                    PopupMenu popup = new PopupMenu(getActivity(), v);
+//                    MenuInflater inflater = popup.getMenuInflater();
+//                    inflater.inflate(R.menu.option_menu_inner, popup.getMenu());
+//                    popup.show();
+//                    popup.setOnMenuItemClickListener(this);
+                    //修改需求，optionmenu直接进入编辑
+                    Intent intent = new Intent(getContext(), FaceEditActivity.class);
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
+                            getItemId()));
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
+                            (WatchFacesModel.FacePath.FACE_CUSTOM));
+                    startActivity(intent);
                 }
 
             }

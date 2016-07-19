@@ -28,6 +28,8 @@ import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.IWatchFacesContract;
 import com.igeak.customwatchface.presenter.WatchFaceListPresent;
+import com.igeak.customwatchface.view.activity.MenuActivity;
+import com.igeak.customwatchface.view.view.ItemDecorationAlbumColumns;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
@@ -63,6 +65,10 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.addItemDecoration(new ItemDecorationAlbumColumns(
+                getResources().getDimensionPixelSize(R.dimen.divider_spacing_horizon),
+                getResources().getDimensionPixelSize(R.dimen.divider_spacing_vertical),
+                SPAN_COUNT));
         mRecycleViewAdapter = new RecycleViewAdapter();
         present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
         //present.getWatchfaceBeanList(facePath);
@@ -122,6 +128,47 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Const.REQUEST_MENU) {
+            switch (resultCode) {
+                case 2000:
+                    deleteOperation();
+                    break;
+                case 2001:
+                    break;
+                case 2002:
+                    break;
+                case 2003:
+                    break;
+                case 2004:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        if (item.getItemId() == R.id.option_delete) {
+            deleteOperation();
+            return true;
+        } else if (item.getItemId() == R.id.option_rename) {
+            renameOperation();
+            return true;
+        } else if (item.getItemId() == R.id.option_edit) {
+            Intent intent = new Intent(getContext(), FaceEditActivity.class);
+            intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
+                    getItemId()));
+            intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
+                    (WatchFacesModel.FacePath.FACE_CUSTOM));
+            startActivity(intent);
+            return true;
+        } else if (item.getItemId() == R.id.option_sent2watch) {
+            sendToWatch(watchfaceList.get((int) getItemId()));
+        }
+
+    }
 
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
@@ -144,7 +191,8 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
         //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_face, null);
+            View v = getActivity().getLayoutInflater().inflate(R.layout
+                    .recycler_item_face_custom, null);
             return new ViewHolder(v);
         }
 
@@ -155,6 +203,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
             viewHolder.textView.setText(watchface.getName());
             //viewHolder.imageView.setElements(watchface);
             present.loadWatchimg(viewHolder.imageView, watchface, facePath);
+            viewHolder.itemView.setBackgroundColor(0x1fffffff);
         }
 
 
@@ -176,6 +225,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
             TextView textView;
             WatchPreviewView imageView;
             ImageButton imb;
+            View itemView;
 
             //在布局中找到所含有的UI组件
             public ViewHolder(View itemView) {
@@ -185,6 +235,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                 imb = (ImageButton) itemView.findViewById(R.id.option_menu);
                 imb.setOnClickListener(this);
                 imageView.setOnClickListener(this);
+                this.itemView = itemView;
             }
 
 
@@ -199,11 +250,17 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                             (WatchFacesModel.FacePath.FACE_CUSTOM));
                     startActivity(intent);
                 } else if (v.getId() == R.id.option_menu) {
-                    PopupMenu popup = new PopupMenu(getActivity(), v);
-                    MenuInflater inflater = popup.getMenuInflater();
-                    inflater.inflate(R.menu.option_menu_custom, popup.getMenu());
-                    popup.show();
-                    popup.setOnMenuItemClickListener(this);
+//                    PopupMenu popup = new PopupMenu(getActivity(), v);
+//                    MenuInflater inflater = popup.getMenuInflater();
+//                    inflater.inflate(R.menu.option_menu_custom, popup.getMenu());
+//                    popup.show();
+//                    popup.setOnMenuItemClickListener(this);
+
+                    Intent intent = new Intent(getContext(), MenuActivity.class);
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
+                            getItemId()));
+                    startActivityForResult(intent, Const.REQUEST_MENU);
+                    itemView.setBackgroundColor(getResources().getColor(android.R.color.white));
                 }
 
             }

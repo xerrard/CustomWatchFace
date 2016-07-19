@@ -24,4 +24,7 @@ public class Const {
 
     public static final String SCALE_FOLDER_NAME = "custom_scale";
 
+    public static final int REQUEST_MENU = 1001;
+    public static final int RESULT_CODE_BASE = 2000;
+
 }
