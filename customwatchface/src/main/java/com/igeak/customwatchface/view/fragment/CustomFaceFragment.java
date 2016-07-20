@@ -2,7 +2,9 @@ package com.igeak.customwatchface.view.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +35,7 @@ import com.igeak.customwatchface.view.activity.MenuActivity;
 import com.igeak.customwatchface.view.view.ItemDecorationAlbumColumns;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
+import java.io.File;
 import java.util.List;
 
 import rx.Observable;
@@ -150,6 +153,24 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                     renameOperation();
                     break;
                 case Const.RESULT_CODE_SHARE:
+                    Intent it = new Intent(Intent.ACTION_SEND);
+                    it.setType("image/*");
+                    String title = getResources().getString(R.string.share);
+                    Intent chooser = Intent.createChooser(it, title);
+                    String imagePath = Environment.getExternalStorageDirectory()
+                            + "/test.png";
+
+                    File imageFileToShare = new File(imagePath);
+
+                    Uri uri = Uri.fromFile(imageFileToShare);
+                    it.putExtra(Intent.EXTRA_STREAM, uri);
+
+                    if (it.resolveActivity(getContext().getPackageManager()) != null) {
+                        startActivity(chooser);
+                    }
+
+
+
                     break;
                 case Const.RESULT_CODE_DELETE:
                     deleteOperation();
