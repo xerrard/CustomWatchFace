@@ -10,7 +10,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +27,11 @@ import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.IWatchFacesContract;
 import com.igeak.customwatchface.presenter.WatchFaceListPresent;
+import com.igeak.customwatchface.view.activity.FaceDetailActivity;
+import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.activity.MenuActivity;
 import com.igeak.customwatchface.view.view.ItemDecorationAlbumColumns;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
-import com.igeak.customwatchface.view.activity.FaceDetailActivity;
-import com.igeak.customwatchface.view.activity.FaceEditActivity;
 
 import java.util.List;
 
@@ -52,6 +51,9 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
     RecycleViewAdapter mRecycleViewAdapter = null;
     WatchFaceListPresent present = null;
     private WatchFacesModel.FacePath facePath = WatchFacesModel.FacePath.FACE_CUSTOM;
+
+    private int currentIndex = 0;
+    private List<WatchFaceBean> beanList;
 
 
     @Nullable
@@ -83,7 +85,7 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
 
     @Override
     public void updateWatchFaceBeanList(List<WatchFaceBean> watchFaceBeanList) {
-
+        beanList = watchFaceBeanList;
         if (!mRecycleViewAdapter.isSetAdapter()) {
             mRecycleViewAdapter.setWatchList(watchFaceBeanList);
             mRecyclerView.setAdapter(mRecycleViewAdapter);
@@ -132,43 +134,58 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Const.REQUEST_MENU) {
+
             switch (resultCode) {
-                case 2000:
+                case Const.RESULT_CODE_EDIT:
+                    Intent intent = new Intent(getContext(), FaceEditActivity.class);
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, beanList.get(currentIndex));
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
+                            (WatchFacesModel.FacePath.FACE_CUSTOM));
+                    startActivity(intent);
+                    break;
+                case Const.RESULT_CODE_RELEASE:
+                    sendToWatch(beanList.get(currentIndex));
+                    break;
+                case Const.RESULT_CODE_RENAME:
+                    renameOperation();
+                    break;
+                case Const.RESULT_CODE_SHARE:
+                    break;
+                case Const.RESULT_CODE_DELETE:
                     deleteOperation();
-                    break;
-                case 2001:
-                    break;
-                case 2002:
-                    break;
-                case 2003:
-                    break;
-                case 2004:
                     break;
                 default:
                     break;
             }
         }
 
-
-        if (item.getItemId() == R.id.option_delete) {
-            deleteOperation();
-            return true;
-        } else if (item.getItemId() == R.id.option_rename) {
-            renameOperation();
-            return true;
-        } else if (item.getItemId() == R.id.option_edit) {
-            Intent intent = new Intent(getContext(), FaceEditActivity.class);
-            intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
-                    getItemId()));
-            intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
-                    (WatchFacesModel.FacePath.FACE_CUSTOM));
-            startActivity(intent);
-            return true;
-        } else if (item.getItemId() == R.id.option_sent2watch) {
-            sendToWatch(watchfaceList.get((int) getItemId()));
-        }
-
     }
+
+    private void deleteOperation() {
+        present.deleteWatchFace(beanList, currentIndex);
+    }
+
+    private void renameOperation() {
+        final EditText et = new EditText(getContext());
+        String name = beanList.get(currentIndex).getName();
+        et.setText(name);
+        et.setSelection(name.length());
+        new AlertDialog.Builder(getContext())
+                .setTitle("请输入")
+                .setIcon(
+                        android.R.drawable.ic_dialog_info)
+                .setView(et)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = et.getText().toString();
+                        present.changeName(name, beanList, currentIndex);
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
 
     //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
@@ -257,9 +274,8 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
 //                    popup.setOnMenuItemClickListener(this);
 
                     Intent intent = new Intent(getContext(), MenuActivity.class);
-                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
-                            getItemId()));
                     startActivityForResult(intent, Const.REQUEST_MENU);
+                    currentIndex = (int) getItemId();
                     itemView.setBackgroundColor(getResources().getColor(android.R.color.white));
                 }
 

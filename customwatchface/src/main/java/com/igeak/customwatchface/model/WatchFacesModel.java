@@ -24,6 +24,8 @@ import rx.Subscriber;
 public class WatchFacesModel {
 
 
+    private List<WatchFaceBean> beanList;
+
     public enum FacePath {
         FACE_INNER,
         FACE_CUSTOM
@@ -58,6 +60,7 @@ public class WatchFacesModel {
 
                 try {
                     final List<WatchFaceBean> watchfaces = loadWatchfaceBeanList(facePath);
+                    beanList = watchfaces;
                     if (watchfaces == null) {
                         subscriber.onError(new Exception("User = null"));
                     } else {

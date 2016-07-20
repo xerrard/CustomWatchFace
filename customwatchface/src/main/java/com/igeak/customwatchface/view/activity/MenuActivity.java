@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class MenuActivity extends Activity {
     private RecyclerView mRecyclerView;
+    private View mEmptyView;
     private GalleryAdapter mAdapter;
     private List<Integer> mDrawableDatas;
     private List<Integer> mStringDatas;
@@ -33,7 +34,14 @@ public class MenuActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.menu);
 
-        //得到控件
+        initData();
+        mEmptyView = findViewById(R.id.empty_view);
+        mEmptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview_horizontal);
         //设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -61,7 +69,7 @@ public class MenuActivity extends Activity {
     }
 
     class GalleryAdapter extends
-            RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
+            RecyclerView.Adapter<GalleryAdapter.ViewHolder> implements View.OnClickListener {
 
         private LayoutInflater mInflater;
         private List<Integer> mDrawableDatas;
@@ -74,28 +82,36 @@ public class MenuActivity extends Activity {
             mStringDatas = stringDatas;
         }
 
+        @Override
+        public void onClick(View v) {
+            int itemPosition = mRecyclerView.getChildLayoutPosition(v);
+            int result = itemPosition + Const.RESULT_CODE_BASE;
+            setResult(result);
+            finish();
+        }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public class ViewHolder extends RecyclerView.ViewHolder{
             public ViewHolder(View itemView) {
                 super(itemView);
                 mImg = (ImageView) itemView
                         .findViewById(R.id.id_index_gallery_item_image);
                 mTxt = (TextView) itemView
                         .findViewById(R.id.id_index_gallery_item_text);
-                itemView.setOnClickListener(this);
+
 
             }
 
             ImageView mImg;
             TextView mTxt;
 
-            @Override
-            public void onClick(View v) {
-                int position = (int) getItemId();
-                int result = position + Const.RESULT_CODE_BASE;
-                setResult(result);
-                finish();
-            }
+//            @Override
+//            public void onClick(View v) {
+//                int position = (int) getItemId();
+//                int result = position + Const.RESULT_CODE_BASE;
+//                setResult(result);
+//                finish();
+//            }
         }
 
         @Override
@@ -116,7 +132,7 @@ public class MenuActivity extends Activity {
             View view = mInflater.inflate(R.layout.menu_item,
                     viewGroup, false);
             ViewHolder viewHolder = new ViewHolder(view);
-
+            view.setOnClickListener(this);
             return viewHolder;
         }
 

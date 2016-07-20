@@ -26,5 +26,10 @@ public class Const {
 
     public static final int REQUEST_MENU = 1001;
     public static final int RESULT_CODE_BASE = 2000;
+    public static final int RESULT_CODE_EDIT = RESULT_CODE_BASE;
+    public static final int RESULT_CODE_RELEASE = RESULT_CODE_BASE + 1;
+    public static final int RESULT_CODE_RENAME = RESULT_CODE_BASE + 2;
+    public static final int RESULT_CODE_SHARE = RESULT_CODE_BASE + 3;
+    public static final int RESULT_CODE_DELETE = RESULT_CODE_BASE + 4;
 
 }
