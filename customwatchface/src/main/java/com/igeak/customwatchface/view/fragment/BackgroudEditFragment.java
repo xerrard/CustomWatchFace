@@ -21,7 +21,9 @@ import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.util.FileUtil;
 import com.igeak.customwatchface.util.MyUtils;
+import com.igeak.customwatchface.util.PicUtil;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
+import com.igeak.customwatchface.view.view.DividerItemDecoration;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -60,6 +62,8 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                DividerItemDecoration.GRID, null, null));
         present = ((FaceEditActivity) getActivity()).present;
         adapter = new RecycleViewAdapter(bitmaps);
         mRecyclerView.setAdapter(adapter);
@@ -153,14 +157,16 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
 
                                     @Override
                                     public void onNext(Bitmap bitmap) {
-                                        imageView.setImageBitmap(bitmap);
+                                        //imageView.setImageBitmap(bitmap);
 
+                                        imageView.setBackground(PicUtil.bitmap2Drawable(bitmap));
                                     }
                                 });
                     }
                 });
             } else {
-                viewHolder.imageView.setImageResource(R.drawable.card_background);
+                //viewHolder.imageView.setImageResource(R.drawable.card_background);
+                viewHolder.imageView.setBackgroundResource(R.drawable.icon_default);
             }
         }
 

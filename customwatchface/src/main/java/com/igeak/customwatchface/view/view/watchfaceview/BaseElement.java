@@ -40,6 +40,8 @@ public abstract class BaseElement {
     protected Matrix matrix = new Matrix();
 
     private float length;
+    private float width;
+    private float height;
 
     public BaseElement(Context context, InputStream bitmap, int view_width, int view_height) {
         mContext = context;
@@ -82,6 +84,9 @@ public abstract class BaseElement {
         start_y = view_height / 2;
 
         length = Math.min(view_width, view_height);
+        width = view_width;
+        height = view_height;
+
         if (mType == WatchPreviewView.Type.HOUR) {
             mRotate = 320.0f;
         } else if (mType == WatchPreviewView.Type.MINUTE) {
@@ -123,8 +128,10 @@ public abstract class BaseElement {
 
         if (drawable != null) {
 
-            drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x + (length / 2)),
-                    (int) (y + (length / 2)));
+//            drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x + (length / 2)),
+//                    (int) (y + (length / 2)));
+            drawable.setBounds((int) (x - (width / 2)), (int) (y - (height / 2)), (int) (x + (width / 2)),
+                    (int) (y + (height / 2)));
             drawable.draw(canvas);
         }
 

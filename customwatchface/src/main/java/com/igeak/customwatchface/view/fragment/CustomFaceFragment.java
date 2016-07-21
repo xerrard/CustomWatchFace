@@ -33,6 +33,7 @@ import com.igeak.customwatchface.view.activity.FaceDetailActivity;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.activity.MenuActivity;
 import com.igeak.customwatchface.view.view.ItemDecorationAlbumColumns;
+import com.igeak.customwatchface.view.view.ShareDialog;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
 import java.io.File;
@@ -153,23 +154,24 @@ public class CustomFaceFragment extends Fragment implements IWatchFacesContract.
                     renameOperation();
                     break;
                 case Const.RESULT_CODE_SHARE:
-                    Intent it = new Intent(Intent.ACTION_SEND);
-                    it.setType("image/*");
-                    String title = getResources().getString(R.string.share);
-                    Intent chooser = Intent.createChooser(it, title);
-                    String imagePath = Environment.getExternalStorageDirectory()
-                            + "/test.png";
+//                    Intent it = new Intent(Intent.ACTION_SEND);
+//                    it.setType("image/*");
+//                    String title = getResources().getString(R.string.share);
+//                    Intent chooser = Intent.createChooser(it, title);
+//                    String imagePath = Environment.getExternalStorageDirectory()
+//                            + "/test.png";
+//
+//                    File imageFileToShare = new File(imagePath);
+//
+//                    Uri uri = Uri.fromFile(imageFileToShare);
+//                    it.putExtra(Intent.EXTRA_STREAM, uri);
+//
+//                    if (it.resolveActivity(getContext().getPackageManager()) != null) {
+//                        startActivity(chooser);
+//                    }
 
-                    File imageFileToShare = new File(imagePath);
-
-                    Uri uri = Uri.fromFile(imageFileToShare);
-                    it.putExtra(Intent.EXTRA_STREAM, uri);
-
-                    if (it.resolveActivity(getContext().getPackageManager()) != null) {
-                        startActivity(chooser);
-                    }
-
-
+                    ShareDialog shareDialog=new ShareDialog(getActivity(),null);
+                    shareDialog.showShareDialog(null);
 
                     break;
                 case Const.RESULT_CODE_DELETE:

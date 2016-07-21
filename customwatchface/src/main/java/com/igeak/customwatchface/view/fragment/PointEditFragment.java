@@ -17,6 +17,7 @@ import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.util.MyUtils;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
+import com.igeak.customwatchface.view.view.DividerItemDecoration;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 
 import java.io.InputStream;
@@ -55,6 +56,8 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                DividerItemDecoration.GRID, null, null));
         present = ((FaceEditActivity) getActivity()).present;
         adapter = new RecycleViewAdapter(pointMaps);
         pointMaps = present.loadPointImg();

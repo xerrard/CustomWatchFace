@@ -32,8 +32,17 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public DividerItemDecoration(Context context, int orientation, Drawable drawable_horizon,
                                  Drawable drawable_vertical) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
-        mDivider_horizon = drawable_horizon;
-        mDivider_vertical = drawable_vertical;
+        if (drawable_horizon != null) {
+            mDivider_horizon = drawable_horizon;
+        }else {
+            mDivider_horizon = a.getDrawable(0);
+        }
+        if (mDivider_vertical != null) {
+            mDivider_vertical = drawable_vertical;
+        }else {
+            mDivider_vertical = a.getDrawable(0);
+        }
+
 
         a.recycle();
         setOrientation(orientation);
@@ -77,7 +86,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             mDivider_vertical.setBounds(left, top, right, bottom);
             mDivider_vertical.draw(c);
 
-            top += mDivider_vertical.getIntrinsicHeight() + params.topMargin + child.getHeight() + params
+            top += mDivider_vertical.getIntrinsicHeight() + params.topMargin + child.getHeight()
+                    + params
                     .bottomMargin + mDivider_vertical.getIntrinsicHeight();
             bottom = top + mDivider_vertical.getIntrinsicHeight();
         }
@@ -92,7 +102,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             final View child = parent.getChildAt(i);
             final RecyclerView.LayoutParams params =
                     (RecyclerView.LayoutParams) child.getLayoutParams();
-            final int left = child.getRight() + params.rightMargin + mDivider_horizon.getIntrinsicHeight();
+            final int left = child.getRight() + params.rightMargin + mDivider_horizon
+                    .getIntrinsicHeight();
             final int right = left + mDivider_horizon.getIntrinsicWidth();
             mDivider_horizon.setBounds(left, top, right, bottom);
             mDivider_horizon.draw(c);
@@ -107,7 +118,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         } else if (mOrientation == HORIZONTAL_LIST) {
             outRect.set(0, 0, mDivider_horizon.getIntrinsicWidth(), 0);
         } else {
-            outRect.set(0, 0, mDivider_horizon.getIntrinsicWidth(), mDivider_vertical.getIntrinsicHeight());
+            outRect.set(0, 0, mDivider_horizon.getIntrinsicWidth(), mDivider_vertical
+                    .getIntrinsicHeight());
         }
     }
 }

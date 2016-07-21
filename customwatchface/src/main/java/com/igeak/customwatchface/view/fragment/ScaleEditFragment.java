@@ -18,6 +18,7 @@ import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
 import com.igeak.customwatchface.util.MyUtils;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
+import com.igeak.customwatchface.view.view.DividerItemDecoration;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                DividerItemDecoration.GRID, null, null));
         present = ((FaceEditActivity) getActivity()).present;
         adapter = new RecycleViewAdapter(bitmaps);
         mRecyclerView.setAdapter(adapter);

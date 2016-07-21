@@ -21,4 +21,5 @@
     <string name="please_open_phone_sync">please open the phone sync</string>
     <string name="has_sent">has sent</string>
     <string name="default_face">default face</string>
+    <string name="share_cancel_title">Cancel</string>
 </resources>

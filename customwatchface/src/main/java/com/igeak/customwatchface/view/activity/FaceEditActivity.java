@@ -99,7 +99,9 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         viewPager.setAdapter(mMyPagerAdapter);
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setDistributeEvenly(true);
-        mSlidingTabLayout.setCustomTabView(R.layout.custom_tab, 0);
+        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(android.R.color
+                .transparent));
+        mSlidingTabLayout.setCustomTabView(R.layout.custom_tab, R.id.tab_text);
         mSlidingTabLayout.setViewPager(viewPager);
     }
 
