@@ -3,6 +3,10 @@ package com.igeak.customwatchface.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.igeak.android.common.api.GeakApiClient;
+import com.igeak.android.wearable.Node;
+import com.igeak.android.wearable.NodeApi;
+import com.igeak.android.wearable.Wearable;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.PicUtil;
@@ -13,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,50 +44,7 @@ public class WatchFaceEditModel {
             @Override
             public void call(Subscriber<? super WatchFace> subscriber) {
 
-                WatchFace watchFace = new WatchFace();
-                watchFace.setName(watchFaceBean.getName());
-                watchFace.setAmPm(watchFaceBean.isAmPm());
-                watchFace.setHaveTemperature(watchFaceBean.isHaveTemperature());
-                watchFace.setShowDate(watchFaceBean.isShowDate());
-                watchFace.setShowWeek(watchFaceBean.isShowWeek());
-                try {
-                    if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-                        watchFace.setBackground(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getBackground()));
-                        watchFace.setDialScale(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getDialScale()));
-                        watchFace.setHour(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getHour()));
-                        watchFace.setMinute(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getMinute()));
-                        watchFace.setSecond(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getSecond()));
-                    } else {
-                        watchFace.setBackground(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getBackground()));
-                        watchFace.setDialScale(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getDialScale()));
-                        watchFace.setHour(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getHour()));
-                        watchFace.setMinute(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getMinute()));
-                        watchFace.setSecond(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getSecond()));
-                    }
-
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                WatchFace watchFace = FaceOperation.bean2Face(watchFaceBean, facePath, context);
                 if (watchFace == null) {
                     subscriber.onError(new Exception("User = null"));
                 } else {
@@ -209,6 +171,68 @@ public class WatchFaceEditModel {
 
 
     }
+
+    public Observable<WatchFaceBean> zipFileAndSentToWatch(final GeakApiClient googleApiClient,
+                                                           final WatchFaceBean watchbeanface,
+                                                           final WatchFacesModel.FacePath
+                                                                   facePath) {
+        return FaceOperation.zipFileAndSent2Watch(googleApiClient, watchbeanface, facePath,
+                context);
+
+    }
+
+    public Observable<WatchFaceBean> saveAndSend(final String name, final GeakApiClient
+            googleApiClient,
+                                                 final WatchFaceBean watchbeanface,
+                                                 final WatchFacesModel.FacePath
+                                                         facePath) {
+        WatchFacesModel.FacePath myfacePath = facePath;
+        try {
+            if (facePath.equals(WatchFacesModel.FacePath.FACE_INNER)) {
+                AssetsOperation.assert2Folder(context, watchfacebean.getName());
+                myfacePath = WatchFacesModel.FacePath.FACE_CUSTOM; //一旦编辑保存，就已经成为CUSTOM模式
+            }
+            for (WatchPreviewView.Type type : modifyMaps.keySet()) {
+                String faceElement;
+                switch (type) {
+                    case BACKGROUND:
+                        faceElement = watchfacebean.getBackground();
+                        break;
+                    case DIALSCALE:
+                        faceElement = watchfacebean.getDialScale();
+                        break;
+                    case HOUR:
+                        faceElement = watchfacebean.getHour();
+                        break;
+                    case MINUTE:
+                        faceElement = watchfacebean.getMinute();
+                        break;
+                    case SECOND:
+                        faceElement = watchfacebean.getSecond();
+                        break;
+                    default:
+                        faceElement = watchfacebean.getBackground();
+                }
+
+                PicUtil.saveBitmapToFile(
+                        modifyMaps.get(type),
+                        FileOperation.getWatchfacesElementFile(
+                                watchfacebean.getName()
+                                , faceElement
+                        )
+                );
+            }
+            FileOperation.changeWatchName(watchfacebean, name);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return FaceOperation.zipFileAndSent2Watch(googleApiClient, watchbeanface, myfacePath,
+                context);
+
+    }
+
 
     public Observable<WatchFaceBean> createNewFace(final String name) {
         return Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {

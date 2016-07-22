@@ -31,15 +31,6 @@
                 app:layout_marginTopPercent="20.9%"
                 app:layout_marginLeftPercent="26.566667%"/>
 
-            <Button
-                android:id="@+id/savewatch"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_toRightOf="@id/watch_view"
-                android:onClick="savewatch"
-                android:text="@string/save"
-                app:layout_heightPercent="30%"
-                app:layout_marginTopPercent="35%"/>
 
         </android.support.percent.PercentRelativeLayout>
 

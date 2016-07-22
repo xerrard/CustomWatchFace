@@ -82,49 +82,7 @@ public class WatchFacesModel {
             @Override
             public void call(Subscriber<? super WatchFace> subscriber) {
 
-                WatchFace watchFace = new WatchFace();
-                watchFace.setName(watchFaceBean.getName());
-                watchFace.setAmPm(watchFaceBean.isAmPm());
-                watchFace.setHaveTemperature(watchFaceBean.isHaveTemperature());
-                watchFace.setShowDate(watchFaceBean.isShowDate());
-                watchFace.setShowWeek(watchFaceBean.isShowWeek());
-                try {
-                    if (facePath.equals(FacePath.FACE_CUSTOM)) {
-                        watchFace.setBackground(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getBackground()));
-                        watchFace.setDialScale(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getDialScale()));
-                        watchFace.setHour(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getHour()));
-                        watchFace.setMinute(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getMinute()));
-                        watchFace.setSecond(FileOperation.getWatchfacesElementStream(
-                                watchFaceBean.getName(),
-                                watchFaceBean.getSecond()));
-                    } else {
-                        watchFace.setBackground(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getBackground()));
-                        watchFace.setDialScale(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getDialScale()));
-                        watchFace.setHour(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getHour()));
-                        watchFace.setMinute(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getMinute()));
-                        watchFace.setSecond(AssetsOperation.getWatchfacesElementStream(context,
-                                watchFaceBean.getName(),
-                                watchFaceBean.getSecond()));
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                WatchFace watchFace = FaceOperation.bean2Face(watchFaceBean,facePath,context);
                 if (watchFace == null) {
                     subscriber.onError(new Exception("User = null"));
                 } else {
@@ -177,64 +135,11 @@ public class WatchFacesModel {
     }
 
     public Observable<WatchFaceBean> zipFileAndSentToWatch(final GeakApiClient googleApiClient,
-                                                           final
-    WatchFaceBean watchbeanface,
+                                                           final WatchFaceBean watchbeanface,
                                                            final WatchFacesModel.FacePath
                                                                    facePath) {
-        return Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {
-            @Override
-            public void call(Subscriber<? super WatchFaceBean> subscriber) {
-                try {
-
-                    /**
-                     * 1.打包文件，得到byte[]
-                     */
-                    byte[] bytes;
-                    if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-                        bytes = FileOperation.zipFolder(watchbeanface.getName());
-                    } else {
-                        bytes = AssetsOperation.zipFolder(context, watchbeanface.getName());
-                        FileOperation.deleteFolder(watchbeanface.getName());
-                    }
-
-
-                    /**
-                     * 2.通过通道，将数据发送出去
-                     */
-                    GeakApiClient mGoogleApiClient = googleApiClient;
-
-
-                    if (mGoogleApiClient.isConnected()) {
-                        NodeApi.GetConnectedNodesResult result = Wearable.NodeApi.getConnectedNodes
-                                (mGoogleApiClient).await();
-                        List<Node> nodes = result.getNodes();
-
-                        if (nodes.isEmpty()) {
-                            subscriber.onError(new Exception(context.getResources().getString(R
-                                    .string.please_connect_watch)));
-                            return;
-                        }
-                        Iterator it = nodes.iterator();
-                        while (it.hasNext()) {
-                            Node node = (Node) it.next();
-                            Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(),
-                                    Const.MESSAGE_DATA_PATH,
-                                    bytes);
-                        }
-                        if (watchbeanface == null) {
-                            subscriber.onError(new Exception("User = null"));
-                        }
-                        subscriber.onNext(watchbeanface);
-                        subscriber.onCompleted();
-                    } else {
-                        subscriber.onError(new Exception(context.getString(R.string
-                                .please_open_phone_sync)));
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+        return FaceOperation.zipFileAndSent2Watch(googleApiClient, watchbeanface, facePath,
+                context);
 
     }
 

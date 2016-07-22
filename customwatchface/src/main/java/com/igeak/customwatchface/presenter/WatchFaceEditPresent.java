@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.model.WatchFace;
@@ -202,6 +203,53 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
                 });
 
 
+    }
+
+    @Override
+    public void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
+                                      final WatchFacesModel.FacePath facePath) {
+        model.zipFileAndSentToWatch(googleApiClient, watchface, facePath)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchFaceBean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        watchfaceview.showThrowable(e);
+                    }
+
+                    @Override
+                    public void onNext(WatchFaceBean watchFaceBean) {
+                        watchfaceview.updateWatchSent(watchFaceBean);
+                    }
+                });
+    }
+
+    @Override
+    public void saveAndSend(String name, GeakApiClient googleApiClient, WatchFaceBean watchface, WatchFacesModel.FacePath facePath) {
+        model.saveAndSend(name,googleApiClient, watchface, facePath)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WatchFaceBean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        watchfaceview.showThrowable(e);
+                    }
+
+                    @Override
+                    public void onNext(WatchFaceBean watchFaceBean) {
+                        watchfaceview.updateSaveandSent(watchFaceBean);
+                    }
+                });
     }
 
 

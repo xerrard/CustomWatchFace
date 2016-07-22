@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
@@ -37,6 +38,12 @@ public interface IWatchFaceEditContract {
         int getWatchWidth();
 
         int getWatchHeight();
+
+        void updateWatchSent(WatchFaceBean watchFace);
+
+        void updateSaveandSent(WatchFaceBean watchFace);
+
+        void showThrowable(Throwable e);
     }
 
     interface IBackgroundView {
@@ -52,20 +59,32 @@ public interface IWatchFaceEditContract {
     }
 
 
-    interface IWatchFaceEditPresent extends IPresenter<IWatchFaceEditView>{
+    interface IWatchFaceEditPresent extends IPresenter<IWatchFaceEditView> {
         List<InputStream> loadbackImg();
+
         void changeBackImg(Bitmap bitmap);
 
         List<InputStream> loadScaleImg();
+
         void changeScaleImg(Bitmap bitmap);
 
         List<Map<PointView.Type, InputStream>> loadPointImg();
+
         void changePointImg(Map<PointView.Type, Bitmap> point);
 
-        void loadWatchimg(final WatchFaceBean watchFaceBean,final WatchFacesModel.FacePath facePath);
+        void loadWatchimg(final WatchFaceBean watchFaceBean, final WatchFacesModel.FacePath
+                facePath);
 
 
         void savewatch(String name);
+
+        void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
+                                   final WatchFacesModel.FacePath facePath);
+
+        void saveAndSend(String name, GeakApiClient googleApiClient, final WatchFaceBean
+                watchface, final WatchFacesModel
+                .FacePath facePath);
+
         void creatNewFace(String name);
     }
 }

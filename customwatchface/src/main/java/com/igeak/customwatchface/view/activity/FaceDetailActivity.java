@@ -53,6 +53,12 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
         present = new WatchFaceDetailPresent(this.getApplicationContext(), this);
 
         setTitle(watchfacebean.getName()); //更新title
+        setFun1(getResources().getString(R.string.sendtowatch), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendToWatch(v);
+            }
+        });
     }
 
     @Override

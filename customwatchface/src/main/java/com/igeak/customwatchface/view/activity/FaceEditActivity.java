@@ -17,8 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
+import com.igeak.customwatchface.MyApplication;
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
@@ -53,7 +55,6 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     BackgroudEditFragment backgroudEditFragment = new BackgroudEditFragment();
     ScaleEditFragment scaleEditFragment = new ScaleEditFragment();
     PointEditFragment pointEditFragment = new PointEditFragment();
-    Button saveBtn;
     WatchFacesModel.FacePath facePath;
 
 
@@ -61,11 +62,32 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_edit);
+        setTitle("");
+        setFun1(getResources().getString(R.string.save), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                savewatch(v);
+            }
+        });
+        setFun2(getResources().getString(R.string.sendtowatch), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MyApplication myApplication = (MyApplication) getApplication();
+                GeakApiClient googleApiClient = myApplication.mGoogleApiclent;
+                present.saveAndSend(watchfacebean.getName(), googleApiClient, watchfacebean,
+                        facePath);
+
+
+            }
+        });
+
+
         Intent intent = getIntent();
         watchfacebean = intent.getParcelableExtra(Const.INTENT_EXTRA_KEY_WATCHFACE);
         facePath = intent.getBooleanExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, false) ? WatchFacesModel
                 .FacePath.FACE_CUSTOM : WatchFacesModel.FacePath.FACE_INNER;
-        setTitle(watchfacebean.getName());
+
         watchPreviewView = (WatchPreviewView) findViewById(R.id.watch_view);
         initFragment();
         initViewpager();
@@ -75,7 +97,6 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
                 , scaleEditFragment
                 , pointEditFragment);
 
-        saveBtn = (Button) findViewById(R.id.savewatch);
         present.loadWatchimg(watchfacebean, facePath);
 
     }
@@ -143,6 +164,24 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     @Override
     public int getWatchHeight() {
         return watchPreviewView.getHeight();
+    }
+
+    @Override
+    public void updateWatchSent(WatchFaceBean watchFace) {
+        Toast.makeText(this, watchFace.getName() + "has sent", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    @Override
+    public void updateSaveandSent(WatchFaceBean watchFace) {
+        Toast.makeText(this, watchFace.getName() + "has saved and sent", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    @Override
+    public void showThrowable(Throwable e) {
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        //finish();
     }
 
 
