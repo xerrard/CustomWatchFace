@@ -1,23 +1,13 @@
 package com.igeak.customwatchface.model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
-import com.google.gson.Gson;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.AssertFileUtil;
 import com.igeak.customwatchface.util.FileUtil;
-import com.igeak.customwatchface.util.PicUtil;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +47,8 @@ public class AssetsOperation {
      * @return
      * @throws Exception
      */
-    public static InputStream getWatchfacesElementStream(Context context, final String faceItem, String
+    public static InputStream getWatchfacesElementStream(Context context, final String faceItem,
+                                                         String
             faceElement) throws Exception {
 
         String filepath = Const.FOLDER_NAME + "/" + faceItem + "/" + faceElement + Const.PNG_EXNAME;
@@ -66,10 +57,9 @@ public class AssetsOperation {
     }
 
 
-
     /**
      * 将需要发送的表盘打包
-     * assert打包的过程比较特别，需要先复制到T卡，然后打包
+     * assert打包的过程比较特别，需要先复制到T卡，然后打包，得到压缩后的数据后，将复制到T卡的表盘删除
      *
      * @param context
      * @param watchfaceName
@@ -80,8 +70,10 @@ public class AssetsOperation {
             watchfaceName) throws Exception {
         String assetsPath = Const.FOLDER_NAME + "/" + watchfaceName;
         String filePath = FileOperation.getCustomWatchfacesFolderPath() + "/" + watchfaceName;
-        FileUtil.assets2Files(context,assetsPath,filePath);
-        return FileOperation.zipFolder(watchfaceName);
+        FileUtil.assets2Files(context, assetsPath, filePath);
+        byte[] bytes = FileOperation.zipFolder(watchfaceName);
+        FileOperation.deleteFolder(watchfaceName); //压缩好之后，
+        return bytes;
     }
 
     /**
@@ -96,8 +88,7 @@ public class AssetsOperation {
             watchfaceName) throws Exception {
         String assetsPath = Const.FOLDER_NAME + "/" + watchfaceName;
         String filePath = FileOperation.getCustomWatchfacesFolderPath() + "/" + watchfaceName;
-        FileUtil.assets2Files(context,assetsPath,filePath);
-
+        FileUtil.assets2Files(context, assetsPath, filePath);
     }
 
 }

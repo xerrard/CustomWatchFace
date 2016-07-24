@@ -30,19 +30,19 @@ public class FaceOperation {
         watchFace.setShowWeek(watchFaceBean.isShowWeek());
         try {
             if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-                watchFace.setBackground(FileOperation.getWatchfacesElementStream(
+                watchFace.setBackground(FileOperation.getWatchFaceElementStream(
                         watchFaceBean.getName(),
                         watchFaceBean.getBackground()));
-                watchFace.setDialScale(FileOperation.getWatchfacesElementStream(
+                watchFace.setDialScale(FileOperation.getWatchFaceElementStream(
                         watchFaceBean.getName(),
                         watchFaceBean.getDialScale()));
-                watchFace.setHour(FileOperation.getWatchfacesElementStream(
+                watchFace.setHour(FileOperation.getWatchFaceElementStream(
                         watchFaceBean.getName(),
                         watchFaceBean.getHour()));
-                watchFace.setMinute(FileOperation.getWatchfacesElementStream(
+                watchFace.setMinute(FileOperation.getWatchFaceElementStream(
                         watchFaceBean.getName(),
                         watchFaceBean.getMinute()));
-                watchFace.setSecond(FileOperation.getWatchfacesElementStream(
+                watchFace.setSecond(FileOperation.getWatchFaceElementStream(
                         watchFaceBean.getName(),
                         watchFaceBean.getSecond()));
             } else {
@@ -69,10 +69,10 @@ public class FaceOperation {
         return watchFace;
     }
 
-    public static Observable<WatchFaceBean> zipFileAndSent2Watch(final GeakApiClient googleApiClient,
-                                                           final WatchFaceBean watchbeanface,
-                                                           final WatchFacesModel.FacePath
-                                                                   facePath, final Context context) {
+    public static Observable<WatchFaceBean> zipAndRelease(final GeakApiClient googleApiClient,
+                                                          final WatchFaceBean watchbeanface,
+                                                          final WatchFacesModel.FacePath facePath,
+                                                          final Context context) {
         return Observable.create(new Observable.OnSubscribe<WatchFaceBean>() {
             @Override
             public void call(Subscriber<? super WatchFaceBean> subscriber) {
@@ -86,7 +86,6 @@ public class FaceOperation {
                         bytes = FileOperation.zipFolder(watchbeanface.getName());
                     } else {
                         bytes = AssetsOperation.zipFolder(context, watchbeanface.getName());
-                        FileOperation.deleteFolder(watchbeanface.getName());
                     }
 
 

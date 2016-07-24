@@ -4,20 +4,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.igeak.android.common.api.GeakApiClient;
-import com.igeak.android.wearable.Node;
-import com.igeak.android.wearable.NodeApi;
-import com.igeak.android.wearable.Wearable;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.PicUtil;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +147,7 @@ public class WatchFaceEditModel {
 
                         PicUtil.saveBitmapToFile(
                                 modifyMaps.get(type),
-                                FileOperation.getWatchfacesElementFile(
+                                FileOperation.getWatchFaceElementFile(
                                         watchfacebean.getName()
                                         , faceElement
                                 )
@@ -176,7 +171,7 @@ public class WatchFaceEditModel {
                                                            final WatchFaceBean watchbeanface,
                                                            final WatchFacesModel.FacePath
                                                                    facePath) {
-        return FaceOperation.zipFileAndSent2Watch(googleApiClient, watchbeanface, facePath,
+        return FaceOperation.zipAndRelease(googleApiClient, watchbeanface, facePath,
                 context);
 
     }
@@ -216,7 +211,7 @@ public class WatchFaceEditModel {
 
                 PicUtil.saveBitmapToFile(
                         modifyMaps.get(type),
-                        FileOperation.getWatchfacesElementFile(
+                        FileOperation.getWatchFaceElementFile(
                                 watchfacebean.getName()
                                 , faceElement
                         )
@@ -228,7 +223,7 @@ public class WatchFaceEditModel {
         }
 
 
-        return FaceOperation.zipFileAndSent2Watch(googleApiClient, watchbeanface, myfacePath,
+        return FaceOperation.zipAndRelease(googleApiClient, watchbeanface, myfacePath,
                 context);
 
     }
@@ -264,7 +259,7 @@ public class WatchFaceEditModel {
 
                         PicUtil.saveBitmapToFile(
                                 modifyMaps.get(type),
-                                FileOperation.getWatchfacesElementFile(
+                                FileOperation.getWatchFaceElementFile(
                                         watchfacebean.getName()
                                         , faceElement
                                 )

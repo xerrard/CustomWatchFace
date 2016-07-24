@@ -1,30 +1,20 @@
 package com.igeak.customwatchface.model;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonWriter;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.FileUtil;
-import com.igeak.customwatchface.util.PicUtil;
-import com.orhanobut.logger.Logger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +25,7 @@ public class FileOperation {
 
 
     /**
-     * 外置表盘位置
+     * 外置表盘文件夹
      *
      * @return sdcard/custom_watchface/
      */
@@ -65,22 +55,14 @@ public class FileOperation {
      * @throws Exception
      */
     public static File[] getWatchFaceFileList() throws Exception {
-        File[] watchfaces;
-//        watchfaces = getCustomWatchfacesFolder().listFiles(new FilenameFilter() {
-//            @Override
-//            public boolean accept(File dir, String filename) {
-//                return filename.contains(Const.ASSETS_WATCH_START_NAME)
-//                        || filename.contains(Const.WATCH_START_NAME);
-//            }
-//        });
-
-        watchfaces = getCustomWatchfacesFolder().listFiles(new FileFilter() {
+        File[] watchFaceFiles;
+        watchFaceFiles = getCustomWatchfacesFolder().listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
                 return pathname.isDirectory();
             }
         });
-        return watchfaces;
+        return watchFaceFiles;
     }
 
 
@@ -91,7 +73,7 @@ public class FileOperation {
      * @throws Exception
      */
     public static File getWatchFaceFile(final String watchname) throws Exception {
-        File[] watchfaces;
+        File[] watchFaceFiles;
         FilenameFilter filenameFilter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
@@ -99,9 +81,9 @@ public class FileOperation {
             }
         };
 
-        watchfaces = getCustomWatchfacesFolder().listFiles(filenameFilter);
-        if (watchfaces.length > 0) {
-            return watchfaces[0];
+        watchFaceFiles = getCustomWatchfacesFolder().listFiles(filenameFilter);
+        if (watchFaceFiles.length > 0) {
+            return watchFaceFiles[0];
         } else {
             return null;
         }
@@ -118,110 +100,95 @@ public class FileOperation {
     public static List<WatchFaceBean> getWatchFaceBeanList()
             throws Exception {
         List<WatchFaceBean> watchFaceBeanList = new ArrayList<WatchFaceBean>();
-        File[] watchfaces = getWatchFaceFileList();
-        for (File watchface : watchfaces) {
-            File[] jsonfiles = watchface.listFiles(new FilenameFilter() {
+        File[] watchFaceFiles = getWatchFaceFileList();
+        for (File watchFace : watchFaceFiles) {
+            File[] jsonFiles = watchFace.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String filename) {
                     return filename.endsWith(Const.JSON_EXNAME);
                 }
             });
-            File jsonfile = jsonfiles[0];
-            if (jsonfile != null) {
-                watchFaceBeanList.add(jsonToJavaBean(jsonfile));
+            File jsonFile = jsonFiles[0];
+            if (jsonFile != null) {
+                watchFaceBeanList.add(json2JavaBean(jsonFile));
             }
         }
         return watchFaceBeanList;
     }
 
-
-    public static WatchFaceBean jsonToJavaBean(File jsonfile) throws IOException {
-        BufferedReader bf = new BufferedReader(new InputStreamReader(
-                new FileInputStream(jsonfile)));
+    /**
+     * jsonFile转换成javaBean
+     * @param jsonFile
+     * @return
+     * @throws IOException
+     */
+    public static WatchFaceBean json2JavaBean(File jsonFile) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(jsonFile)));
         Gson gson = new Gson();
-        WatchFaceBean watchFaceBean = gson.fromJson(bf, WatchFaceBean.class);
-        bf.close();
+        WatchFaceBean watchFaceBean = gson.fromJson(bufferedReader, WatchFaceBean.class);
+        bufferedReader.close();
         return watchFaceBean;
     }
 
 
-    public static void javaBean2Json(WatchFaceBean bean, File jsonfile) throws
+    public static void javaBean2Json(WatchFaceBean bean, File jsonFile) throws
             IOException {
-        if (jsonfile.exists()) {
-            jsonfile.delete();
-            jsonfile.createNewFile();
+        if (jsonFile.exists()) {
+            jsonFile.delete();
+            jsonFile.createNewFile();
         }
-        if (jsonfile.canWrite()) {
-            FileWriter fw = new FileWriter(jsonfile);
+        if (jsonFile.canWrite()) {
+            FileWriter fw = new FileWriter(jsonFile);
             BufferedWriter bw = new BufferedWriter(fw);
             Gson gson = new Gson();
             gson.toJson(bean, bw);
-            //bw.flush();
             bw.close();
-            //fw.flush();
             fw.close();
         }
-        //String str = gson.toJson(bean);
-        //System.out.print(str);
-        //Logger.i(str);
     }
 
 
     /**
-     * 获取表盘元素的drawable
+     * 获取表盘元素的InputStream
      *
      * @param faceItem    表盘名
      * @param faceElement 表盘元素
      * @return
      * @throws Exception
      */
-    public static InputStream getWatchfacesElementStream(final String faceItem, String
+    public static InputStream getWatchFaceElementStream(final String faceItem, String
             faceElement) throws Exception {
 
-        return new FileInputStream(getWatchfacesElementFile(faceItem, faceElement));
+        return new FileInputStream(getWatchFaceElementFile(faceItem, faceElement));
     }
 
 
     /**
-     * 获取表盘元素的drawable
+     * 获取表盘元素的文件
      *
      * @param faceItem    表盘名
      * @param faceElement 表盘元素
-     * @return
+     * @return File
      * @throws Exception
      */
-    public static Bitmap getWatchfacesElementImg(final String faceItem, String
-            faceElement) throws Exception {
-
-        return PicUtil.file2Bitmap(getWatchfacesElementFile(faceItem, faceElement));
-    }
-
-    /**
-     * 获取表盘元素的drawable
-     *
-     * @param faceItem    表盘名
-     * @param faceElement 表盘元素
-     * @return
-     * @throws Exception
-     */
-    public static File getWatchfacesElementFile(final String faceItem, String
+    public static File getWatchFaceElementFile(final String faceItem, String
             faceElement) throws Exception {
 
         File drawableFile = null;
-        File facedir = null;
-        File[] facedirs = null; //
-        File rootFolder = null;
+        File faceDir;
+        File[] faceDirs;
 
-        facedirs = getCustomWatchfacesFolder().listFiles(new FilenameFilter() {
+        faceDirs = getCustomWatchfacesFolder().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
                 return filename.equals(faceItem);
             }
         });
 
-        facedir = facedirs[0];
-        if (facedir != null && facedir.exists()) {
-            drawableFile = new File(facedir, faceElement + Const.PNG_EXNAME);
+        faceDir = faceDirs[0];
+        if (faceDir != null && faceDir.exists()) {
+            drawableFile = new File(faceDir, faceElement + Const.PNG_EXNAME);
         }
         return drawableFile;
     }
@@ -230,20 +197,18 @@ public class FileOperation {
     /**
      * 将需要发送的表盘打包
      *
-     * @param watchfaceName
+     * @param watchFaceName
      * @return
      * @throws Exception
      */
-    public static byte[] zipFolder(final String watchfaceName) throws Exception {
-        File watchFolder = getWatchFaceFile(watchfaceName);
-        FileUtil.zipFolder(watchFolder, getZipfilePath());
-
-
-        return FileUtil.file2Byte(getZipfilePath());
+    public static byte[] zipFolder(final String watchFaceName) throws Exception {
+        File watchFolder = getWatchFaceFile(watchFaceName);
+        FileUtil.zipFolder(watchFolder, getZipFilePath());
+        return FileUtil.file2Byte(getZipFilePath());
     }
 
 
-    public static String getZipfilePath() {
+    public static String getZipFilePath() {
         return new StringBuilder().append(FileUtil.getExternalStoragePath())
                 .append(File.separator)
                 .append(Const.FOLDER_NAME)
@@ -253,16 +218,14 @@ public class FileOperation {
     }
 
 
-    public static void deleteFolder(String watchfaceName) throws Exception {
-        File watchFolder = getWatchFaceFile(watchfaceName);
+    public static void deleteFolder(String watchFaceName) throws Exception {
+        File watchFolder = getWatchFaceFile(watchFaceName);
         FileUtil.deleteDir(watchFolder);
     }
 
 
-    public static void changeWatchName(WatchFaceBean watchFaceBean, String tarName) throws
+    public static void changeWatchName(WatchFaceBean watchFaceBean, String targetName) throws
             Exception {
-
-
         String oriName = watchFaceBean.getName();
         File watchFolder = getWatchFaceFile(oriName);
         File[] files = null;
@@ -274,14 +237,12 @@ public class FileOperation {
                 }
             });
         }
-
-
-        File jsonfile = null;
+        File jsonFile = null;
         if (files.length > 0) {
-            jsonfile = files[0];
+            jsonFile = files[0];
         }
-        watchFaceBean.setName(tarName);
-        javaBean2Json(watchFaceBean, jsonfile);
-        FileUtil.changeDirName(watchFolder, tarName);
+        watchFaceBean.setName(targetName);
+        javaBean2Json(watchFaceBean, jsonFile);
+        FileUtil.changeDirName(watchFolder, targetName);
     }
 }

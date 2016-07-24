@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.igeak.customwatchface.presenter.loader.ImageResizer;
-import com.igeak.customwatchface.util.FileUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,9 +18,9 @@ public class PicOperation {
     /**
      * 优化图片加载，根据当前界面的需要，调整inSampleSize
      * @param is
-     * @param reqWidth
-     * @param reqHeight
-     * @return
+     * @param reqWidth    需要显示的宽度
+     * @param reqHeight   需要显示的高度
+     * @return Bitmap     得到我们需要的Bitmap
      * @throws Exception
      */
     public static Bitmap InputStream2Bitmap(InputStream is, int reqWidth, int reqHeight) throws Exception {

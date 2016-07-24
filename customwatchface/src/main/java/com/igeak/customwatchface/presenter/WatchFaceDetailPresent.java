@@ -1,6 +1,5 @@
 package com.igeak.customwatchface.presenter;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.igeak.android.common.api.GeakApiClient;
@@ -33,7 +32,7 @@ public class WatchFaceDetailPresent implements IWatchFaceDetailContract.IWatchFa
     @Override
     public void loadWatchimg(final WatchFaceBean watchFaceBean,
                              final WatchFacesModel.FacePath facePath) {
-        mWatchFaceDetailModel.loadWatchimg(watchFaceBean, facePath)
+        mWatchFaceDetailModel.loadWatchImg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WatchFace>() {

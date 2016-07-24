@@ -3,16 +3,8 @@ package com.igeak.customwatchface.model;
 import android.content.Context;
 
 import com.igeak.android.common.api.GeakApiClient;
-import com.igeak.android.wearable.Node;
-import com.igeak.android.wearable.NodeApi;
-import com.igeak.android.wearable.Wearable;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
-import com.igeak.customwatchface.Const;
-import com.igeak.customwatchface.R;
-import com.igeak.customwatchface.util.FileUtil;
 
-import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 
 import rx.Observable;
@@ -22,9 +14,6 @@ import rx.Subscriber;
  * Created by xuqiang on 16-5-19.
  */
 public class WatchFacesModel {
-
-
-    private List<WatchFaceBean> beanList;
 
     public enum FacePath {
         FACE_INNER,
@@ -37,46 +26,33 @@ public class WatchFacesModel {
         this.context = context;
     }
 
-
-    /**
-     * 获得表盘
-     *
-     * @param facePath 表盘类型
-     * @return
-     * @throws Exception
-     */
-    private List<WatchFaceBean> loadWatchfaceBeanList(FacePath facePath) throws Exception {
-        if (facePath.equals(FacePath.FACE_CUSTOM)) {
-            return FileOperation.getWatchFaceBeanList();
-        } else {
-            return AssetsOperation.getWatchFaceBeanList(context);
-        }
-    }
-
-    public Observable<List<WatchFaceBean>> getWatchfaceBeanList(final FacePath facePath) {
+    public Observable<List<WatchFaceBean>> getWatchFaceBeanList(final FacePath facePath) {
         return Observable.create(new Observable.OnSubscribe<List<WatchFaceBean>>() {
             @Override
             public void call(Subscriber<? super List<WatchFaceBean>> subscriber) {
 
                 try {
-                    final List<WatchFaceBean> watchfaces = loadWatchfaceBeanList(facePath);
-                    beanList = watchfaces;
-                    if (watchfaces == null) {
+                    List<WatchFaceBean> watchFaces;
+                    if (facePath.equals(FacePath.FACE_CUSTOM)) {
+                        watchFaces =  FileOperation.getWatchFaceBeanList();
+                    } else {
+                        watchFaces =  AssetsOperation.getWatchFaceBeanList(context);
+                    }
+
+                    if (watchFaces == null) {
                         subscriber.onError(new Exception("User = null"));
                     } else {
-                        subscriber.onNext(watchfaces);
+                        subscriber.onNext(watchFaces);
                         subscriber.onCompleted();
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-
             }
         });
     }
 
-
-    public Observable<WatchFace> loadWatchimg(final WatchFaceBean watchFaceBean,
+    public Observable<WatchFace> loadWatchImg(final WatchFaceBean watchFaceBean,
                                               final WatchFacesModel.FacePath facePath) {
         return Observable.create(new Observable.OnSubscribe<WatchFace>() {
             @Override
@@ -138,7 +114,7 @@ public class WatchFacesModel {
                                                            final WatchFaceBean watchbeanface,
                                                            final WatchFacesModel.FacePath
                                                                    facePath) {
-        return FaceOperation.zipFileAndSent2Watch(googleApiClient, watchbeanface, facePath,
+        return FaceOperation.zipAndRelease(googleApiClient, watchbeanface, facePath,
                 context);
 
     }

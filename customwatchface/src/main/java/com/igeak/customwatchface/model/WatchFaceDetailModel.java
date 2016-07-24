@@ -1,23 +1,9 @@
 package com.igeak.customwatchface.model;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.SystemClock;
 
 import com.igeak.android.common.api.GeakApiClient;
-import com.igeak.android.wearable.Node;
-import com.igeak.android.wearable.NodeApi;
-import com.igeak.android.wearable.Wearable;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
-import com.igeak.customwatchface.Const;
-import com.igeak.customwatchface.MyApplication;
-import com.igeak.customwatchface.util.JsonUtil;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -33,7 +19,7 @@ public class WatchFaceDetailModel {
     }
 
 
-    public Observable<WatchFace> loadWatchimg(final WatchFaceBean watchFaceBean,
+    public Observable<WatchFace> loadWatchImg(final WatchFaceBean watchFaceBean,
                                               final WatchFacesModel.FacePath facePath) {
         return Observable.create(new Observable.OnSubscribe<WatchFace>() {
             @Override
@@ -55,7 +41,7 @@ public class WatchFaceDetailModel {
                                                            final WatchFaceBean watchbeanface,
                                                            final WatchFacesModel.FacePath
                                                                    facePath) {
-        return FaceOperation.zipFileAndSent2Watch(googleApiClient, watchbeanface, facePath,
+        return FaceOperation.zipAndRelease(googleApiClient, watchbeanface, facePath,
                 context);
 
     }

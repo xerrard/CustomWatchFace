@@ -4,14 +4,12 @@ import android.content.Context;
 
 import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
-import com.igeak.customwatchface.model.AssetsOperation;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
 import java.util.List;
 
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -35,7 +33,7 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
 
     @Override
     public void getWatchfaceBeanList(WatchFacesModel.FacePath facePath) {
-        mWatchFacesModel.getWatchfaceBeanList(facePath)
+        mWatchFacesModel.getWatchFaceBeanList(facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<WatchFaceBean>>() {
@@ -62,7 +60,7 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
     @Override
     public void loadWatchimg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
                              final WatchFacesModel.FacePath facePath) {
-        mWatchFacesModel.loadWatchimg(watchFaceBean, facePath)
+        mWatchFacesModel.loadWatchImg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WatchFace>() {
