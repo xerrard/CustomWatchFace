@@ -2,6 +2,7 @@ package com.igeak.customwatchface.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.igeak.customwatchface.presenter.loader.ImageResizer;
 
@@ -17,45 +18,59 @@ public class PicOperation {
 
     /**
      * 优化图片加载，根据当前界面的需要，调整inSampleSize
-     * @param is
+     * @param is   is要求一定要是bufferInputStream（原因：要支持mark/reset方法）
      * @param reqWidth    需要显示的宽度
      * @param reqHeight   需要显示的高度
      * @return Bitmap     得到我们需要的Bitmap
      * @throws Exception
      */
     public static Bitmap InputStream2Bitmap(InputStream is, int reqWidth, int reqHeight) throws Exception {
-        InputStream copyInputStream = copy2Stream(is);
-        copyInputStream.mark(copyInputStream.available());
+        is.mark(is.available());
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(copyInputStream, null, options);
+        BitmapFactory.decodeStream(is, null, options);
         options.inJustDecodeBounds = false;
-        options.inSampleSize = ImageResizer.calculateInSampleSize(options, reqWidth, reqHeight);
-        copyInputStream.reset();
-        Bitmap bitmap = BitmapFactory.decodeStream(copyInputStream, null, options);
-        copyInputStream.close();
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        is.reset();
+        Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
+        is.close();
         return bitmap;
 
     }
 
 
     /**
-     * 复制一个InputStream出来
-     * @param in
-     * @return
-     * @throws IOException
+     * 根据需要的width和height，算出inSampleSize
+     * @param options
+     * @param reqWidth
+     * @param reqHeight
+     * @return inSampleSize
      */
-    public static InputStream copy2Stream(InputStream in) throws IOException {
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] data = new byte[1024 * 16];
-        int count = -1;
-        while ((count = in.read(data, 0, 1024 * 16)) != -1)
-            outStream.write(data, 0, count);
-        byte[] out = outStream.toByteArray();
-        outStream.close();
-        in.close();
-        return new ByteArrayInputStream(out);
-    }
+    public static int calculateInSampleSize(BitmapFactory.Options options,
+                                            int reqWidth, int reqHeight) {
+        if (reqWidth == 0 || reqHeight == 0) {
+            return 1;
+        }
 
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and
+            // keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
 
 }

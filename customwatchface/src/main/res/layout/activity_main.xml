@@ -8,6 +8,11 @@
     tools:context=".view.activity.MainActivity">
 
     <include layout="@layout/toolbar"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+    />
 
     <LinearLayout
         android:layout_width="match_parent"

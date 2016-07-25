@@ -1,25 +1,37 @@
 <resources>
     <string name="app_name">CustomWatchFace</string>
-    <string name="innerface">Inner Face</string>
-    <string name="myface">My Face</string>
-    <string name="rename">Rename</string>
-    <string name="edit">Edit</string>
-    <string name="delete">Delete</string>
-    <string name="share">Share</string>
-    <string name="facefuction">Fuction</string>
-    <string name="sendtowatch">Send to Watch</string>
-    <string name="backgroud">Background</string>
-    <string name="scale">Scale</string>
-    <string name="pointer">Pointer</string>
-    <string name="newwatch">new WatchFace</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="save">Save</string>
-    <string name="watchface_saved">watchface saved</string>
-    <string name="watchface_created">watchface created</string>
-    <string name="save_watchface">Save watchface?</string>
-    <string name="please_connect_watch">please connect the watch</string>
-    <string name="please_open_phone_sync">please open the phone sync</string>
-    <string name="has_sent">has sent</string>
+    <string name="frg_innerface">Inner Face</string>
+    <string name="frg_myface">My Face</string>
+    <string name="toast_query_connect_watch">please connect the watch</string>
+    <string name="toast_query_open_phone_sync">please open the phone sync</string>
+    <string name="toast_has_sent">has sent</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_rename">Rename</string>
+
+    <string name="option_rename">Rename</string>
+    <string name="option_edit">Edit</string>
+    <string name="option_delete">Delete</string>
+    <string name="option_share">Share</string>
+    <string name="option_release">Release</string>
+
+
+    <string name="detail_face_fuction">Fuction</string>
+    <string name="frg_backgroud">Background</string>
+    <string name="frg_scale">Scale</string>
+    <string name="frg_pointer">Pointer</string>
+    <string name="option_newwatch">new WatchFace</string>
+    <string name="option_save">Save</string>
+
+
+    <string name="toast_watchface_saved">watchFace saved</string>
+    <string name="toast_watchface_created">watchFace created</string>
+    <string name="dialog_save_watchface">Save watchFaceBean?</string>
+
+
     <string name="default_face">default face</string>
-    <string name="share_cancel_title">Cancel</string>
+    <string name="dialog_share_cancel">Cancel</string>
+
+    <string name="dialog_share">Share</string>
+
 </resources>

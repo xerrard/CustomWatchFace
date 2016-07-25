@@ -32,7 +32,7 @@ public class WatchFaceEditModel {
         modifyMaps = new HashMap<>();
     }
 
-    public Observable<WatchFace> loadWatchimg(final WatchFaceBean watchFaceBean, final
+    public Observable<WatchFace> loadWatchImg(final WatchFaceBean watchFaceBean, final
     WatchFacesModel.FacePath facePath) {
         this.watchfacebean = watchFaceBean;
         return Observable.create(new Observable.OnSubscribe<WatchFace>() {
@@ -56,7 +56,7 @@ public class WatchFaceEditModel {
      * @return
      * @throws Exception
      */
-    public List<InputStream> loadbackImg() throws Exception {
+    public List<InputStream> loadBackImg() throws Exception {
         List<InputStream> backImgs = new ArrayList<InputStream>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.BACK_FOLDER_NAME);
@@ -68,7 +68,7 @@ public class WatchFaceEditModel {
     }
 
     public List<InputStream> loadScaleImg() throws Exception {
-        List<InputStream> backImgs = new ArrayList<InputStream>();
+        List<InputStream> backImgs = new ArrayList<>();
         String[] backgrounds;
         backgrounds = context.getAssets().list(Const.SCALE_FOLDER_NAME);
 
@@ -156,7 +156,6 @@ public class WatchFaceEditModel {
                     FileOperation.changeWatchName(watchfacebean, name);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
-                    //subscriber.onError(e);
                 }
                 subscriber.onNext(watchfacebean);
                 subscriber.onCompleted();
@@ -269,7 +268,6 @@ public class WatchFaceEditModel {
                     FileOperation.changeWatchName(watchfacebean, name);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
-                    //subscriber.onError(e);
                 }
                 subscriber.onNext(watchfacebean);
                 subscriber.onCompleted();

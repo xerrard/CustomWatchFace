@@ -21,10 +21,10 @@ public interface IWatchFaceDetailContract {
     }
 
     interface IWatchFaceDetailPresent extends IPresenter<IWatchFaceDetailView> {
-        void loadWatchimg(final WatchFaceBean watchFaceBean,
+        void loadWatchImg(final WatchFaceBean watchFaceBean,
                           final WatchFacesModel.FacePath facePath);
 
-        void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
+        void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchFaceBean,
                                    final WatchFacesModel.FacePath facePath);
     }
 }

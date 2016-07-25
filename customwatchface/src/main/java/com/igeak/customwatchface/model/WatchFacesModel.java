@@ -75,11 +75,10 @@ public class WatchFacesModel {
             @Override
             public void call(Subscriber<? super List<WatchFaceBean>> subscriber) {
                 try {
-                    WatchFaceBean currentbean = watchbeanlist.get(position);
-                    FileOperation.changeWatchName(currentbean, name);
+                    WatchFaceBean bean = watchbeanlist.get(position);
+                    FileOperation.changeWatchName(bean, name);
 
                 } catch (Exception e) {
-                    //throw new RuntimeException(e);
                     subscriber.onError(new Exception(e));
                 }
                 subscriber.onNext(watchbeanlist);
@@ -100,7 +99,6 @@ public class WatchFacesModel {
                     FileOperation.deleteFolder(currentbean.getName());
                     watchbeanlist.remove(position);
                 } catch (Exception e) {
-                    //throw new RuntimeException(e);
                     subscriber.onError(new Exception(e));
                 }
                 subscriber.onNext(watchbeanlist);
@@ -110,9 +108,9 @@ public class WatchFacesModel {
 
     }
 
-    public Observable<WatchFaceBean> zipFileAndSentToWatch(final GeakApiClient googleApiClient,
-                                                           final WatchFaceBean watchbeanface,
-                                                           final WatchFacesModel.FacePath
+    public Observable<WatchFaceBean> zipFileAndRelease(final GeakApiClient googleApiClient,
+                                                       final WatchFaceBean watchbeanface,
+                                                       final WatchFacesModel.FacePath
                                                                    facePath) {
         return FaceOperation.zipAndRelease(googleApiClient, watchbeanface, facePath,
                 context);

@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +31,7 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
     WatchFace watchface;
     String[] data = {"12小时制", "显示天气", "显示日期", "显示星期"};
     WatchFacesModel.FacePath facePath;
-    WatchPreviewView watchview;
+    WatchPreviewView watchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,31 +42,27 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
         watchfacebean = intent.getParcelableExtra(Const.INTENT_EXTRA_KEY_WATCHFACE);
         facePath = intent.getBooleanExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, false) ? WatchFacesModel
                 .FacePath.FACE_CUSTOM : WatchFacesModel.FacePath.FACE_INNER;
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_facelist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecycleViewAdapter = new RecycleViewAdapter(watchfacebean);
-        watchview = (WatchPreviewView) findViewById(R.id.watch_view);
+        watchView = (WatchPreviewView) findViewById(R.id.watch_view);
 
         present = new WatchFaceDetailPresent(this.getApplicationContext(), this);
 
         setTitle(watchfacebean.getName()); //更新title
-        setFun1(getResources().getString(R.string.sendtowatch), new View.OnClickListener() {
+        setFun1(getResources().getString(R.string.option_release), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendToWatch(v);
+                send2Watch(v);
             }
         });
+        present.loadWatchImg(watchfacebean, facePath);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        present.loadWatchimg(watchfacebean, facePath);
-    }
 
-    public void sendToWatch(View v) {
+    public void send2Watch(View v) {
         MyApplication myApplication = (MyApplication) getApplication();
         GeakApiClient googleApiClient = myApplication.mGoogleApiclent;
         present.zipFileAndSentToWatch(googleApiClient, watchfacebean, facePath);
@@ -76,7 +71,8 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
     @Override
     public void updateWatchFaceDetailView(WatchFace watchFace) {
         this.watchface = watchFace;
-        watchview.setElements(watchface); //更新预览图
+        watchView.setElements(watchface);
+        watchView.invalidate();
 
         if (!mRecycleViewAdapter.isSetAdapter()) {
             mRecyclerView.setAdapter(mRecycleViewAdapter);
@@ -87,60 +83,60 @@ public class FaceDetailActivity extends BaseActivity implements IWatchFaceDetail
 
     @Override
     public void updateWatchSent(WatchFaceBean watchFace) {
-        Toast.makeText(this, watchFace.getName() + "has sent", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, watchFace.getName() + getString(R.string.toast_has_sent), Toast
+                .LENGTH_LONG).show();
         finish();
     }
 
     @Override
     public void showThrowable(Throwable e) {
-        Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
+        if (e.getMessage().equals(Const.EXCEPTION_CHECK_CONNECT)) {
+            Toast.makeText(this, getString(R.string.toast_query_connect_watch), Toast
+                    .LENGTH_LONG).show();
+        } else if (e.getMessage().equals(Const.EXCEPTION_CHECK_PHONESYNC)) {
+            Toast.makeText(this, getString(R.string.toast_query_open_phone_sync), Toast
+                    .LENGTH_LONG).show();
+        }
         finish();
     }
 
 
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
-        private WatchFaceBean watchface = null;
+        private WatchFaceBean watchFaceBean = null;
 
         public boolean isSetAdapter() {
-            return watchface != null;
+            return watchFaceBean != null;
         }
 
-        public RecycleViewAdapter(WatchFaceBean watchface) {
-            this.watchface = watchface;
+        public RecycleViewAdapter(WatchFaceBean watchFaceBean) {
+            this.watchFaceBean = watchFaceBean;
         }
 
-        //RecyclerView显示的子View
-        //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = getLayoutInflater().inflate(R.layout.recycler_item_detail, null);
             return new ViewHolder(v);
         }
 
-        //将数据绑定到子View，会自动复用View
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
             viewHolder.textView.setText(data[i]);
         }
 
-        //RecyclerView显示数据条数
         @Override
         public int getItemCount() {
             return data.length;
         }
 
-        //自定义的ViewHolder,减少findViewById调用次数
         class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView textView;
             ImageView imageView;
-            ImageButton imb;
 
-            //在布局中找到所含有的UI组件
             public ViewHolder(View itemView) {
                 super(itemView);
-                textView = (TextView) itemView.findViewById(R.id.textView);
-                imageView = (ImageView) itemView.findViewById(R.id.imageView);
+                textView = (TextView) itemView.findViewById(R.id.tv_watchname);
+                imageView = (ImageView) itemView.findViewById(R.id.watch_preview);
             }
 
         }

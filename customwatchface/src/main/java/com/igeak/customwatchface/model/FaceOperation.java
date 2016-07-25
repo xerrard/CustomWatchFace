@@ -46,19 +46,19 @@ public class FaceOperation {
                         watchFaceBean.getName(),
                         watchFaceBean.getSecond()));
             } else {
-                watchFace.setBackground(AssetsOperation.getWatchfacesElementStream(context,
+                watchFace.setBackground(AssetsOperation.getWatchFaceElementStream(context,
                         watchFaceBean.getName(),
                         watchFaceBean.getBackground()));
-                watchFace.setDialScale(AssetsOperation.getWatchfacesElementStream(context,
+                watchFace.setDialScale(AssetsOperation.getWatchFaceElementStream(context,
                         watchFaceBean.getName(),
                         watchFaceBean.getDialScale()));
-                watchFace.setHour(AssetsOperation.getWatchfacesElementStream(context,
+                watchFace.setHour(AssetsOperation.getWatchFaceElementStream(context,
                         watchFaceBean.getName(),
                         watchFaceBean.getHour()));
-                watchFace.setMinute(AssetsOperation.getWatchfacesElementStream(context,
+                watchFace.setMinute(AssetsOperation.getWatchFaceElementStream(context,
                         watchFaceBean.getName(),
                         watchFaceBean.getMinute()));
-                watchFace.setSecond(AssetsOperation.getWatchfacesElementStream(context,
+                watchFace.setSecond(AssetsOperation.getWatchFaceElementStream(context,
                         watchFaceBean.getName(),
                         watchFaceBean.getSecond()));
             }
@@ -101,7 +101,7 @@ public class FaceOperation {
                         List<Node> nodes = result.getNodes();
 
                         if (nodes.isEmpty()) {
-                            subscriber.onError(new Exception("please connect the watch"));
+                            subscriber.onError(new Exception(Const.EXCEPTION_CHECK_CONNECT));
                             return;
                         }
                         Iterator it = nodes.iterator();
@@ -117,7 +117,7 @@ public class FaceOperation {
                         subscriber.onNext(watchbeanface);
                         subscriber.onCompleted();
                     } else {
-                        subscriber.onError(new Exception("please open the phone sync"));
+                        subscriber.onError(new Exception(Const.EXCEPTION_CHECK_PHONESYNC));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);

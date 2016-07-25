@@ -5,6 +5,7 @@ import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.util.FileUtil;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -118,6 +119,7 @@ public class FileOperation {
 
     /**
      * jsonFile转换成javaBean
+     *
      * @param jsonFile
      * @return
      * @throws IOException
@@ -160,7 +162,8 @@ public class FileOperation {
     public static InputStream getWatchFaceElementStream(final String faceItem, String
             faceElement) throws Exception {
 
-        return new FileInputStream(getWatchFaceElementFile(faceItem, faceElement));
+        return new BufferedInputStream(new FileInputStream(getWatchFaceElementFile(faceItem,
+                faceElement)));
     }
 
 

@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.igeak.android.common.api.GeakApiClient;
@@ -15,11 +13,10 @@ import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFaceEditModel;
 import com.igeak.customwatchface.model.WatchFacesModel;
-import com.igeak.customwatchface.util.PicUtil;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
-import com.orhanobut.logger.Logger;
 import com.soundcloud.android.crop.Crop;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -54,9 +51,9 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
     }
 
     @Override
-    public List<InputStream> loadbackImg() {
+    public List<InputStream> loadBackImg() {
         try {
-            return model.loadbackImg();
+            return model.loadBackImg();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -64,10 +61,9 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
 
     @Override
     public void changeBackImg(Bitmap bitmap) {
-        watchfaceview.updatebackground(bitmap);
+        watchfaceview.updateBackground(bitmap);
         model.saveBackImg(bitmap);
     }
-
 
 
     @Override
@@ -103,8 +99,9 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
 
 
     @Override
-    public void loadWatchimg(final WatchFaceBean watchFaceBean, final WatchFacesModel.FacePath facePath) {
-        model.loadWatchimg(watchFaceBean, facePath)
+    public void loadWatchImg(final WatchFaceBean watchFaceBean, final WatchFacesModel.FacePath
+            facePath) {
+        model.loadWatchImg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WatchFace>() {
@@ -125,62 +122,8 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
                 });
     }
 
-    public void handleCrop(int resultCode, Intent result) {
-        final int width = watchfaceview.getWatchWidth();
-        final int height = watchfaceview.getWatchHeight();
-        try {
-            if (resultCode == Activity.RESULT_OK) {
-                Uri uri = Crop.getOutput(result);
-
-                //Bitmap photo = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-                final InputStream stream = context.getContentResolver().openInputStream(uri);
-                //Drawable drawable = Drawable.createFromStream(stream, null);
-                //Bitmap bitmap = PicUtil.drawable2Bitmap(drawable);
-
-                //Logger.i("   photo.getWidth() = " + photo.getWidth()
-                //        + "   photo.getHeight() = " + photo.getHeight());
-                //Bitmap bitmap = PicUtil.InputStream2Bitmap(stream);
-                Observable.create(new Observable.OnSubscribe<Bitmap>() {
-                    @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-                        try {
-                            Bitmap bitmap = PicOperation.InputStream2Bitmap(stream,width,height);
-                            subscriber.onNext(bitmap);
-                            subscriber.onCompleted();
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    })
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<Bitmap>() {
-                            @Override
-                            public void onCompleted() {
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(Bitmap bitmap) {
-                                changeBackImg(bitmap);
-                            }
-
-                        });
-            } else if (resultCode == Crop.RESULT_ERROR) {
-                Toast.makeText(context, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT)
-                        .show();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
-    public void savewatch(String name) {
+    public void saveWatch(String name) {
         model.savewatch(name)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -196,7 +139,6 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
 
                     @Override
                     public void onNext(WatchFaceBean watchFace) {
-                        //watchfaceview.updateWatchFace(watchFace);
                         watchfaceview.updateSaved();
                     }
 
@@ -230,8 +172,9 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
     }
 
     @Override
-    public void saveAndSend(String name, GeakApiClient googleApiClient, WatchFaceBean watchface, WatchFacesModel.FacePath facePath) {
-        model.saveAndSend(name,googleApiClient, watchface, facePath)
+    public void saveAndSend(String name, GeakApiClient googleApiClient, WatchFaceBean watchface,
+                            WatchFacesModel.FacePath facePath) {
+        model.saveAndSend(name, googleApiClient, watchface, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WatchFaceBean>() {
@@ -247,14 +190,14 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
 
                     @Override
                     public void onNext(WatchFaceBean watchFaceBean) {
-                        watchfaceview.updateSaveandSent(watchFaceBean);
+                        watchfaceview.updateSaveAndSent(watchFaceBean);
                     }
                 });
     }
 
 
     @Override
-    public void creatNewFace(String name) {
+    public void createNewFace(String name) {
         model.createNewFace(name)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -270,7 +213,6 @@ public class WatchFaceEditPresent implements IWatchFaceEditContract.IWatchFaceEd
 
                     @Override
                     public void onNext(WatchFaceBean watchFace) {
-                        //watchfaceview.updateWatchFace(watchFace);
                         watchfaceview.updateSaved();
                     }
 

@@ -8,9 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
 import com.igeak.customwatchface.R;
-import com.igeak.customwatchface.presenter.IPresenter;
 import com.igeak.customwatchface.view.fragment.CustomFaceFragment;
-import com.igeak.customwatchface.view.fragment.InnerFaceFrgment;
+import com.igeak.customwatchface.view.fragment.InnerFaceFragment;
 import com.igeak.customwatchface.view.view.slide.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class MainActivity extends BaseActivity {
     MainActivityPagerAdapter mMyPagerAdapter = null;
     SlidingTabLayout mSlidingTabLayout = null;
     List<Fragment> fragments = null;
-    List<String> titlelist = null;
+    List<String> titleList = null;
 
 
     @Override
@@ -36,14 +35,14 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        InnerFaceFrgment innerFaceFrgment = new InnerFaceFrgment();
+        InnerFaceFragment innerFaceFragment = new InnerFaceFragment();
         CustomFaceFragment myFaceFragment = new CustomFaceFragment();
-        fragments = new ArrayList<Fragment>();
-        fragments.add(innerFaceFrgment);
+        fragments = new ArrayList<>();
+        fragments.add(innerFaceFragment);
         fragments.add(myFaceFragment);
-        titlelist = new ArrayList<String>();
-        titlelist.add(getResources().getString(R.string.innerface));
-        titlelist.add(getResources().getString(R.string.myface));
+        titleList = new ArrayList<>();
+        titleList.add(getResources().getString(R.string.frg_innerface));
+        titleList.add(getResources().getString(R.string.frg_myface));
     }
 
     private void initViewpager() {
@@ -51,8 +50,8 @@ public class MainActivity extends BaseActivity {
         mMyPagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mMyPagerAdapter);
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(android.R.color
-                .holo_red_light));
+        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color
+                .slide_indicator));
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setViewPager(viewPager);
     }
@@ -64,7 +63,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return titlelist.size();
+            return titleList.size();
         }
 
         @Override
@@ -75,7 +74,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             // TODO Auto-generated method stub
-            return titlelist.get(position);
+            return titleList.get(position);
         }
     }
 

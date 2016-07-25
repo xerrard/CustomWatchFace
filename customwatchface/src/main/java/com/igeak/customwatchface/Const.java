@@ -32,4 +32,9 @@ public class Const {
     public static final int RESULT_CODE_SHARE = RESULT_CODE_BASE + 3;
     public static final int RESULT_CODE_DELETE = RESULT_CODE_BASE + 4;
 
+    public static final int REQUEST_EDIT = 1100;
+
+    public static final String EXCEPTION_CHECK_CONNECT = "please_connect_watch";
+    public static final String EXCEPTION_CHECK_PHONESYNC = "please_open_phone_sync";
+
 }

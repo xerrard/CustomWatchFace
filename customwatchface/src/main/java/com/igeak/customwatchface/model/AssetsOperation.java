@@ -25,9 +25,9 @@ public class AssetsOperation {
      */
     public static List<WatchFaceBean> getWatchFaceBeanList(Context context)
             throws Exception {
-        List<WatchFaceBean> watchFaceBeanList = new ArrayList<WatchFaceBean>();
-        String[] watchfaces = context.getAssets().list(Const.FOLDER_NAME);
-        for (String str : watchfaces) {
+        List<WatchFaceBean> watchFaceBeanList = new ArrayList<>();
+        String[] watchFaces = context.getAssets().list(Const.FOLDER_NAME);
+        for (String str : watchFaces) {
             String filepath = Const.FOLDER_NAME + "/" + str + "/" + Const
                     .WATCHFACEJSON;
             String json = AssertFileUtil.assetsFile2String(context, filepath);
@@ -47,8 +47,8 @@ public class AssetsOperation {
      * @return
      * @throws Exception
      */
-    public static InputStream getWatchfacesElementStream(Context context, final String faceItem,
-                                                         String
+    public static InputStream getWatchFaceElementStream(Context context, final String faceItem,
+                                                        String
             faceElement) throws Exception {
 
         String filepath = Const.FOLDER_NAME + "/" + faceItem + "/" + faceElement + Const.PNG_EXNAME;
@@ -62,17 +62,17 @@ public class AssetsOperation {
      * assert打包的过程比较特别，需要先复制到T卡，然后打包，得到压缩后的数据后，将复制到T卡的表盘删除
      *
      * @param context
-     * @param watchfaceName
+     * @param watchFaceName
      * @return
      * @throws Exception
      */
     public static byte[] zipFolder(Context context, final String
-            watchfaceName) throws Exception {
-        String assetsPath = Const.FOLDER_NAME + "/" + watchfaceName;
-        String filePath = FileOperation.getCustomWatchfacesFolderPath() + "/" + watchfaceName;
+            watchFaceName) throws Exception {
+        String assetsPath = Const.FOLDER_NAME + "/" + watchFaceName;
+        String filePath = FileOperation.getCustomWatchfacesFolderPath() + "/" + watchFaceName;
         FileUtil.assets2Files(context, assetsPath, filePath);
-        byte[] bytes = FileOperation.zipFolder(watchfaceName);
-        FileOperation.deleteFolder(watchfaceName); //压缩好之后，
+        byte[] bytes = FileOperation.zipFolder(watchFaceName);
+        FileOperation.deleteFolder(watchFaceName); //压缩好之后，
         return bytes;
     }
 
@@ -81,13 +81,13 @@ public class AssetsOperation {
      * assert打包的过程比较特别，需要先复制到T卡，然后打包
      *
      * @param context
-     * @param watchfaceName
+     * @param watchFaceName
      * @throws Exception
      */
     public static void assert2Folder(Context context, final String
-            watchfaceName) throws Exception {
-        String assetsPath = Const.FOLDER_NAME + "/" + watchfaceName;
-        String filePath = FileOperation.getCustomWatchfacesFolderPath() + "/" + watchfaceName;
+            watchFaceName) throws Exception {
+        String assetsPath = Const.FOLDER_NAME + "/" + watchFaceName;
+        String filePath = FileOperation.getCustomWatchfacesFolderPath() + "/" + watchFaceName;
         FileUtil.assets2Files(context, assetsPath, filePath);
     }
 

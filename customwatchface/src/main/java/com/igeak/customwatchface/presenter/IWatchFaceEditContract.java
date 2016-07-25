@@ -24,24 +24,17 @@ public interface IWatchFaceEditContract {
     interface IWatchFaceEditView extends IView {
         void updateWatchFace(WatchFace watchFace);
 
-        //void updatebackground(InputStream bitmap);
-
-        void updatebackground(Bitmap bitmap);
+        void updateBackground(Bitmap bitmap);
 
         void updateScale(Bitmap bitmap);
 
         void updatePoint(Map<PointView.Type, Bitmap> map);
 
-
         void updateSaved();
-
-        int getWatchWidth();
-
-        int getWatchHeight();
 
         void updateWatchSent(WatchFaceBean watchFace);
 
-        void updateSaveandSent(WatchFaceBean watchFace);
+        void updateSaveAndSent(WatchFaceBean watchFace);
 
         void showThrowable(Throwable e);
     }
@@ -60,7 +53,7 @@ public interface IWatchFaceEditContract {
 
 
     interface IWatchFaceEditPresent extends IPresenter<IWatchFaceEditView> {
-        List<InputStream> loadbackImg();
+        List<InputStream> loadBackImg();
 
         void changeBackImg(Bitmap bitmap);
 
@@ -72,19 +65,19 @@ public interface IWatchFaceEditContract {
 
         void changePointImg(Map<PointView.Type, Bitmap> point);
 
-        void loadWatchimg(final WatchFaceBean watchFaceBean, final WatchFacesModel.FacePath
+        void loadWatchImg(final WatchFaceBean watchFaceBean, final WatchFacesModel.FacePath
                 facePath);
 
 
-        void savewatch(String name);
+        void saveWatch(String name);
 
-        void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
+        void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchFaceBean,
                                    final WatchFacesModel.FacePath facePath);
 
         void saveAndSend(String name, GeakApiClient googleApiClient, final WatchFaceBean
-                watchface, final WatchFacesModel
+                watchFaceBean, final WatchFacesModel
                 .FacePath facePath);
 
-        void creatNewFace(String name);
+        void createNewFace(String name);
     }
 }

@@ -61,11 +61,11 @@ public class MenuActivity extends Activity {
         mDrawableDatas.add(R.drawable.icon_share);
         mDrawableDatas.add(R.drawable.icon_delete);
         mStringDatas = new ArrayList<>();
-        mStringDatas.add(R.string.edit);
-        mStringDatas.add(R.string.sendtowatch);
-        mStringDatas.add(R.string.rename);
-        mStringDatas.add(R.string.share);
-        mStringDatas.add(R.string.delete);
+        mStringDatas.add(R.string.option_edit);
+        mStringDatas.add(R.string.option_release);
+        mStringDatas.add(R.string.option_rename);
+        mStringDatas.add(R.string.option_share);
+        mStringDatas.add(R.string.option_delete);
     }
 
     class GalleryAdapter extends
@@ -105,13 +105,6 @@ public class MenuActivity extends Activity {
             ImageView mImg;
             TextView mTxt;
 
-//            @Override
-//            public void onClick(View v) {
-//                int position = (int) getItemId();
-//                int result = position + Const.RESULT_CODE_BASE;
-//                setResult(result);
-//                finish();
-//            }
         }
 
         @Override

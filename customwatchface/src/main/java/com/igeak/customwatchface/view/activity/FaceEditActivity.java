@@ -1,10 +1,8 @@
 package com.igeak.customwatchface.view.activity;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,9 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.igeak.android.common.api.GeakApiClient;
@@ -26,16 +22,13 @@ import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
-import com.igeak.customwatchface.util.FileUtil;
-import com.igeak.customwatchface.view.fragment.BackgroudEditFragment;
+import com.igeak.customwatchface.view.fragment.BackgroundEditFragment;
 import com.igeak.customwatchface.view.fragment.PointEditFragment;
 import com.igeak.customwatchface.view.fragment.ScaleEditFragment;
 import com.igeak.customwatchface.view.view.slide.SlidingTabLayout;
 import com.igeak.customwatchface.view.view.watchfaceview.PointView;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
-import com.soundcloud.android.crop.Crop;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,13 +42,14 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     SlidingTabLayout mSlidingTabLayout = null;
     List<Fragment> fragments = null;
     List<String> titlelist = null;
-    WatchPreviewView watchPreviewView = null;
+    private WatchPreviewView watchPreviewView = null;
     public WatchFaceEditPresent present = null;
     public WatchFaceBean watchfacebean;
-    BackgroudEditFragment backgroudEditFragment = new BackgroudEditFragment();
+    BackgroundEditFragment backgroundEditFragment = new BackgroundEditFragment();
     ScaleEditFragment scaleEditFragment = new ScaleEditFragment();
     PointEditFragment pointEditFragment = new PointEditFragment();
     WatchFacesModel.FacePath facePath;
+
 
 
     @Override
@@ -63,13 +57,13 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_edit);
         setTitle("");
-        setFun1(getResources().getString(R.string.save), new View.OnClickListener() {
+        setFun1(getResources().getString(R.string.option_save), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 savewatch(v);
             }
         });
-        setFun2(getResources().getString(R.string.sendtowatch), new View.OnClickListener() {
+        setFun2(getResources().getString(R.string.option_release), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -93,24 +87,24 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         initViewpager();
         present = new WatchFaceEditPresent(this
                 , this
-                , backgroudEditFragment
+                , backgroundEditFragment
                 , scaleEditFragment
                 , pointEditFragment);
 
-        present.loadWatchimg(watchfacebean, facePath);
+        present.loadWatchImg(watchfacebean, facePath);
 
     }
 
 
     private void initFragment() {
-        fragments = new ArrayList<Fragment>();
-        fragments.add(backgroudEditFragment);
+        fragments = new ArrayList<>();
+        fragments.add(backgroundEditFragment);
         fragments.add(scaleEditFragment);
         fragments.add(pointEditFragment);
-        titlelist = new ArrayList<String>();
-        titlelist.add(getResources().getString(R.string.backgroud));
-        titlelist.add(getResources().getString(R.string.scale));
-        titlelist.add(getResources().getString(R.string.pointer));
+        titlelist = new ArrayList<>();
+        titlelist.add(getResources().getString(R.string.frg_backgroud));
+        titlelist.add(getResources().getString(R.string.frg_scale));
+        titlelist.add(getResources().getString(R.string.frg_pointer));
     }
 
     private void initViewpager() {
@@ -132,7 +126,7 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     }
 
     @Override
-    public void updatebackground(Bitmap bitmap) {
+    public void updateBackground(Bitmap bitmap) {
         watchPreviewView.setBackground(bitmap);
     }
 
@@ -149,19 +143,18 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     @Override
     public void updateSaved() {
         if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-            Toast.makeText(this, R.string.watchface_saved, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.toast_watchface_saved, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, R.string.watchface_created, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.toast_watchface_created, Toast.LENGTH_LONG).show();
         }
         finish();
     }
 
-    @Override
+
     public int getWatchWidth() {
         return watchPreviewView.getWidth();
     }
 
-    @Override
     public int getWatchHeight() {
         return watchPreviewView.getHeight();
     }
@@ -173,7 +166,7 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
     }
 
     @Override
-    public void updateSaveandSent(WatchFaceBean watchFace) {
+    public void updateSaveAndSent(WatchFaceBean watchFace) {
         Toast.makeText(this, watchFace.getName() + "has saved and sent", Toast.LENGTH_LONG).show();
         finish();
     }
@@ -199,21 +192,21 @@ public class FaceEditActivity extends BaseActivity implements IWatchFaceEditCont
         et.setText(name);
         et.setSelection(name.length());
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.save_watchface))
+                .setTitle(getString(R.string.dialog_save_watchface))
                 .setView(et)
-                .setPositiveButton(getString(android.R.string.ok), new DialogInterface
+                .setPositiveButton(getString(R.string.dialog_yes), new DialogInterface
                         .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String name = et.getText().toString();
                         if (facePath.equals(WatchFacesModel.FacePath.FACE_CUSTOM)) {
-                            present.savewatch(name);
+                            present.saveWatch(name);
                         } else {
-                            present.creatNewFace(name);
+                            present.createNewFace(name);
                         }
                     }
                 })
-                .setNegativeButton(getString(android.R.string.cancel), new DialogInterface
+                .setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface
                         .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:textColor="#595959"
-        android:text="@string/delete"
+        android:text="@string/option_delete"
         android:textSize="9dp" />
 
 </RelativeLayout>

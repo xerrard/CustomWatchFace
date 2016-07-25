@@ -14,18 +14,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.igeak.customwatchface.R;
 import com.igeak.customwatchface.model.PicOperation;
 import com.igeak.customwatchface.presenter.IWatchFaceEditContract;
 import com.igeak.customwatchface.presenter.WatchFaceEditPresent;
-import com.igeak.customwatchface.util.FileUtil;
 import com.igeak.customwatchface.util.MyUtils;
 import com.igeak.customwatchface.util.PicUtil;
 import com.igeak.customwatchface.view.activity.FaceEditActivity;
 import com.igeak.customwatchface.view.view.DividerItemDecoration;
 import com.soundcloud.android.crop.Crop;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,10 +41,9 @@ import rx.schedulers.Schedulers;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class BackgroudEditFragment extends Fragment implements IWatchFaceEditContract
+public class BackgroundEditFragment extends Fragment implements IWatchFaceEditContract
         .IBackgroundView {
 
-    private static final String TAG = "InnerFaceFrgment";
     private static final int SPAN_COUNT = 3;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter adapter;
@@ -57,17 +57,16 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
-        rootView.setTag(TAG);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_facelist);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.GRID, null, null));
+                DividerItemDecoration.GRID, null, null)); //分隔线
         present = ((FaceEditActivity) getActivity()).present;
         adapter = new RecycleViewAdapter(bitmaps);
         mRecyclerView.setAdapter(adapter);
-        bitmaps = present.loadbackImg();
+        bitmaps = present.loadBackImg();
         if (!adapter.isSetAdapter()) {
             adapter.setInputStreams(bitmaps);
             mRecyclerView.setAdapter(adapter);
@@ -79,7 +78,6 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
     }
 
 
-    //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<InputStream> inputStreams;
@@ -91,7 +89,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
 
         public void setInputStreams(List<InputStream> inputStreams) {
             this.inputStreams = inputStreams;
-            bitmaps = new ArrayList<Bitmap>();
+            bitmaps = new ArrayList<>();
         }
 
         public RecycleViewAdapter(List<InputStream> inputStreams) {
@@ -99,8 +97,6 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
             setHasStableIds(true); //必须要加的代码，默认为false，当true，getItemId才有效
         }
 
-        //RecyclerView显示的子View
-        //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_element,
@@ -108,7 +104,6 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
             return new ViewHolder(v);
         }
 
-        //将数据绑定到子View，会自动复用View
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
             if (i > 0) {
@@ -157,15 +152,12 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
 
                                     @Override
                                     public void onNext(Bitmap bitmap) {
-                                        //imageView.setImageBitmap(bitmap);
-
                                         imageView.setBackground(PicUtil.bitmap2Drawable(bitmap));
                                     }
                                 });
                     }
                 });
             } else {
-                //viewHolder.imageView.setImageResource(R.drawable.card_background);
                 viewHolder.imageView.setBackgroundResource(R.drawable.icon_default);
             }
         }
@@ -175,21 +167,18 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
             return position;
         }
 
-        //RecyclerView显示数据条数
         @Override
         public int getItemCount() {
             return inputStreams.size() + 1;
         }
 
-        //自定义的ViewHolder,减少findViewById调用次数
         class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             ImageView imageView;
 
-            //在布局中找到所含有的UI组件
             public ViewHolder(View itemView) {
                 super(itemView);
-                imageView = (ImageView) itemView.findViewById(R.id.imageView);
+                imageView = (ImageView) itemView.findViewById(R.id.iv_element);
                 itemView.setOnClickListener(this);
             }
 
@@ -200,8 +189,7 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
                     Bitmap bitmap = bitmaps.get(index - 1);
                     present.changeBackImg(bitmap);
                 } else {
-                    //Crop.pickImage(getActivity());
-                    Crop.pickImage(getContext(), BackgroudEditFragment.this);
+                    Crop.pickImage(getContext(), BackgroundEditFragment.this);
                 }
             }
         }
@@ -216,7 +204,56 @@ public class BackgroudEditFragment extends Fragment implements IWatchFaceEditCon
             Crop.of(result.getData(), destination).asCircle(true).asPng(true).start(getContext(),
                     this);
         } else if (requestCode == Crop.REQUEST_CROP) {
-            present.handleCrop(resultCode, result);
+            handleCrop(resultCode, result);
+        }
+    }
+
+
+    public void handleCrop(int resultCode, Intent result) {
+        final int width = ((FaceEditActivity) getActivity()).getWatchWidth();
+        final int height = ((FaceEditActivity) getActivity()).getWatchHeight();
+        try {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = Crop.getOutput(result);
+                final InputStream stream = getContext().getContentResolver().openInputStream(uri);
+                Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                    @Override
+                    public void call(Subscriber<? super Bitmap> subscriber) {
+                        try {
+                            Bitmap bitmap = PicOperation.InputStream2Bitmap(new
+                                    BufferedInputStream(stream), width, height);
+                            subscriber.onNext(bitmap);
+                            subscriber.onCompleted();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<Bitmap>() {
+                            @Override
+                            public void onCompleted() {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(Bitmap bitmap) {
+                                present.changeBackImg(bitmap);
+                            }
+
+                        });
+            } else if (resultCode == Crop.RESULT_ERROR) {
+                Toast.makeText(getContext().getApplicationContext(), Crop.getError(result)
+                        .getMessage(), Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -37,7 +37,6 @@ import rx.schedulers.Schedulers;
  */
 public class PointEditFragment extends Fragment implements IWatchFaceEditContract.IPointView {
 
-    private static final String TAG = "PointEditFragment";
     private static final int SPAN_COUNT = 3;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter adapter;
@@ -51,13 +50,12 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
-        rootView.setTag(TAG);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_facelist);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.GRID, null, null));
+                DividerItemDecoration.GRID, null, null)); //分隔线
         present = ((FaceEditActivity) getActivity()).present;
         adapter = new RecycleViewAdapter(pointMaps);
         pointMaps = present.loadPointImg();
@@ -67,15 +65,10 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
     }
 
 
-    //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<Map<PointView.Type, Bitmap>> pointbitMaps = new ArrayList<>();
         private List<Map<PointView.Type, InputStream>> pointMaps;
-
-        public boolean isSetAdapter() {
-            return pointMaps != null;
-        }
 
         public void setBitmap(List<Map<PointView.Type, InputStream>> pointMaps) {
             this.pointMaps = pointMaps;
@@ -86,8 +79,6 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
             setHasStableIds(true); //必须要加的代码，默认为false，当true，getItemId才有效
         }
 
-        //RecyclerView显示的子View
-        //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_point,
@@ -95,7 +86,6 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
             return new ViewHolder(v);
         }
 
-        //将数据绑定到子View，会自动复用View
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
             final int index = i;
@@ -192,7 +182,6 @@ public class PointEditFragment extends Fragment implements IWatchFaceEditContrac
             @Override
             public void onClick(View v) {
                 int index = (int) getItemId();
-                //Map<PointView.Type, InputStream> pointmap = pointMaps.get(index);
                 present.changePointImg(pointbitMaps.get(index));
             }
         }

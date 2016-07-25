@@ -35,7 +35,6 @@ import rx.schedulers.Schedulers;
  */
 public class ScaleEditFragment extends Fragment implements IWatchFaceEditContract.IScaleView {
 
-    private static final String TAG = "ScaleEditFragment";
     private static final int SPAN_COUNT = 3;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter adapter;
@@ -48,46 +47,25 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
-        rootView.setTag(TAG);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_facelist);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.GRID, null, null));
         present = ((FaceEditActivity) getActivity()).present;
+        bitmaps = present.loadScaleImg();
         adapter = new RecycleViewAdapter(bitmaps);
         mRecyclerView.setAdapter(adapter);
         return rootView;
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        bitmaps = present.loadScaleImg();
-        if (!adapter.isSetAdapter()) {
-            adapter.setInputStreams(bitmaps);
-            mRecyclerView.setAdapter(adapter);
-        } else {
-            adapter.setInputStreams(bitmaps);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
         private List<InputStream> inputStreams;
         private List<Bitmap> bitmaps = new ArrayList<>();
 
-        public boolean isSetAdapter() {
-            return inputStreams != null;
-        }
-
-        public void setInputStreams(List<InputStream> inputStreams) {
-            this.inputStreams = inputStreams;
-        }
 
         public RecycleViewAdapter(List<InputStream> inputStreams) {
             this.inputStreams = inputStreams;
@@ -182,7 +160,7 @@ public class ScaleEditFragment extends Fragment implements IWatchFaceEditContrac
             //在布局中找到所含有的UI组件
             public ViewHolder(View itemView) {
                 super(itemView);
-                imageView = (ImageView) itemView.findViewById(R.id.imageView);
+                imageView = (ImageView) itemView.findViewById(R.id.iv_element);
                 itemView.setOnClickListener(this);
             }
 

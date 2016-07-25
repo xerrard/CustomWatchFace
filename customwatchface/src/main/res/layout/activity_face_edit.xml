@@ -9,16 +9,21 @@
     tools:context=".view.activity.FaceEditActivity">
 
     <include layout="@layout/toolbar"/>
-
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="?android:attr/listDivider"
+    />
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.percent.PercentRelativeLayout
             android:id="@+id/watch_view_pr"
-            android:background="@drawable/edit_bg"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@drawable/edit_bg"
             app:layout_heightPercent="48%">
 
             <com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView
@@ -27,15 +32,12 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_heightPercent="57.5%"
-                app:layout_widthPercent="45.6%"
+                app:layout_marginLeftPercent="26.566667%"
                 app:layout_marginTopPercent="20.9%"
-                app:layout_marginLeftPercent="26.566667%"/>
+                app:layout_widthPercent="45.6%"/>
 
 
         </android.support.percent.PercentRelativeLayout>
-
-
-
 
 
         <com.igeak.customwatchface.view.view.slide.SlidingTabLayout

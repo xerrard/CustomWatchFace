@@ -32,7 +32,7 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
 
 
     @Override
-    public void getWatchfaceBeanList(WatchFacesModel.FacePath facePath) {
+    public void getWatchFaceBeanList(WatchFacesModel.FacePath facePath) {
         mWatchFacesModel.getWatchFaceBeanList(facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -58,7 +58,7 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
 
 
     @Override
-    public void loadWatchimg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
+    public void loadWatchImg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
                              final WatchFacesModel.FacePath facePath) {
         mWatchFacesModel.loadWatchImg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
@@ -82,8 +82,8 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
     }
 
     @Override
-    public void changeName(String name,List<WatchFaceBean> watchbeanlist,int position) {
-        mWatchFacesModel.changeName(name,watchbeanlist,position)
+    public void changeName(String name,List<WatchFaceBean> beanList,int position) {
+        mWatchFacesModel.changeName(name,beanList,position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<WatchFaceBean>>() {
@@ -105,8 +105,8 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
     }
 
     @Override
-    public void deleteWatchFace(List<WatchFaceBean> watchbeanlist, int position) {
-        mWatchFacesModel.deleteWatchFace(watchbeanlist,position)
+    public void deleteWatchFace(List<WatchFaceBean> beanList, int position) {
+        mWatchFacesModel.deleteWatchFace(beanList,position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<WatchFaceBean>>() {
@@ -129,9 +129,9 @@ public class WatchFaceListPresent implements IWatchFacesContract.IWatchFacesPres
 
 
     @Override
-    public void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
-                                      final WatchFacesModel.FacePath facePath) {
-        mWatchFacesModel.zipFileAndSentToWatch(googleApiClient, watchface, facePath)
+    public void zipFileAndRelease(GeakApiClient googleApiClient, final WatchFaceBean watchface,
+                                  final WatchFacesModel.FacePath facePath) {
+        mWatchFacesModel.zipFileAndRelease(googleApiClient, watchface, facePath)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WatchFaceBean>() {

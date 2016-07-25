@@ -1,13 +1,10 @@
 package com.igeak.customwatchface.presenter;
 
-import android.app.Activity;
-
 import com.igeak.android.common.api.GeakApiClient;
 import com.igeak.customwatchface.Bean.WatchFaceBean;
 import com.igeak.customwatchface.model.WatchFace;
 import com.igeak.customwatchface.model.WatchFacesModel;
 import com.igeak.customwatchface.view.IView;
-import com.igeak.customwatchface.view.fragment.InnerFaceFrgment;
 import com.igeak.customwatchface.view.view.watchfaceview.WatchPreviewView;
 
 import java.util.List;
@@ -35,16 +32,16 @@ public interface IWatchFacesContract {
      * Present开放给view的接口，
      */
     interface IWatchFacesPresent extends IPresenter<IWatchFacesView> {
-        void getWatchfaceBeanList(WatchFacesModel.FacePath facePath);
+        void getWatchFaceBeanList(WatchFacesModel.FacePath facePath);
 
-        void loadWatchimg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
+        void loadWatchImg(final WatchPreviewView imageView, final WatchFaceBean watchFaceBean,
                           final WatchFacesModel.FacePath facePath);
         void changeName(String name,List<WatchFaceBean> watchbeanlist,int position);
 
         void deleteWatchFace(List<WatchFaceBean> watchfaceList, int itemId);
 
-        void zipFileAndSentToWatch(GeakApiClient googleApiClient, final WatchFaceBean watchface,
-                                   final WatchFacesModel.FacePath facePath);
+        void zipFileAndRelease(GeakApiClient googleApiClient, final WatchFaceBean watchface,
+                               final WatchFacesModel.FacePath facePath);
     }
 
 }

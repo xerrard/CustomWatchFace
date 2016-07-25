@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +39,8 @@ import rx.schedulers.Schedulers;
 /**
  * Created by xuqiang on 16-5-11.
  */
-public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IWatchFacesView {
+public class InnerFaceFragment extends Fragment implements IWatchFacesContract.IWatchFacesView {
 
-    private static final String TAG = "InnerFaceFrgment";
     private static final int SPAN_COUNT = 2;
     RecyclerView mRecyclerView = null;
     RecycleViewAdapter mRecycleViewAdapter = null;
@@ -57,8 +55,7 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
             savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_facelist, container, false);
-        rootView.setTag(TAG);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_facelist);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
@@ -66,11 +63,11 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
         mRecyclerView.addItemDecoration(new ItemDecorationAlbumColumns(
                 getResources().getDimensionPixelSize(R.dimen.divider_spacing_horizon),
                 getResources().getDimensionPixelSize(R.dimen.divider_spacing_vertical),
-                SPAN_COUNT));
+                SPAN_COUNT)); //设置分隔线
         mRecycleViewAdapter = new RecycleViewAdapter();
 
         present = new WatchFaceListPresent(this, getActivity().getApplicationContext());
-        present.getWatchfaceBeanList(facePath);
+        present.getWatchFaceBeanList(facePath);
         return rootView;
     }
 
@@ -121,38 +118,34 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
 
     }
 
-
-    //继承自 RecyclerView.Adapter
     class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
 
-        private List<WatchFaceBean> watchfaceList = null;
+        private List<WatchFaceBean> beanList = null;
 
         public boolean isSetAdapter() {
-            return watchfaceList != null;
+            return beanList != null;
         }
 
-        public void setWatchList(List<WatchFaceBean> watchfaceList) {
-            this.watchfaceList = watchfaceList;
+        public void setWatchList(List<WatchFaceBean> beanList) {
+            this.beanList = beanList;
         }
 
         public RecycleViewAdapter() {
             setHasStableIds(true);
         }
 
-        //RecyclerView显示的子View
-        //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_face_inner, null);
+            View v = getActivity().getLayoutInflater().inflate(R.layout.recycler_item_face_inner,
+                    null);
             return new ViewHolder(v);
         }
 
-        //将数据绑定到子View，会自动复用View
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
-            WatchFaceBean watchface = watchfaceList.get(i);
-            viewHolder.textView.setText(watchface.getName());
-            present.loadWatchimg(viewHolder.imageView, watchface, facePath);
+            WatchFaceBean faceBean = beanList.get(i);
+            viewHolder.mWatchNameTv.setText(faceBean.getName());
+            present.loadWatchImg(viewHolder.mWatchPreView, faceBean, facePath);
         }
 
 
@@ -161,96 +154,81 @@ public class InnerFaceFrgment extends Fragment implements IWatchFacesContract.IW
             return position;
         }
 
-        //RecyclerView显示数据条数
         @Override
         public int getItemCount() {
-            return watchfaceList.size();
+            return beanList.size();
         }
 
-        //自定义的ViewHolder,减少findViewById调用次数
-        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-                PopupMenu.OnMenuItemClickListener {
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-            TextView textView;
-            WatchPreviewView imageView;
-            ImageButton imb;
+            WatchPreviewView mWatchPreView;
+            TextView mWatchNameTv;
+            ImageButton mCreateFaceIb;
+            ImageButton mReleaseIb;
 
-            //在布局中找到所含有的UI组件
             public ViewHolder(View itemView) {
                 super(itemView);
-                textView = (TextView) itemView.findViewById(R.id.textView);
-                imageView = (WatchPreviewView) itemView.findViewById(R.id.imageView);
-                imb = (ImageButton) itemView.findViewById(R.id.option_menu);
-                imb.setOnClickListener(this);
-                imageView.setOnClickListener(this);
+                mWatchNameTv = (TextView) itemView.findViewById(R.id.tv_watchname);
+                mWatchPreView = (WatchPreviewView) itemView.findViewById(R.id.watch_preview);
+                mCreateFaceIb = (ImageButton) itemView.findViewById(R.id.ib_createface);
+                mReleaseIb = (ImageButton) itemView.findViewById(R.id.ib_release_red);
+                mCreateFaceIb.setOnClickListener(this);
+                mWatchPreView.setOnClickListener(this);
+                mReleaseIb.setOnClickListener(this);
             }
 
 
             @Override
             public void onClick(View v) {
-                if (v.getId() == R.id.imageView) {
+                if (v.getId() == R.id.watch_preview) {
 
                     Intent intent = new Intent(getContext(), FaceDetailActivity.class);
-                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, beanList.get((int)
                             getItemId()));
                     intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
                             (WatchFacesModel.FacePath.FACE_CUSTOM));
                     startActivity(intent);
-                } else if (v.getId() == R.id.option_menu) {
-//                    PopupMenu popup = new PopupMenu(getActivity(), v);
-//                    MenuInflater inflater = popup.getMenuInflater();
-//                    inflater.inflate(R.menu.option_menu_inner, popup.getMenu());
-//                    popup.show();
-//                    popup.setOnMenuItemClickListener(this);
-                    //修改需求，optionmenu直接进入编辑
+                } else if (v.getId() == R.id.ib_createface) {
                     Intent intent = new Intent(getContext(), FaceEditActivity.class);
-                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
+                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, beanList.get((int)
                             getItemId()));
                     intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
                             (WatchFacesModel.FacePath.FACE_CUSTOM));
                     startActivity(intent);
+                } else if (v.getId() == R.id.ib_release_red) {
+                    send2Watch(beanList.get((int) getItemId()));
                 }
-
-            }
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.option_new) {
-                    Intent intent = new Intent(getContext(), FaceEditActivity.class);
-                    intent.putExtra(Const.INTENT_EXTRA_KEY_WATCHFACE, watchfaceList.get((int)
-                            getItemId()));
-                    intent.putExtra(Const.INTENT_EXTRA_KEY_ISCUSTOM, facePath.equals
-                            (WatchFacesModel.FacePath.FACE_CUSTOM));
-                    startActivity(intent);
-                    return true;
-                } else if (item.getItemId() == R.id.option_sent2watch) {
-                    sendToWatch(watchfaceList.get((int) getItemId()));
-                }
-                return false;
             }
 
         }
     }
 
-    public void sendToWatch(WatchFaceBean watchfacebean) {
+    public void send2Watch(WatchFaceBean watchfacebean) {
         MyApplication myApplication = (MyApplication) getActivity().getApplication();
         GeakApiClient googleApiClient = myApplication.mGoogleApiclent;
-        present.zipFileAndSentToWatch(googleApiClient, watchfacebean, facePath);
+        present.zipFileAndRelease(googleApiClient, watchfacebean, facePath);
     }
 
 
     @Override
     public void updateWatchSent(WatchFaceBean watchFace) {
         Toast.makeText(getActivity().getApplicationContext()
-                , watchFace.getName() + getString(R.string.has_sent)
+                , watchFace.getName() + getString(R.string.toast_has_sent)
                 , Toast.LENGTH_LONG).show();
 
     }
 
     @Override
     public void showThrowable(Throwable e) {
-        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG)
-                .show();
+        if (e.getMessage().equals(Const.EXCEPTION_CHECK_CONNECT)) {
+            Toast.makeText(getContext().getApplicationContext(), getString(R.string
+                    .toast_query_connect_watch), Toast
+                    .LENGTH_LONG).show();
+        } else if (e.getMessage().equals(Const.EXCEPTION_CHECK_PHONESYNC)) {
+            Toast.makeText(getContext().getApplicationContext(), getString(R.string
+                    .toast_query_open_phone_sync), Toast
+                    .LENGTH_LONG).show();
+        }
 
     }
 

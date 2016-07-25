@@ -30,7 +30,7 @@ public class WatchFaceDetailPresent implements IWatchFaceDetailContract.IWatchFa
     }
 
     @Override
-    public void loadWatchimg(final WatchFaceBean watchFaceBean,
+    public void loadWatchImg(final WatchFaceBean watchFaceBean,
                              final WatchFacesModel.FacePath facePath) {
         mWatchFaceDetailModel.loadWatchImg(watchFaceBean, facePath)
                 .subscribeOn(Schedulers.io())
