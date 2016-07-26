@@ -30,6 +30,9 @@ public class ShareDialog extends Dialog {
     private Integer[] shareIcon = new Integer[]{R.drawable.weibo, R.drawable.weixin, R.drawable
             .weixin1, R.drawable.weibo, R.drawable.weixin, R.drawable
             .weixin1};
+    private Integer[] shareString = new Integer[]{R.string.weibo, R.string.weixin, R.string
+            .weixin_friend, R.string.weibo, R.string.weixin, R.string
+            .weixin_friend};
     private Activity activity;
     private View shareView;
 
@@ -67,7 +70,7 @@ public class ShareDialog extends Dialog {
         LinearLayout root = (LinearLayout) inflater.inflate(R.layout.share_bottom_view, null);
 
         GridView gvShare = (GridView) root.findViewById(R.id.gvShare);
-        adapter = new ShareAdapter(shareIcon);
+        adapter = new ShareAdapter(shareIcon, shareString);
         gvShare.setAdapter(adapter);
         gvShare.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -104,6 +107,7 @@ public class ShareDialog extends Dialog {
     private class ShareAdapter extends BaseAdapter {
 
         private String[] list;
+        private Integer[] listString;
         private Integer[] listIcon;
 
         private int clickTmp = -1;
@@ -112,8 +116,9 @@ public class ShareDialog extends Dialog {
             this.clickTmp = position;
         }
 
-        public ShareAdapter(Integer[] listIcon) {
+        public ShareAdapter(Integer[] listIcon, Integer[] listString) {
             this.listIcon = listIcon;
+            this.listString = listString;
         }
 
         @Override
@@ -151,13 +156,17 @@ public class ShareDialog extends Dialog {
                 convertView.setBackgroundColor(activity.getResources().getColor(android.R.color
                         .transparent));
             }
-            //viewHolder.tvTitle.setText(list[position]);
+            viewHolder.tvTitle.setText(getStringByPosition(position));
             viewHolder.ivIcon.setImageResource(getImageByPosition(position));
             return convertView;
         }
 
         public int getImageByPosition(int position) {
             return listIcon[position];
+        }
+
+        public int getStringByPosition(int position) {
+            return listString[position];
         }
 
         private class ViewHolder {
