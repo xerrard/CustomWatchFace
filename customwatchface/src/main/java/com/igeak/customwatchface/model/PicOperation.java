@@ -31,6 +31,7 @@ public class PicOperation {
         BitmapFactory.decodeStream(is, null, options);
         options.inJustDecodeBounds = false;
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         is.reset();
         Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
         is.close();
