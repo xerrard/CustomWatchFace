@@ -251,6 +251,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mElements.put(Type.HOUR, new Hour(watchface.getHour()));
             mElements.put(Type.MINUTE, new Minute(watchface.getMinute()));
             mElements.put(Type.SECOND, new Second(watchface.getSecond()));
+
         }
 
         @Override

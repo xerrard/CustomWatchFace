@@ -31,7 +31,9 @@
     <string name="detail_face_fuction">表盘功能</string>
 
     <string name="dialog_share">分享到</string>
-
+    <string name="weibo">Weibo</string>
+    <string name="weixin">Weixin</string>
+    <string name="weixin_friend">Friend</string>
 
 
 

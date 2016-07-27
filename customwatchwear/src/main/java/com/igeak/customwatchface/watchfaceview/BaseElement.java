@@ -5,15 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.text.format.Time;
-import android.util.Log;
-import android.view.animation.Transformation;
 
-import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.MyWatchFace;
 import com.igeak.customwatchface.PicUtil;
-import com.igeak.customwatchface.WatchTime;
-import com.orhanobut.logger.Logger;
 
 
 /**
@@ -67,8 +61,8 @@ public abstract class BaseElement {
             millisecond) {
 //起始坐标为中心点
 
-        this.view_height = view_height;
-        this.view_width = view_width;
+        this.view_height = 360;
+        this.view_width = 360;
         start_x = view_width / 2;
         start_y = view_height / 2;
         length = Math.min(view_width, view_height);
