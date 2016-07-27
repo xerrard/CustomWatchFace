@@ -41,6 +41,7 @@ import com.igeak.android.wearable.MessageEvent;
 import com.igeak.android.wearable.Wearable;
 import com.igeak.customwatchface.watchfaceview.BackGround;
 import com.igeak.customwatchface.watchfaceview.BaseElement;
+import com.igeak.customwatchface.watchfaceview.CalendarCache;
 import com.igeak.customwatchface.watchfaceview.DialScale;
 import com.igeak.customwatchface.watchfaceview.Hour;
 import com.igeak.customwatchface.watchfaceview.Minute;
@@ -49,6 +50,7 @@ import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -63,7 +65,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
      * Update rate in milliseconds for interactive mode. We update once a second to advance the
      * second hand.
      */
-    private static final long INTERACTIVE_UPDATE_RATE_MS = TimeUnit.SECONDS.toMillis(1);
+    private static final long INTERACTIVE_UPDATE_RATE_MS = 40;//TimeUnit.SECONDS.toMillis(1);
 
     /**
      * Handler message id for updating the time periodically in interactive mode.
@@ -118,6 +120,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             }
         };
         int mTapCount;
+        public CalendarCache mCalendar = new CalendarCache(Calendar.getInstance());
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
@@ -174,7 +177,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
             present.loadWatchimg();
 
         }
-
 
 
         @Override
@@ -253,7 +255,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
-            mTime.setToNow();
+            //mTime.setToNow();
+            mCalendar.getInstance();
+
             drawElement(canvas, mElements.get(Type.BACKGROUND), bounds);
             drawElement(canvas, mElements.get(Type.DIALSCALE), bounds);
             drawElement(canvas, mElements.get(Type.HOUR), bounds);
@@ -265,10 +269,15 @@ public class MyWatchFace extends CanvasWatchFaceService {
             if (element == null || canvas == null) {
                 return;
             }
+            int hour = mCalendar.get(Calendar.HOUR);
+            int minite = mCalendar.get(Calendar.MINUTE);
+            int second = mCalendar.get(Calendar.SECOND);
+            int millisecond = mCalendar.get(Calendar.MILLISECOND);
+
             PaintFlagsDrawFilter paintFlter = new PaintFlagsDrawFilter(0,
                     Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG); //设置抗锯齿
             canvas.setDrawFilter(paintFlter);
-            element.layout(bounds.width(), bounds.height(), mTime);
+            element.layout(bounds.width(), bounds.height(), hour, minite, second, millisecond);
             element.onDraw(canvas);
         }
 

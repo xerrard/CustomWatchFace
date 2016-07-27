@@ -12,6 +12,7 @@ import android.view.animation.Transformation;
 import com.igeak.customwatchface.Const;
 import com.igeak.customwatchface.MyWatchFace;
 import com.igeak.customwatchface.PicUtil;
+import com.igeak.customwatchface.WatchTime;
 import com.orhanobut.logger.Logger;
 
 
@@ -22,18 +23,11 @@ public abstract class BaseElement {
 
     public MyWatchFace.Type mType = MyWatchFace.Type.NULL;
 
-    public String ResourcePath = "";
-
     public BitmapDrawable mDrawable;
 
-    public float width = 0;
-    public float height = 0;
 
     public float mRotate = 0.0f;
 
-    public float scale = 1.0f;
-
-    public int alpha = 255;
 
     public float start_x = 0;
     public float start_y = 0;
@@ -43,10 +37,6 @@ public abstract class BaseElement {
     public int window_level = 0;
 
     private Matrix matrix = new Matrix();
-
-    private Transformation mTransformation = new Transformation();
-
-    private String pngName = "";
 
     private float length;
     float view_width;
@@ -62,9 +52,6 @@ public abstract class BaseElement {
         mDrawable = PicUtil.bitmap2Drawable(bitmap);
     }
 
-    //public abstract BitmapDrawable loadDefaultDrawable(Context context);
-
-
     public static class DisPlayLevel {
 
         public static int LEVEL_BACKGROUND = 10;
@@ -76,23 +63,21 @@ public abstract class BaseElement {
     }
 
 
-    public void layout(float view_width, float view_height, Time mTime) {
+    public void layout(float view_width, float view_height, int hour, int minite, int second, int
+            millisecond) {
 //起始坐标为中心点
 
-        Logger.i("     mTime.hour=" + mTime.hour);
-        Logger.i("     mTime.minute=" + mTime.minute);
-        Logger.i("     mTime.second=" + mTime.second);
         this.view_height = view_height;
         this.view_width = view_width;
         start_x = view_width / 2;
         start_y = view_height / 2;
         length = Math.min(view_width, view_height);
         if (mType == MyWatchFace.Type.HOUR) {
-            mRotate = 360.0f * (mTime.hour - 12.0f + mTime.minute / 60.0f) / 12.0f;
+            mRotate = 360.0f * (hour - 12.0f + minite / 60.0f) / 12.0f;
         } else if (mType == MyWatchFace.Type.MINUTE) {
-            mRotate = 360.0f * (mTime.minute + mTime.second / 60.0f) / 60.0f;
+            mRotate = 360.0f * (minite + second / 60.0f) / 60.0f;
         } else if (mType == MyWatchFace.Type.SECOND) {
-            mRotate = 360.0f * mTime.second / 60.0f;
+            mRotate = 360.0f * (second + millisecond / 1000.0f) / 60.0f;
         } else {
             mRotate = 0.0f;
         }
@@ -104,7 +89,6 @@ public abstract class BaseElement {
 
 
     public void onDraw(Canvas canvas) {
-        Log.d(Const.TAG, "onDraw Type = " + mType);
         canvas.save();
 
         float x = start_x;
@@ -128,7 +112,7 @@ public abstract class BaseElement {
 //            Logger.d(Const.TAG + "onDraw Type = " + mType + "   mRotate = " + mRotate + "   " +
 //                    "   width=" + w + "   height =" + h);
             drawable.setBounds((int) (x - (length / 2)), (int) (y - (length / 2)), (int) (x +
-                    (length / 2)),
+                            (length / 2)),
                     (int) (y + (length / 2)));
             drawable.draw(canvas);
         }
